@@ -1,9 +1,9 @@
-# ignore Maven output directory
+# Maven output directory
 target/
-# ignore Eclipse files
+# Eclipse files
 .classpath
 .project
-# ignore Eclipse directories
+# Eclipse directories
 .metadata/
 .settings/
 bin/
@@ -11,10 +11,10 @@ bin/
 # Java class files
 *.class
 
-# Package Files #
+# package files #
 *.jar
 *.war
 *.ear
 
-# Backup Files
-*.*~
+# backup files
+*~
