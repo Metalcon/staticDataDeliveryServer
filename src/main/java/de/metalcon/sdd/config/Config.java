@@ -17,13 +17,13 @@ public abstract class Config {
 
     private Set<String> details;
 
-    private Map<String, MetaEntity> entities;
+    private Map<String, ConfigEntity> entities;
 
     public Config() {
         leveldbPath = null;
         neo4jPath = null;
         details = new HashSet<String>();
-        entities = new HashMap<String, MetaEntity>();
+        entities = new HashMap<String, ConfigEntity>();
     }
 
     public void setLeveldbPath(String leveldbPath) {
@@ -72,7 +72,7 @@ public abstract class Config {
      * @return Returns the MetaEntity for type or Null if no entity with that
      *         type was configured.
      */
-    public MetaEntity getEntity(String type) {
+    public ConfigEntity getEntity(String type) {
         return entities.get(type);
     }
 
@@ -80,7 +80,7 @@ public abstract class Config {
         return entities.containsKey(type);
     }
 
-    public void addEntity(String type, MetaEntity entity) {
+    public void addEntity(String type, ConfigEntity entity) {
         entities.put(type, entity);
     }
 
@@ -95,7 +95,7 @@ public abstract class Config {
         }
 
         for (String type : getEntities()) {
-            MetaEntity entity = getEntity(type);
+            ConfigEntity entity = getEntity(type);
             for (String attrName : entity.getAttrs()) {
                 MetaType attrType = entity.getAttr(attrName);
 

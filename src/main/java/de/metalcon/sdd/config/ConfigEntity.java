@@ -7,13 +7,13 @@ import java.util.Set;
 
 import de.metalcon.sdd.error.InvalidAttrNameException;
 
-public class MetaEntity {
+public class ConfigEntity {
 
     private Map<String, MetaType> attrs;
 
     private Map<String, MetaEntityOutput> outputs;
 
-    public MetaEntity() {
+    public ConfigEntity() {
         attrs = new HashMap<String, MetaType>();
         outputs = new HashMap<String, MetaEntityOutput>();
     }

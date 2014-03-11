@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.MetaEntity;
+import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.MetaEntityOutput;
 import de.metalcon.sdd.config.MetaType;
 import de.metalcon.sdd.config.TempConfig;
@@ -36,7 +36,7 @@ public class SddTest {
         config.addDetail("detail0");
         config.addDetail("detail1");
 
-        MetaEntity entity0 = new MetaEntity();
+        ConfigEntity entity0 = new ConfigEntity();
         entity0.addAttr("attr0", new MetaType("String"));
         entity0.addAttr("attr1", new MetaType("entity1"));
         MetaEntityOutput entity0_detail0 = new MetaEntityOutput();
@@ -45,7 +45,7 @@ public class SddTest {
         entity0.addOutput("detail0", entity0_detail0);
         config.addEntity("entity0", entity0);
 
-        MetaEntity entity1 = new MetaEntity();
+        ConfigEntity entity1 = new ConfigEntity();
         entity1.addAttr("attr2", new MetaType("String"));
         MetaEntityOutput entity1_detail0 = new MetaEntityOutput();
         entity1.addOutput("detail0", entity1_detail0);
@@ -54,17 +54,17 @@ public class SddTest {
         entity1.addOutput("detail1", entity1_detail1);
         config.addEntity("entity1", entity1);
 
-        MetaEntity entity2 = new MetaEntity();
+        ConfigEntity entity2 = new ConfigEntity();
         config.addEntity("entity2", entity2);
 
-        MetaEntity entity3 = new MetaEntity();
+        ConfigEntity entity3 = new ConfigEntity();
         entity3.addAttr("attr3", new MetaType("entity1[]"));
         MetaEntityOutput entity3_detail0 = new MetaEntityOutput();
         entity3_detail0.addOattr("attr3", "detail1");
         entity3.addOutput("detail0", entity3_detail0);
         config.addEntity("entity3", entity3);
 
-        MetaEntity cross1 = new MetaEntity();
+        ConfigEntity cross1 = new ConfigEntity();
         cross1.addAttr("title", new MetaType("String"));
         cross1.addAttr("elem", new MetaType("cross2"));
         MetaEntityOutput cross1_detail0 = new MetaEntityOutput();
@@ -76,7 +76,7 @@ public class SddTest {
         cross1.addOutput("detail1", cross1_detail1);
         config.addEntity("cross1", cross1);
 
-        MetaEntity cross2 = new MetaEntity();
+        ConfigEntity cross2 = new ConfigEntity();
         cross2.addAttr("title", new MetaType("String"));
         cross2.addAttr("elem", new MetaType("cross1"));
         MetaEntityOutput cross2_detail0 = new MetaEntityOutput();

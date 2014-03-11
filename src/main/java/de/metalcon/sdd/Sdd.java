@@ -31,7 +31,7 @@ import org.neo4j.tooling.GlobalGraphOperations;
 
 import de.metalcon.common.JsonString;
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.MetaEntity;
+import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.MetaEntityOutput;
 import de.metalcon.sdd.config.MetaType;
 import de.metalcon.sdd.error.InconsitentTypeException;
@@ -181,7 +181,7 @@ public class Sdd implements Closeable {
         for (Map.Entry<String, String> attr : attrs.entrySet()) {
             String attrName = attr.getKey();
             String attrValue = attr.getValue();
-            MetaType attrType = entity.getMetaEntity().getAttr(attrName);
+            MetaType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (attrValue == null) {
                 throw new InvalidAttrException();
@@ -238,7 +238,7 @@ public class Sdd implements Closeable {
         for (Map.Entry<String, String> attr : attrs.entrySet()) {
             String attrName = attr.getKey();
             String attrValue = attr.getValue();
-            MetaType attrType = entity.getMetaEntity().getAttr(attrName);
+            MetaType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (!attrType.isPrimitive() || attrValue == null) {
                 throw new InvalidAttrException();
@@ -260,7 +260,7 @@ public class Sdd implements Closeable {
 
         Entity entity = new Entity(config, id, type);
 
-        MetaType attrType = entity.getMetaEntity().getAttr(attr);
+        MetaType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || attrType.isArray()) {
             throw new InvalidAttrException();
         }
@@ -282,7 +282,7 @@ public class Sdd implements Closeable {
 
         Entity entity = new Entity(config, id, type);
 
-        MetaType attrType = entity.getMetaEntity().getAttr(attr);
+        MetaType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || !attrType.isArray() || rel == null) {
             throw new InvalidAttrException();
         }
@@ -414,7 +414,7 @@ public class Sdd implements Closeable {
     private void generateReference(Entity entity, String attr, long refrenceId)
             throws InvalidReferenceException, InvalidTypeException,
             InvalidAttrNameException, InconsitentTypeException {
-        MetaType attrType = entity.getMetaEntity().getAttr(attr);
+        MetaType attrType = entity.getConfigEntity().getAttr(attr);
 
         Node referenceNode = entityGraphIdIndex.get(refrenceId);
         if (referenceNode == null) {
@@ -460,7 +460,7 @@ public class Sdd implements Closeable {
 
     private String generateJson(Entity entity, String detail)
             throws InvalidTypeException, InvalidAttrNameException {
-        MetaEntity metaEntity = entity.getMetaEntity();
+        ConfigEntity metaEntity = entity.getConfigEntity();
         if (metaEntity == null) {
             throw new RuntimeException();
         }
@@ -533,7 +533,7 @@ public class Sdd implements Closeable {
             Entity referencing =
                     new Entity(config, referencingRel.getStartNode());
 
-            if (referencing.getMetaEntity().dependsOn(entity.getType(),
+            if (referencing.getConfigEntity().dependsOn(entity.getType(),
                     modifiedDetails)) {
                 queueAction(new UpdateJsonQueueAction(this, referencing));
             }

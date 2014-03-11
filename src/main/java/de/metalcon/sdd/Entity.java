@@ -5,7 +5,7 @@ import java.util.Map;
 import org.neo4j.graphdb.Node;
 
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.MetaEntity;
+import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.error.InconsitentTypeException;
 import de.metalcon.sdd.error.InvalidTypeException;
 
@@ -17,7 +17,7 @@ public class Entity {
 
     private String type;
 
-    private MetaEntity metaEntity;
+    private ConfigEntity configEntity;
 
     private Node node;
 
@@ -31,16 +31,15 @@ public class Entity {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
         }
-
-        this.config = config;
-
-        this.id = id;
-
         if (!config.isValidEntityType(type)) {
             throw new InvalidTypeException();
         }
 
+        this.config = config;
+        this.id = id;
         this.type = type;
+        configEntity = null;
+        node = null;
     }
 
     public Entity(
@@ -53,22 +52,25 @@ public class Entity {
             throw new IllegalArgumentException("node was null");
         }
 
-        this.config = config;
-
         Long id = (Long) node.getProperty("id", null);
         if (id == null) {
+            // TODO: create good exception
             throw new RuntimeException();
         }
-        this.id = id;
 
-        type = (String) node.getProperty("type", null);
+        String type = (String) node.getProperty("type", null);
         if (type == null) {
+            // TODO: create good exception
             throw new RuntimeException();
         }
         if (!config.isValidEntityType(type)) {
             throw new InvalidTypeException();
         }
 
+        this.config = config;
+        this.id = id;
+        this.type = type;
+        configEntity = null;
         setNode(node);
     }
 
@@ -78,19 +80,20 @@ public class Entity {
 
     public String getType() {
         if (type == null) {
+            // TODO: create good exception
             throw new RuntimeException();
         }
         return type;
     }
 
-    public MetaEntity getMetaEntity() throws InvalidTypeException {
-        if (metaEntity == null) {
-            metaEntity = config.getEntity(getType());
-            if (metaEntity == null) {
+    public ConfigEntity getConfigEntity() throws InvalidTypeException {
+        if (configEntity == null) {
+            configEntity = config.getEntity(getType());
+            if (configEntity == null) {
                 throw new InvalidTypeException();
             }
         }
-        return metaEntity;
+        return configEntity;
     }
 
     public void setNode(Node node) throws InconsitentTypeException {
@@ -106,6 +109,7 @@ public class Entity {
 
     public Node getNode() {
         if (node == null) {
+            // TODO: create good exception
             throw new RuntimeException();
         }
         return node;

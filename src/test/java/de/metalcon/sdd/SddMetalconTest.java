@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.MetaEntity;
+import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.MetaEntityOutput;
 import de.metalcon.sdd.config.TempConfig;
 import de.metalcon.sdd.error.InvalidAttrException;
@@ -32,7 +32,7 @@ public class SddMetalconTest {
         config.addDetail("big");
         config.addDetail("small");
 
-        MetaEntity band = new MetaEntity();
+        ConfigEntity band = new ConfigEntity();
         band.addAttr("name", "String");
         band.addAttr("records", "Record[]");
         MetaEntityOutput band_page = new MetaEntityOutput();
@@ -48,7 +48,7 @@ public class SddMetalconTest {
         band.addOutput("small", band_small);
         config.addEntity("Band", band);
 
-        MetaEntity record = new MetaEntity();
+        ConfigEntity record = new ConfigEntity();
         record.addAttr("name", "String");
         record.addAttr("band", "Band");
         record.addAttr("tracks", "Track[]");
@@ -67,7 +67,7 @@ public class SddMetalconTest {
         record.addOutput("small", record_small);
         config.addEntity("Record", record);
 
-        MetaEntity track = new MetaEntity();
+        ConfigEntity track = new ConfigEntity();
         track.addAttr("name", "String");
         track.addAttr("band", "Band");
         track.addAttr("record", "Record");

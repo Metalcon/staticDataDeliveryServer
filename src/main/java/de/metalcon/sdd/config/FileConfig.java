@@ -125,7 +125,7 @@ public class FileConfig extends Config {
             throw new RuntimeException();
         }
 
-        MetaEntity entity = new MetaEntity();
+        ConfigEntity entity = new ConfigEntity();
 
         for (Node domNode = domEntity.getFirstChild(); domNode != null; domNode =
                 domNode.getNextSibling()) {
@@ -150,7 +150,7 @@ public class FileConfig extends Config {
         addEntity(type, entity);
     }
 
-    private void xmlLoadEntityAttr(MetaEntity entity, Element domAttr)
+    private void xmlLoadEntityAttr(ConfigEntity entity, Element domAttr)
             throws InvalidAttrNameException {
         xmlAssertNodeName(domAttr, "attr");
         xmlAssertHasAttribute(domAttr, "name");
@@ -161,7 +161,7 @@ public class FileConfig extends Config {
         entity.addAttr(name, new MetaType(type));
     }
 
-    private void xmlLoadEntityOutput(MetaEntity entity, Element domOutput) {
+    private void xmlLoadEntityOutput(ConfigEntity entity, Element domOutput) {
         xmlAssertNodeName(domOutput, "output");
         xmlAssertHasAttribute(domOutput, "detail");
 
