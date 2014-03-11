@@ -1,6 +1,6 @@
 package de.metalcon.sdd.config;
 
-public class MetaType {
+public class ConfigType {
 
     final public static String arraySuffix = "[]";
 
@@ -10,7 +10,7 @@ public class MetaType {
 
     private boolean isPrimitive;
 
-    public MetaType(
+    public ConfigType(
             String type) {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
@@ -52,7 +52,7 @@ public class MetaType {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        MetaType o = (MetaType) other;
+        ConfigType o = (ConfigType) other;
         return type.equals(o.type) && isArray == o.isArray
                 && isPrimitive == o.isPrimitive;
     }

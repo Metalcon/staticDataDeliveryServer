@@ -69,7 +69,7 @@ public abstract class Config {
     }
 
     /**
-     * @return Returns the MetaEntity for type or Null if no entity with that
+     * @return Returns the ConfigEntity for type or Null if no entity with that
      *         type was configured.
      */
     public ConfigEntity getEntity(String type) {
@@ -97,7 +97,7 @@ public abstract class Config {
         for (String type : getEntities()) {
             ConfigEntity entity = getEntity(type);
             for (String attrName : entity.getAttrs()) {
-                MetaType attrType = entity.getAttr(attrName);
+                ConfigType attrType = entity.getAttr(attrName);
 
                 if (attrType.getType().equals("id")
                         || attrType.getType().equals("type")
@@ -116,7 +116,7 @@ public abstract class Config {
             }
 
             for (String outputDetail : entity.getOutputs()) {
-                MetaEntityOutput output = entity.getOutput(outputDetail);
+                ConfigEntityOutput output = entity.getOutput(outputDetail);
 
                 if (!isValidDetail(outputDetail)) {
                     throw new InvalidConfigException("invalid output detail \""
@@ -127,7 +127,7 @@ public abstract class Config {
                 for (String oattr : output.getOattrs()) {
                     String oattrDetail = output.getOattr(oattr);
 
-                    MetaType oattrType;
+                    ConfigType oattrType;
                     try {
                         oattrType = entity.getAttr(oattr);
                     } catch (InvalidAttrNameException e) {

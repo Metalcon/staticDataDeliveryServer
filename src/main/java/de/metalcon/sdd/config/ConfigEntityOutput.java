@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MetaEntityOutput {
+public class ConfigEntityOutput {
 
     private Map<String, String> oattrs;
 
-    public MetaEntityOutput() {
+    public ConfigEntityOutput() {
         oattrs = new HashMap<String, String>();
     }
 

@@ -9,21 +9,21 @@ import de.metalcon.sdd.error.InvalidAttrNameException;
 
 public class ConfigEntity {
 
-    private Map<String, MetaType> attrs;
+    private Map<String, ConfigType> attrs;
 
-    private Map<String, MetaEntityOutput> outputs;
+    private Map<String, ConfigEntityOutput> outputs;
 
     public ConfigEntity() {
-        attrs = new HashMap<String, MetaType>();
-        outputs = new HashMap<String, MetaEntityOutput>();
+        attrs = new HashMap<String, ConfigType>();
+        outputs = new HashMap<String, ConfigEntityOutput>();
     }
 
     public Set<String> getAttrs() {
         return Collections.unmodifiableSet(attrs.keySet());
     }
 
-    public MetaType getAttr(String name) throws InvalidAttrNameException {
-        MetaType attr = attrs.get(name);
+    public ConfigType getAttr(String name) throws InvalidAttrNameException {
+        ConfigType attr = attrs.get(name);
         if (attr == null) {
             throw new InvalidAttrNameException();
         }
@@ -36,10 +36,10 @@ public class ConfigEntity {
 
     public void addAttr(String name, String type)
             throws InvalidAttrNameException {
-        addAttr(name, new MetaType(type));
+        addAttr(name, new ConfigType(type));
     }
 
-    public void addAttr(String name, MetaType type)
+    public void addAttr(String name, ConfigType type)
             throws InvalidAttrNameException {
         if (name.equals("id") || name.equals("type")
                 || name.startsWith("json-")) {
@@ -52,23 +52,23 @@ public class ConfigEntity {
         return Collections.unmodifiableSet(outputs.keySet());
     }
 
-    public MetaEntityOutput getOutput(String detail) {
-        MetaEntityOutput output = outputs.get(detail);
+    public ConfigEntityOutput getOutput(String detail) {
+        ConfigEntityOutput output = outputs.get(detail);
         if (output == null) {
             throw new RuntimeException();
         }
         return output;
     }
 
-    public void addOutput(String detail, MetaEntityOutput output) {
+    public void addOutput(String detail, ConfigEntityOutput output) {
         outputs.put(detail, output);
     }
 
     public boolean dependsOn(String type, Set<String> modifiedDetails) {
-        for (MetaEntityOutput output : outputs.values()) {
+        for (ConfigEntityOutput output : outputs.values()) {
             for (String oattrName : output.getOattrs()) {
                 String oattrDetail = output.getOattr(oattrName);
-                MetaType oattrType = attrs.get(oattrName);
+                ConfigType oattrType = attrs.get(oattrName);
                 if (type.equals(oattrType.getType())
                         && modifiedDetails.contains(oattrDetail)) {
                     return true;

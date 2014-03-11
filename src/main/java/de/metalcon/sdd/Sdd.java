@@ -32,8 +32,8 @@ import org.neo4j.tooling.GlobalGraphOperations;
 import de.metalcon.common.JsonString;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
-import de.metalcon.sdd.config.MetaEntityOutput;
-import de.metalcon.sdd.config.MetaType;
+import de.metalcon.sdd.config.ConfigEntityOutput;
+import de.metalcon.sdd.config.ConfigType;
 import de.metalcon.sdd.error.InconsitentTypeException;
 import de.metalcon.sdd.error.InvalidAttrException;
 import de.metalcon.sdd.error.InvalidAttrNameException;
@@ -181,7 +181,7 @@ public class Sdd implements Closeable {
         for (Map.Entry<String, String> attr : attrs.entrySet()) {
             String attrName = attr.getKey();
             String attrValue = attr.getValue();
-            MetaType attrType = entity.getConfigEntity().getAttr(attrName);
+            ConfigType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (attrValue == null) {
                 throw new InvalidAttrException();
@@ -238,7 +238,7 @@ public class Sdd implements Closeable {
         for (Map.Entry<String, String> attr : attrs.entrySet()) {
             String attrName = attr.getKey();
             String attrValue = attr.getValue();
-            MetaType attrType = entity.getConfigEntity().getAttr(attrName);
+            ConfigType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (!attrType.isPrimitive() || attrValue == null) {
                 throw new InvalidAttrException();
@@ -260,7 +260,7 @@ public class Sdd implements Closeable {
 
         Entity entity = new Entity(config, id, type);
 
-        MetaType attrType = entity.getConfigEntity().getAttr(attr);
+        ConfigType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || attrType.isArray()) {
             throw new InvalidAttrException();
         }
@@ -282,7 +282,7 @@ public class Sdd implements Closeable {
 
         Entity entity = new Entity(config, id, type);
 
-        MetaType attrType = entity.getConfigEntity().getAttr(attr);
+        ConfigType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || !attrType.isArray() || rel == null) {
             throw new InvalidAttrException();
         }
@@ -414,7 +414,7 @@ public class Sdd implements Closeable {
     private void generateReference(Entity entity, String attr, long refrenceId)
             throws InvalidReferenceException, InvalidTypeException,
             InvalidAttrNameException, InconsitentTypeException {
-        MetaType attrType = entity.getConfigEntity().getAttr(attr);
+        ConfigType attrType = entity.getConfigEntity().getAttr(attr);
 
         Node referenceNode = entityGraphIdIndex.get(refrenceId);
         if (referenceNode == null) {
@@ -460,20 +460,20 @@ public class Sdd implements Closeable {
 
     private String generateJson(Entity entity, String detail)
             throws InvalidTypeException, InvalidAttrNameException {
-        ConfigEntity metaEntity = entity.getConfigEntity();
-        if (metaEntity == null) {
+        ConfigEntity configEntity = entity.getConfigEntity();
+        if (configEntity == null) {
             throw new RuntimeException();
         }
-        MetaEntityOutput metaOutput = metaEntity.getOutput(detail);
+        ConfigEntityOutput configEntityOutput = configEntity.getOutput(detail);
 
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("id", entity.getId());
         json.put("type", entity.getType());
 
-        if (metaOutput != null) {
-            for (String attr : metaOutput.getOattrs()) {
-                String attrDetail = metaOutput.getOattr(attr);
-                MetaType attrType = metaEntity.getAttr(attr);
+        if (configEntityOutput != null) {
+            for (String attr : configEntityOutput.getOattrs()) {
+                String attrDetail = configEntityOutput.getOattr(attr);
+                ConfigType attrType = configEntity.getAttr(attr);
 
                 if (attrType.isPrimitive()) {
                     String attrValue =

@@ -158,7 +158,7 @@ public class FileConfig extends Config {
 
         String name = domAttr.getAttribute("name");
         String type = domAttr.getAttribute("type");
-        entity.addAttr(name, new MetaType(type));
+        entity.addAttr(name, new ConfigType(type));
     }
 
     private void xmlLoadEntityOutput(ConfigEntity entity, Element domOutput) {
@@ -166,7 +166,7 @@ public class FileConfig extends Config {
         xmlAssertHasAttribute(domOutput, "detail");
 
         String detail = domOutput.getAttribute("detail");
-        MetaEntityOutput output = new MetaEntityOutput();
+        ConfigEntityOutput output = new ConfigEntityOutput();
 
         for (Node domNode = domOutput.getFirstChild(); domNode != null; domNode =
                 domNode.getNextSibling()) {
@@ -179,7 +179,7 @@ public class FileConfig extends Config {
     }
 
     private void xmlLoadEntityOutputOattr(
-            MetaEntityOutput output,
+            ConfigEntityOutput output,
             Element domOattr) {
         xmlAssertNodeName(domOattr, "oattr");
         xmlAssertHasAttribute(domOattr, "attr");
