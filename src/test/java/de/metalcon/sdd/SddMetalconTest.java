@@ -1,7 +1,5 @@
 package de.metalcon.sdd;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,18 +22,18 @@ import de.metalcon.sdd.error.InvalidTypeException;
 public class SddMetalconTest {
 
     private Sdd sdd;
-    
+
     @Before
-    public void setUp()
-    throws IOException, InvalidAttrNameException, InvalidConfigException {
+    public void setUp() throws IOException, InvalidAttrNameException,
+            InvalidConfigException {
         Config config = new TempConfig();
-        
+
         config.addDetail("page");
         config.addDetail("big");
         config.addDetail("small");
-        
+
         MetaEntity band = new MetaEntity();
-        band.addAttr("name",    "String");
+        band.addAttr("name", "String");
         band.addAttr("records", "Record[]");
         MetaEntityOutput band_page = new MetaEntityOutput();
         band_page.addOattr("name", "");
@@ -49,10 +47,10 @@ public class SddMetalconTest {
         band_small.addOattr("name", "");
         band.addOutput("small", band_small);
         config.addEntity("Band", band);
-        
+
         MetaEntity record = new MetaEntity();
-        record.addAttr("name",   "String");
-        record.addAttr("band",   "Band");
+        record.addAttr("name", "String");
+        record.addAttr("band", "Band");
         record.addAttr("tracks", "Track[]");
         MetaEntityOutput record_page = new MetaEntityOutput();
         record_page.addOattr("name", "");
@@ -68,10 +66,10 @@ public class SddMetalconTest {
         record_small.addOattr("name", "");
         record.addOutput("small", record_small);
         config.addEntity("Record", record);
-        
+
         MetaEntity track = new MetaEntity();
-        track.addAttr("name",   "String");
-        track.addAttr("band",   "Band");
+        track.addAttr("name", "String");
+        track.addAttr("band", "Band");
         track.addAttr("record", "Record");
         MetaEntityOutput track_page = new MetaEntityOutput();
         track_page.addOattr("name", "");
@@ -87,19 +85,19 @@ public class SddMetalconTest {
         track_small.addOattr("name", "");
         track.addOutput("small", track_small);
         config.addEntity("Track", track);
-        
+
         sdd = new Sdd(config);
     }
-    
+
     @After
-    public void tearDown()
-    throws IOException {
+    public void tearDown() throws IOException {
         sdd.close();
     }
-    
+
     @Test
-    public void testExampleSetUp()
-    throws InvalidTypeException, InvalidAttrException, InvalidDetailException, IOException, InvalidAttrNameException {
+    public void testExampleSetUp() throws InvalidTypeException,
+            InvalidAttrException, InvalidDetailException, IOException,
+            InvalidAttrNameException {
         Map<String, String> ensiferum = new HashMap<String, String>();
         ensiferum.put("name", "Ensiferum");
         Map<String, String> iron = new HashMap<String, String>();
@@ -112,34 +110,41 @@ public class SddMetalconTest {
         laiLaiHei.put("name", "Lai Lai Hei");
         Map<String, String> ahti = new HashMap<String, String>();
         ahti.put("name", "Ahti");
-        
+
         long t1 = System.currentTimeMillis();
-        
+
         sdd.updateEntityAttrs(31L, "Band", ensiferum);
         sdd.updateEntityAttrs(32L, "Record", iron);
         sdd.updateEntityAttrs(33L, "Record", victorySongs);
         sdd.updateEntityAttrs(34L, "Track", intoBattle);
         sdd.updateEntityAttrs(35L, "Track", laiLaiHei);
         sdd.updateEntityAttrs(36L, "Track", ahti);
-        
-        sdd.updateEntityRel(31L, "Band", "records", new long[]{32L, 33L});
+
+        sdd.updateEntityRel(31L, "Band", "records", new long[] {
+            32L, 33L
+        });
         sdd.updateEntityRel(32L, "Record", "band", 31L);
-        sdd.updateEntityRel(32L, "Record", "tracks", new long[]{34L, 35L});
+        sdd.updateEntityRel(32L, "Record", "tracks", new long[] {
+            34L, 35L
+        });
         sdd.updateEntityRel(33L, "Record", "band", 31L);
-        sdd.updateEntityRel(33L, "Record", "tracks", new long[]{36L});
+        sdd.updateEntityRel(33L, "Record", "tracks", new long[] {
+            36L
+        });
         sdd.updateEntityRel(34L, "Track", "band", 31L);
         sdd.updateEntityRel(34L, "Track", "record", 32L);
         sdd.updateEntityRel(35L, "Track", "band", 31L);
         sdd.updateEntityRel(35L, "Track", "record", 32L);
         sdd.updateEntityRel(36L, "Track", "band", 31L);
         sdd.updateEntityRel(35L, "Track", "record", 33L);
-        
+
         sdd.waitUntilQueueEmpty();
-        
+
         long t2 = System.currentTimeMillis();
         System.out.println(t2 - t1);
-        
-        System.out.println(JsonPrettyPrinter.prettyPrintJson(sdd.readEntity(32L, "page")));
+
+        System.out.println(JsonPrettyPrinter.prettyPrintJson(sdd.readEntity(
+                32L, "page")));
     }
-    
+
 }
