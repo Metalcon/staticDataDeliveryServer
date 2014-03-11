@@ -102,6 +102,7 @@ public class Worker implements Runnable {
         try {
             onStateEnd();
         } catch (IOException e) {
+            // TODO: handle this
             throw new RuntimeException();
         }
 
@@ -128,6 +129,7 @@ public class Worker implements Runnable {
                 }
                 break;
             default:
+                // TODO: handle this
                 throw new RuntimeException();
         }
     }

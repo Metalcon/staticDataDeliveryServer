@@ -17,18 +17,20 @@ public class ConfigType {
         }
 
         this.type = type;
-        isArray = false;
-        isPrimitive = false;
 
         if (type.length() >= arraySuffix.length()
                 && type.substring(type.length() - arraySuffix.length()).equals(
                         arraySuffix)) {
             this.type = type.substring(0, type.length() - arraySuffix.length());
             isArray = true;
+        } else {
+            isArray = false;
         }
 
         if (type.equals("String")) {
             isPrimitive = true;
+        } else {
+            isPrimitive = false;
         }
     }
 

@@ -462,6 +462,7 @@ public class Sdd implements Closeable {
             throws InvalidTypeException, InvalidAttrNameException {
         ConfigEntity configEntity = entity.getConfigEntity();
         if (configEntity == null) {
+            // TODO: handle this
             throw new RuntimeException();
         }
         ConfigEntityOutput configEntityOutput = configEntity.getOutput(detail);
