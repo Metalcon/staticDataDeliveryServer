@@ -17,18 +17,17 @@ import de.metalcon.sdd.config.Config;
 public abstract class Servlet extends HttpServlet {
 
     private static final long serialVersionUID = 8820626952496106160L;
-    
+
     protected Config config;
-    
+
     protected Sdd sdd;
-    
-    protected abstract String run(HttpServletRequest request)
-    throws Exception;
-    
+
+    protected abstract String run(HttpServletRequest request) throws Exception;
+
     @Override
-    protected void doGet(HttpServletRequest  request,
-                         HttpServletResponse response)
-    throws IOException {
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
         try {
             JsonResponder.writeJsonResponse(response, run(request));
         } catch (Exception e) {
@@ -37,14 +36,14 @@ public abstract class Servlet extends HttpServlet {
             JsonResponder.writeJsonResponse(response, stackTrace.toString());
         }
     }
-    
+
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        
+
         ServletContext context = getServletContext();
         config = (Config) context.getAttribute("sdd-config");
-        sdd    = (Sdd)    context.getAttribute("sdd");
+        sdd = (Sdd) context.getAttribute("sdd");
     }
-    
+
 }

@@ -3,10 +3,11 @@ package de.metalcon.common;
 /**
  * This class contains methods to format JSON-Strings into a "pretty-printed"
  * more human-readable format.
+ * 
  * @author lukasschmelzeisen
  */
 public class JsonPrettyPrinter {
-    
+
     /**
      * Amount of spaces inserted at each indentation level.
      */
@@ -14,39 +15,46 @@ public class JsonPrettyPrinter {
 
     /**
      * Repeats a `String` a number of `times`.
-     * @param str    The string to be repeated.
-     * @param times  Number of times `str` should be repeated.
-     * @return Returns the repeated string. 
+     * 
+     * @param str
+     *            The string to be repeated.
+     * @param times
+     *            Number of times `str` should be repeated.
+     * @return Returns the repeated string.
      */
     private static String strrepeat(String str, int times) {
-        if (str == null)
+        if (str == null) {
             return null;
-        
-        assert(times >= 0);
-        
+        }
+
+        assert (times >= 0);
+
         String result = "";
         for (int i = 0; i != times; ++i) {
             result += str;
         }
         return result;
     }
-    
+
     /**
      * Formats a JSON-String into a "pretty-printed" more human readable format.
-     * @param json  The JSON-String to be formatted. This needs to be a minimal
-     *              JSON, meaning no whitespace or newlines inside it.
+     * 
+     * @param json
+     *            The JSON-String to be formatted. This needs to be a minimal
+     *            JSON, meaning no whitespace or newlines inside it.
      * @return The formatted JSON-String. Returns null if json was null.
      */
     public static String prettyPrintJson(String json) {
-        if (json == null)
+        if (json == null) {
             return null;
-        
+        }
+
         int indent = 0;
         boolean inString = false;
         boolean inEscape = false;
-        
+
         String result = "";
-        
+
         // We could change this method of iterating over string by using
         // reflection, this would improve performance for strings longer than
         // 500 chars. See:
@@ -61,9 +69,9 @@ public class JsonPrettyPrinter {
                     }
                     break;
             }
-            
+
             result += c;
-            
+
             switch (c) {
                 case '{':
                 case '[':
@@ -72,29 +80,33 @@ public class JsonPrettyPrinter {
                         result += "\n" + strrepeat(" ", indent * tabWidth);
                     }
                     break;
-                   
+
                 case ':':
-                    if (!inString)
+                    if (!inString) {
                         result += " ";
+                    }
                     break;
-                    
+
                 case ',':
-                    if (!inString)
+                    if (!inString) {
                         result += "\n" + strrepeat(" ", indent * tabWidth);
+                    }
                     break;
-                    
+
                 case '"':
-                    if (!inEscape)
+                    if (!inEscape) {
                         inString = !inString;
+                    }
                     break;
             }
-            
-            if (inEscape)
+
+            if (inEscape) {
                 inEscape = false;
-            else if (c == '\\')
+            } else if (c == '\\') {
                 inEscape = true;
+            }
         }
-        
+
         return result;
     }
 

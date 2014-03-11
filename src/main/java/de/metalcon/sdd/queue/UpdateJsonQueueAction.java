@@ -8,32 +8,34 @@ import de.metalcon.sdd.error.InvalidAttrNameException;
 import de.metalcon.sdd.error.InvalidTypeException;
 
 public class UpdateJsonQueueAction extends QueueAction {
-    
+
     private Entity entity;
-    
-    public UpdateJsonQueueAction(Sdd sdd, Entity entity) {
+
+    public UpdateJsonQueueAction(
+            Sdd sdd,
+            Entity entity) {
         super(sdd, entity.getId());
         this.entity = entity;
     }
-    
+
     @Override
-    public void runQueueAction()
-    throws IOException, InvalidTypeException, InvalidAttrNameException {
+    public void runQueueAction() throws IOException, InvalidTypeException,
+            InvalidAttrNameException {
         sdd.actionUpdateJson(entity);
     }
-    
+
     @Override
     public QueueActionType getType() {
         return QueueActionType.updateJsonQueueAction;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 91241;
         int mult = 251;
-        
-        hash = hash*mult + ((Long) id).hashCode();
-        
+
+        hash = hash * mult + ((Long) id).hashCode();
+
         return hash;
     }
 

@@ -19,19 +19,21 @@ public class Queue extends Servlet {
     @Override
     protected String run(HttpServletRequest request) {
         QueueStatus status = sdd.getQueueStatus();
-        
-        List<String> jsonQueue = new LinkedList<String>(); 
-        for (QueueAction action : status.queue)
+
+        List<String> jsonQueue = new LinkedList<String>();
+        for (QueueAction action : status.queue) {
             jsonQueue.add(action.toString());
-        
+        }
+
         List<String> jsonQueueDone = new LinkedList<String>();
-        for (QueueAction action : status.queueDone)
+        for (QueueAction action : status.queueDone) {
             jsonQueueDone.add(action.toString());
-        
+        }
+
         Map<String, Object> json = new HashMap<String, Object>();
-        json.put("queue",     jsonQueue);
+        json.put("queue", jsonQueue);
         json.put("queueDone", jsonQueueDone);
         return JSONValue.toJSONString(json);
     }
-    
+
 }

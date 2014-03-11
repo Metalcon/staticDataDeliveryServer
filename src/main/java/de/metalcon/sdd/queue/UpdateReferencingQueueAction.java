@@ -8,38 +8,40 @@ import de.metalcon.sdd.error.InconsitentTypeException;
 import de.metalcon.sdd.error.InvalidTypeException;
 
 public class UpdateReferencingQueueAction extends QueueAction {
-    
+
     private Entity entity;
-    
+
     private Set<String> modifiedDetails;
-    
-    public UpdateReferencingQueueAction(Sdd sdd, Entity entity,
-                                        Set<String> modifiedDetails) {
+
+    public UpdateReferencingQueueAction(
+            Sdd sdd,
+            Entity entity,
+            Set<String> modifiedDetails) {
         super(sdd, entity.getId());
-        
-        this.entity          = entity;
+
+        this.entity = entity;
         this.modifiedDetails = modifiedDetails;
     }
-    
+
     @Override
-    public void runQueueAction()
-    throws InconsitentTypeException, InvalidTypeException {
+    public void runQueueAction() throws InconsitentTypeException,
+            InvalidTypeException {
         sdd.actionUpdateReferencing(entity, modifiedDetails);
     }
-    
+
     @Override
     public QueueActionType getType() {
         return QueueActionType.updateJsonQueueAction;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 82210;
         int mult = 137;
-        
-        hash = hash*mult + ((Long) id).hashCode();
-        
+
+        hash = hash * mult + ((Long) id).hashCode();
+
         return hash;
     }
-    
+
 }

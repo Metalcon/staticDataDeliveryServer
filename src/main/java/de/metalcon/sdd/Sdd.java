@@ -38,18 +38,18 @@ import de.metalcon.sdd.error.InconsitentTypeException;
 import de.metalcon.sdd.error.InvalidAttrException;
 import de.metalcon.sdd.error.InvalidAttrNameException;
 import de.metalcon.sdd.error.InvalidConfigException;
-import de.metalcon.sdd.error.InvalidReferenceException;
 import de.metalcon.sdd.error.InvalidDetailException;
+import de.metalcon.sdd.error.InvalidReferenceException;
 import de.metalcon.sdd.error.InvalidTypeException;
 import de.metalcon.sdd.queue.QueueAction;
+import de.metalcon.sdd.queue.UpdateGraphEntityQueueAction;
 import de.metalcon.sdd.queue.UpdateGraphRelQueueAction;
 import de.metalcon.sdd.queue.UpdateGraphRelsQueueAction;
-import de.metalcon.sdd.queue.UpdateReferencingQueueAction;
-import de.metalcon.sdd.queue.UpdateGraphEntityQueueAction;
 import de.metalcon.sdd.queue.UpdateJsonQueueAction;
+import de.metalcon.sdd.queue.UpdateReferencingQueueAction;
 
 public class Sdd implements Closeable {
-    
+
     // TODO: implement delete
     // TODO: add validate data option
     // TODO: dont make index lookup for relation
@@ -57,238 +57,268 @@ public class Sdd implements Closeable {
     // TODO: split up entity/relationship transactions
     // TODO: rel with nonexisting entity???
     // TODO: bug that attrs are only update after second reload?
-    
+
     private Config config;
-    
+
     private DB jsonDb;
-    
+
     private WriteBatch jsonDbWriteBatch;
-    
+
     private GraphDatabaseService entityGraph;
-    
+
     private Map<Long, Node> entityGraphIdIndex;
-    
+
     private Transaction entityGraphTransaction;
-    
+
     private BlockingQueue<QueueAction> queue;
-    
+
     private Worker worker;
-    
-    public Sdd(Config config)
-    throws InvalidConfigException, IOException, InvalidAttrNameException {
-        if (config == null)
+
+    public Sdd(
+            Config config) throws InvalidConfigException, IOException,
+            InvalidAttrNameException {
+        if (config == null) {
             throw new IllegalArgumentException("config was null");
-        
+        }
+
         // config
         config.validate();
         this.config = config;
-        
+
         // connect to jsonDb (LevelDB)
         Options options = new Options();
         options.createIfMissing(true);
         try {
-            jsonDb = factory.open(new  File(config.getLeveldbPath()), options);
+            jsonDb = factory.open(new File(config.getLeveldbPath()), options);
         } catch (IOException e) {
             throw new IOException("Couldn't connect to jsonDb (LevelDB)", e);
         }
-        
+
         jsonDbWriteBatch = null;
-        
+
         // connect to entityGraph (Neo4j)
-        entityGraph = new GraphDatabaseFactory().
-                        newEmbeddedDatabase(config.getNeo4jPath());
-        if (entityGraph == null)
+        entityGraph =
+                new GraphDatabaseFactory().newEmbeddedDatabase(config
+                        .getNeo4jPath());
+        if (entityGraph == null) {
             throw new IOException("Couldn't connect to entityGraph (Neo4j)");
+        }
         // load index
         entityGraphIdIndex = new HashMap<Long, Node>();
-        for (Node node : GlobalGraphOperations.at(entityGraph).getAllNodes())
+        for (Node node : GlobalGraphOperations.at(entityGraph).getAllNodes()) {
             if (node.hasProperty("id")) {
                 Long id = (Long) node.getProperty("id");
                 entityGraphIdIndex.put(id, node);
             }
-        
+        }
+
         entityGraphTransaction = null;
-        
+
         // create action queue
         queue = new PriorityBlockingQueue<QueueAction>();
-        
+
         // startup worker thread
         worker = new Worker(this, queue);
         worker.start();
     }
 
     @Override
-    public void close()
-    throws IOException {
+    public void close() throws IOException {
         // close worker thread
         if (worker != null) {
             worker.stop();
             worker.waitForShutdown();
         }
-        
+
         // close entityGraph (Neo4j)
-        if (entityGraph != null)
+        if (entityGraph != null) {
             entityGraph.shutdown();
-        
+        }
+
         // close jsonDb (LevelDB)
-        if (jsonDb != null)
+        if (jsonDb != null) {
             try {
                 jsonDb.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 throw new IOException("Couldn't close jsonDb (LevelDB)", e);
             }
+        }
     }
-    
+
     public String readEntity(long id, String detail)
-    throws InvalidDetailException {
-        if (detail == null)
+            throws InvalidDetailException {
+        if (detail == null) {
             throw new IllegalArgumentException("detail was null");
-        
+        }
+
         // is valid detail?
-        if (!config.isValidDetail(detail))
+        if (!config.isValidDetail(detail)) {
             throw new InvalidDetailException();
-        
+        }
+
         // TODO: is idDetail as string a good idea?
         String idDetail = buildIdDetail(id, detail);
         return asString(jsonDb.get(bytes(idDetail)));
     }
-    
-    public boolean updateEntity(long id, String type, Map<String, String> attrs)
-    throws InvalidTypeException, InvalidAttrException, InvalidAttrNameException {
-        if (type == null)
+
+    public boolean
+        updateEntity(long id, String type, Map<String, String> attrs)
+                throws InvalidTypeException, InvalidAttrException,
+                InvalidAttrNameException {
+        if (type == null) {
             throw new IllegalArgumentException("type was null");
-        if (attrs == null)
+        }
+        if (attrs == null) {
             throw new IllegalArgumentException("attrs was null");
-        
+        }
+
         Entity entity = new Entity(config, id, type);
-        
-        Map<String, String>     primitives = new HashMap<String, String>(); 
-        Map<String, Long>       entityRel  = new HashMap<String, Long>();
+
+        Map<String, String> primitives = new HashMap<String, String>();
+        Map<String, Long> entityRel = new HashMap<String, Long>();
         Map<String, List<Long>> entityRels = new HashMap<String, List<Long>>();
-        
-        for (Map.Entry<String, String> attr: attrs.entrySet()) {
-            String   attrName  = attr.getKey();
-            String   attrValue = attr.getValue();
-            MetaType attrType  = entity.getMetaEntity().getAttr(attrName);
-            
-            if (attrValue == null)
+
+        for (Map.Entry<String, String> attr : attrs.entrySet()) {
+            String attrName = attr.getKey();
+            String attrValue = attr.getValue();
+            MetaType attrType = entity.getMetaEntity().getAttr(attrName);
+
+            if (attrValue == null) {
                 throw new InvalidAttrException();
-            
-            if (attrType.isPrimitive())
+            }
+
+            if (attrType.isPrimitive()) {
                 primitives.put(attrName, attrValue);
-            else if (attrType.isArray()) {
+            } else if (attrType.isArray()) {
                 String[] relsStrings = attrValue.split(config.getIdDelimeter());
                 List<Long> rels = new LinkedList<Long>();
-                for (String relString : relsStrings)
+                for (String relString : relsStrings) {
                     rels.add(Long.parseLong(relString));
+                }
                 entityRels.put(attrName, rels);
-            } else
+            } else {
                 entityRel.put(attrName, Long.parseLong(attrValue));
+            }
         }
-        
+
         boolean worked = updateEntityAttrs(id, type, primitives);
         for (Map.Entry<String, Long> r : entityRel.entrySet()) {
             String attr = r.getKey();
-            long   rel  = r.getValue();
+            long rel = r.getValue();
             worked = worked && updateEntityRel(id, type, attr, rel);
         }
         for (Map.Entry<String, List<Long>> r : entityRels.entrySet()) {
-            String     attr    = r.getKey();
+            String attr = r.getKey();
             List<Long> relList = r.getValue();
-            long[]     rels    = new long[relList.size()];
-            
+            long[] rels = new long[relList.size()];
+
             int i = 0;
-            for (long rel : relList)
+            for (long rel : relList) {
                 rels[i++] = rel;
+            }
             worked = worked && updateEntityRel(id, type, attr, rels);
         }
         return worked;
     }
-    
-    public boolean updateEntityAttrs(long id, String type,
-                                     Map<String, String> attrs)
-    throws InvalidTypeException, InvalidAttrException, InvalidAttrNameException {
-        if (type == null)
+
+    public boolean updateEntityAttrs(
+            long id,
+            String type,
+            Map<String, String> attrs) throws InvalidTypeException,
+            InvalidAttrException, InvalidAttrNameException {
+        if (type == null) {
             throw new IllegalArgumentException("type was null");
-        if (attrs == null)
-            throw new IllegalArgumentException("attrs was null");
-        
-        Entity entity = new Entity(config, id, type);
-        
-        for (Map.Entry<String, String> attr : attrs.entrySet()) {
-            String   attrName  = attr.getKey();
-            String   attrValue = attr.getValue();
-            MetaType attrType  = entity.getMetaEntity().getAttr(attrName);
-            
-            if (!attrType.isPrimitive() || attrValue == null)
-                throw new InvalidAttrException();
         }
-        
+        if (attrs == null) {
+            throw new IllegalArgumentException("attrs was null");
+        }
+
+        Entity entity = new Entity(config, id, type);
+
+        for (Map.Entry<String, String> attr : attrs.entrySet()) {
+            String attrName = attr.getKey();
+            String attrValue = attr.getValue();
+            MetaType attrType = entity.getMetaEntity().getAttr(attrName);
+
+            if (!attrType.isPrimitive() || attrValue == null) {
+                throw new InvalidAttrException();
+            }
+        }
+
         return queueAction(new UpdateGraphEntityQueueAction(this, entity, attrs));
     }
-    
-    public boolean updateEntityRel(long id, String type,
-                                      String attr, long rel)
-    throws InvalidTypeException, InvalidAttrException, InvalidAttrNameException {
-        if (type == null)
+
+    public boolean updateEntityRel(long id, String type, String attr, long rel)
+            throws InvalidTypeException, InvalidAttrException,
+            InvalidAttrNameException {
+        if (type == null) {
             throw new IllegalArgumentException("type was null");
-        if (attr == null)
+        }
+        if (attr == null) {
             throw new IllegalArgumentException("attr was null");
-        
+        }
+
         Entity entity = new Entity(config, id, type);
-        
+
         MetaType attrType = entity.getMetaEntity().getAttr(attr);
-        if (attrType.isPrimitive() || attrType.isArray())
+        if (attrType.isPrimitive() || attrType.isArray()) {
             throw new InvalidAttrException();
-        
-        return queueAction(new UpdateGraphRelQueueAction(this, entity, attr, rel));
+        }
+
+        return queueAction(new UpdateGraphRelQueueAction(this, entity, attr,
+                rel));
     }
-  
-    public boolean updateEntityRel(long id, String type,
-                                      String attr, long[] rel)
-    throws InvalidTypeException, InvalidAttrException, InvalidAttrNameException {
-        if (type == null)
+
+    public boolean
+        updateEntityRel(long id, String type, String attr, long[] rel)
+                throws InvalidTypeException, InvalidAttrException,
+                InvalidAttrNameException {
+        if (type == null) {
             throw new IllegalArgumentException("type was null");
-        if (attr == null)
+        }
+        if (attr == null) {
             throw new IllegalArgumentException("attr was null");
-        
+        }
+
         Entity entity = new Entity(config, id, type);
-        
+
         MetaType attrType = entity.getMetaEntity().getAttr(attr);
-        if (attrType.isPrimitive() || !attrType.isArray() || rel == null)
+        if (attrType.isPrimitive() || !attrType.isArray() || rel == null) {
             throw new InvalidAttrException();
-        
-        return queueAction(new UpdateGraphRelsQueueAction(this, entity, attr, rel));
+        }
+
+        return queueAction(new UpdateGraphRelsQueueAction(this, entity, attr,
+                rel));
     }
-   
+
     public boolean deleteEntity(long id) {
         // TODO: queue
         return false;
     }
-    
+
     public void waitUntilQueueEmpty() throws IOException {
         worker.waitUntilQueueEmpty();
     }
-    
+
     public Worker.QueueStatus getQueueStatus() {
         return worker.getQueueState();
     }
-    
-    /* package */ void startEntityGraphTransaction() {
+
+    /* package */void startEntityGraphTransaction() {
         entityGraphTransaction = entityGraph.beginTx();
     }
-    
-    /* package */ void endEntityGraphTransaction() {
+
+    /* package */void endEntityGraphTransaction() {
         entityGraphTransaction.success();
         entityGraphTransaction.finish();
         entityGraphTransaction = null;
     }
-    
-    /* package */ void startJsonDbTransaction() {
+
+    /* package */void startJsonDbTransaction() {
         jsonDbWriteBatch = jsonDb.createWriteBatch();
     }
-    
-    /* package */ void endJsonDbTransaction() throws IOException {
+
+    /* package */void endJsonDbTransaction() throws IOException {
         try {
             jsonDb.write(jsonDbWriteBatch);
             jsonDbWriteBatch.close();
@@ -296,198 +326,218 @@ public class Sdd implements Closeable {
             throw new IOException("Couldn't close WriteBatch", e);
         }
     }
-    
+
     private boolean queueAction(QueueAction action) {
-        if (queue.contains(action))
+        if (queue.contains(action)) {
             return true;
-        else
+        } else {
             return queue.offer(action);
+        }
     }
-    
+
     private String buildIdDetail(long id, String detail) {
         return id + config.getIdDetailDelimeter() + detail;
     }
-    
+
     private String buildJsonProperty(String detail) {
         return "json-" + detail;
     }
-    
-    public void actionUpdateGraphEntity(Entity entity,
-                                        Map<String, String> attrs)
-    throws InconsitentTypeException {
+
+    public void
+        actionUpdateGraphEntity(Entity entity, Map<String, String> attrs)
+                throws InconsitentTypeException {
         Node node = entityGraphIdIndex.get(entity.getId());
         if (node == null) {
             node = entityGraph.createNode();
-            node.setProperty("id",   entity.getId());
+            node.setProperty("id", entity.getId());
             node.setProperty("type", entity.getType());
             entityGraphIdIndex.put(entity.getId(), node);
         }
         entity.setNode(node);
-        
+
         entity.setAttrs(attrs);
-        
+
         queueAction(new UpdateJsonQueueAction(this, entity));
     }
-    
+
     public void actionUpdateGraphRel(Entity entity, String attr, long rel)
-    throws InconsitentTypeException, InvalidTypeException,
-           InvalidReferenceException, InvalidAttrNameException {
+            throws InconsitentTypeException, InvalidTypeException,
+            InvalidReferenceException, InvalidAttrNameException {
         entity.setNode(entityGraphIdIndex.get(entity.getId()));
-        
+
         boolean exists = false;
         for (Relationship referenceRel : entity.getNode().getRelationships(
                 Direction.OUTGOING, DynamicRelationshipType.withName(attr))) {
             Entity reference = new Entity(config, referenceRel.getEndNode());
-            if (reference.getId() == rel)
+            if (reference.getId() == rel) {
                 exists = true;
-            else
+            } else {
                 referenceRel.delete();
+            }
         }
-        
-        if (!exists)
+
+        if (!exists) {
             generateReference(entity, attr, rel);
-        
+        }
+
         queueAction(new UpdateJsonQueueAction(this, entity));
     }
-    
+
     public void actionUpdateGraphRels(Entity entity, String attr, long[] rels)
-    throws InvalidReferenceException, InconsitentTypeException,
-           InvalidTypeException, InvalidAttrNameException {
+            throws InvalidReferenceException, InconsitentTypeException,
+            InvalidTypeException, InvalidAttrNameException {
         entity.setNode(entityGraphIdIndex.get(entity.getId()));
-        
+
         Set<Long> remainingRels = new HashSet<Long>();
-        for (long rel : rels)
+        for (long rel : rels) {
             remainingRels.add(rel);
-        
+        }
+
         for (Relationship referenceRel : entity.getNode().getRelationships(
                 Direction.OUTGOING, DynamicRelationshipType.withName(attr))) {
             Entity reference = new Entity(config, referenceRel.getEndNode());
-            
-            if (remainingRels.contains(reference.getId()))
+
+            if (remainingRels.contains(reference.getId())) {
                 remainingRels.remove(reference.getId());
-            else
+            } else {
                 referenceRel.delete();
+            }
         }
-        
-        for (long rel : remainingRels)
+
+        for (long rel : remainingRels) {
             generateReference(entity, attr, rel);
-        
+        }
+
         queueAction(new UpdateJsonQueueAction(this, entity));
     }
-    
+
     private void generateReference(Entity entity, String attr, long refrenceId)
-    throws InvalidReferenceException, InvalidTypeException, InvalidAttrNameException, InconsitentTypeException {
+            throws InvalidReferenceException, InvalidTypeException,
+            InvalidAttrNameException, InconsitentTypeException {
         MetaType attrType = entity.getMetaEntity().getAttr(attr);
-        
+
         Node referenceNode = entityGraphIdIndex.get(refrenceId);
-        if (referenceNode == null)
+        if (referenceNode == null) {
             throw new InvalidReferenceException("reference was not found");
-        
+        }
+
         Entity reference = new Entity(config, referenceNode);
-        
-        if (reference.getId() == entity.getId())
+
+        if (reference.getId() == entity.getId()) {
             throw new InvalidReferenceException("cant reference oneself");
-        if (reference.getType() != attrType.getType())
+        }
+        if (reference.getType() != attrType.getType()) {
             throw new InvalidReferenceException("reference was of invalid type");
-        
-        entity.getNode().createRelationshipTo(
-                referenceNode, DynamicRelationshipType.withName(attr));
+        }
+
+        entity.getNode().createRelationshipTo(referenceNode,
+                DynamicRelationshipType.withName(attr));
     }
-    
-    public void actionUpdateJson(Entity entity)
-    throws IOException, InvalidTypeException, InvalidAttrNameException {
+
+    public void actionUpdateJson(Entity entity) throws IOException,
+            InvalidTypeException, InvalidAttrNameException {
         Set<String> modifiedDetails = new HashSet<String>();
-        
+
         for (String detail : config.getDetails()) {
             String json = generateJson(entity, detail);
-            
-            String oldjson = (String) entity.getNode().getProperty(
-                    buildJsonProperty(detail), null);
+
+            String oldjson =
+                    (String) entity.getNode().getProperty(
+                            buildJsonProperty(detail), null);
             if (!json.equals(oldjson)) {
                 modifiedDetails.add(detail);
-                
+
                 entity.getNode().setProperty(buildJsonProperty(detail), json);
-                
+
                 String idDetail = buildIdDetail(entity.getId(), detail);
                 jsonDbWriteBatch.put(bytes(idDetail), bytes(json));
             }
         }
-            
+
         queueAction(new UpdateReferencingQueueAction(this, entity,
-                                                     modifiedDetails));
+                modifiedDetails));
     }
-    
+
     private String generateJson(Entity entity, String detail)
-    throws InvalidTypeException, InvalidAttrNameException {
+            throws InvalidTypeException, InvalidAttrNameException {
         MetaEntity metaEntity = entity.getMetaEntity();
-        if (metaEntity == null)
+        if (metaEntity == null) {
             throw new RuntimeException();
+        }
         MetaEntityOutput metaOutput = metaEntity.getOutput(detail);
-        
+
         Map<String, Object> json = new HashMap<String, Object>();
-        json.put("id",   entity.getId());
+        json.put("id", entity.getId());
         json.put("type", entity.getType());
-        
-        if (metaOutput != null)
+
+        if (metaOutput != null) {
             for (String attr : metaOutput.getOattrs()) {
-                String   attrDetail = metaOutput.getOattr(attr);
-                MetaType attrType   = metaEntity.getAttr(attr);
-                
+                String attrDetail = metaOutput.getOattr(attr);
+                MetaType attrType = metaEntity.getAttr(attr);
+
                 if (attrType.isPrimitive()) {
-                    String attrValue = (String) entity.getNode().getProperty(
-                            attr, null);
-                    if (attrValue == null)
+                    String attrValue =
+                            (String) entity.getNode().getProperty(attr, null);
+                    if (attrValue == null) {
                         json.put(attr, null);
-                    else
+                    } else {
                         json.put(attr, attrValue.toString());
+                    }
                 } else {
                     Iterable<Relationship> referenceRels =
                             entity.getNode().getRelationships(
                                     Direction.OUTGOING,
                                     DynamicRelationshipType.withName(attr));
-                    
+
                     if (attrType.isArray()) {
                         List<JsonString> referenceJsons =
                                 new LinkedList<JsonString>();
                         for (Relationship referenceRel : referenceRels) {
                             Node reference = referenceRel.getEndNode();
-                            referenceJsons.add(new JsonString((String)
-                                    reference.getProperty("json-" + attrDetail,
-                                                           null)));
+                            referenceJsons.add(new JsonString(
+                                    (String) reference.getProperty("json-"
+                                            + attrDetail, null)));
                         }
-                        if (referenceJsons.isEmpty())
+                        if (referenceJsons.isEmpty()) {
                             json.put(attr, null);
-                        else
+                        } else {
                             json.put(attr, referenceJsons);
+                        }
                     } else {
                         if (referenceRels.iterator().hasNext()) {
                             Relationship referenceRel =
                                     referenceRels.iterator().next();
                             Node reference = referenceRel.getEndNode();
-                            json.put(attr, new JsonString((String)
-                                    reference.getProperty("json-" + attrDetail,
-                                                           null)));
-                        } else
+                            json.put(
+                                    attr,
+                                    new JsonString((String) reference
+                                            .getProperty("json-" + attrDetail,
+                                                    null)));
+                        } else {
                             json.put(attr, null);
+                        }
                     }
                 }
             }
-        
+        }
+
         return JSONValue.toJSONString(json);
     }
-    
-    public void actionUpdateReferencing(Entity entity,
-                                         Set<String> modifiedDetails)
-    throws InconsitentTypeException, InvalidTypeException {
-        for (Relationship referencingRel :
-                entity.getNode().getRelationships(Direction.INCOMING)) {
-            Entity referencing = new Entity(config,
-                                            referencingRel.getStartNode());
-            
+
+    public void actionUpdateReferencing(
+            Entity entity,
+            Set<String> modifiedDetails) throws InconsitentTypeException,
+            InvalidTypeException {
+        for (Relationship referencingRel : entity.getNode().getRelationships(
+                Direction.INCOMING)) {
+            Entity referencing =
+                    new Entity(config, referencingRel.getStartNode());
+
             if (referencing.getMetaEntity().dependsOn(entity.getType(),
-                                                      modifiedDetails))
+                    modifiedDetails)) {
                 queueAction(new UpdateJsonQueueAction(this, referencing));
+            }
         }
     }
-    
+
 }

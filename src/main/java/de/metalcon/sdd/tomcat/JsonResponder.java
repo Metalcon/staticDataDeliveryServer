@@ -11,21 +11,24 @@ import org.json.simple.JSONValue;
 import de.metalcon.common.JsonPrettyPrinter;
 
 public class JsonResponder {
-    
+
     final public static boolean prettyPrint = true;
 
-    public static void writeJsonResponse(HttpServletResponse response,
+    public static void writeJsonResponse(
+            HttpServletResponse response,
             Map<String, Object> json) throws IOException {
         writeJsonResponse(response, JSONValue.toJSONString(json));
     }
-    
-    public static void writeJsonResponse(HttpServletResponse response,
+
+    public static void writeJsonResponse(
+            HttpServletResponse response,
             String json) throws IOException {
         response.setContentType("application/json");
-        
-        if (prettyPrint)
+
+        if (prettyPrint) {
             json = JsonPrettyPrinter.prettyPrintJson(json);
-        
+        }
+
         PrintWriter w = null;
         try {
             w = response.getWriter();
@@ -33,8 +36,9 @@ public class JsonResponder {
             w.flush();
             w.close();
         } finally {
-            if (w != null)
+            if (w != null) {
                 w.close();
+            }
         }
     }
 }

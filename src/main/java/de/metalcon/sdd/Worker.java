@@ -9,52 +9,57 @@ import de.metalcon.sdd.queue.QueueAction;
 import de.metalcon.sdd.queue.QueueActionType;
 
 public class Worker implements Runnable {
-    
+
     public class QueueStatus {
+
         public Queue<QueueAction> queue;
+
         public Queue<QueueAction> queueDone;
     }
-    
+
     public static final int graphTransactionCount = 20;
-    
+
     public static final int jsonTransactionCount = 20;
-    
+
     private Sdd sdd;
-    
+
     private Thread thread;
-    
+
     private boolean running;
-    
+
     private boolean stopping;
-    
+
     private boolean busy;
-    
+
     private QueueActionType state;
-    
+
     private int count;
-    
+
     private BlockingQueue<QueueAction> queue;
-    
+
     private Queue<QueueAction> queueDone;
-    
-    public Worker(Sdd sdd, BlockingQueue<QueueAction> queue) {
-        if (queue == null)
+
+    public Worker(
+            Sdd sdd,
+            BlockingQueue<QueueAction> queue) {
+        if (queue == null) {
             throw new IllegalArgumentException("queue was null");
-        
-        this.sdd   = sdd;
-        running    = false;
-        stopping   = false;
-        busy       = false;
-        state      = null;
-        count      = 0;
+        }
+
+        this.sdd = sdd;
+        running = false;
+        stopping = false;
+        busy = false;
+        state = null;
+        count = 0;
         this.queue = queue;
-        queueDone  = new LinkedList<QueueAction>();
+        queueDone = new LinkedList<QueueAction>();
     }
-    
+
     @Override
     public void run() {
         running = true;
-        
+
         try {
             QueueAction queueAction = null;
             while (!stopping) {
@@ -63,27 +68,27 @@ public class Worker implements Runnable {
                     queueAction = queue.poll(); // get frist action or null
                     if (queueAction == null) {
                         onStateEnd();
-                        state       = null;
-                        count       = 0;
+                        state = null;
+                        count = 0;
                         queueAction = queue.take(); // wait for first action
                     }
                     busy = true;
-                    
+
                     QueueActionType newState = queueAction.getType();
                     if (state != newState) {
                         onStateEnd();
                         state = newState;
                         count = 0;
                     }
-                    
+
                     onStateUpdate();
-                    
+
                     queueAction.runQueueAction();
                     queueDone.add(queueAction);
                     ++count;
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw e;
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // An error in a request does not terminate the server.
                     // TODO: somehow log the error.
                     e.printStackTrace();
@@ -93,31 +98,31 @@ public class Worker implements Runnable {
             // stopped by server
             // TODO: somehow store the queue until the server start up again.
         }
-        
+
         try {
             onStateEnd();
         } catch (IOException e) {
             throw new RuntimeException();
         }
-        
-        running  = false;
+
+        running = false;
         stopping = false;
     }
 
     private void onStateUpdate() throws IOException {
         switch (state) {
             case updateGraphQueueAction:
-                if (count == 0)
+                if (count == 0) {
                     onStateStart();
-                else if (count % graphTransactionCount == 0) {
+                } else if (count % graphTransactionCount == 0) {
                     onStateEnd();
                     onStateStart();
                 }
                 break;
             case updateJsonQueueAction:
-                if (count == 0)
+                if (count == 0) {
                     onStateStart();
-                else if (count % jsonTransactionCount == 0) {
+                } else if (count % jsonTransactionCount == 0) {
                     onStateEnd();
                     onStateStart();
                 }
@@ -126,7 +131,7 @@ public class Worker implements Runnable {
                 throw new RuntimeException();
         }
     }
-    
+
     private void onStateStart() throws IOException {
         switch (state) {
             case updateGraphQueueAction:
@@ -138,9 +143,9 @@ public class Worker implements Runnable {
                 break;
         }
     }
-    
+
     private void onStateEnd() throws IOException {
-        if (state != null)
+        if (state != null) {
             switch (state) {
                 case updateGraphQueueAction:
                     sdd.endEntityGraphTransaction();
@@ -150,50 +155,54 @@ public class Worker implements Runnable {
                     sdd.endJsonDbTransaction();
                     break;
             }
+        }
     }
-    
+
     public void start() {
         thread = new Thread(this);
         thread.start();
     }
-    
+
     public void stop() {
         if (running) {
             stopping = true;
             thread.interrupt();
         }
     }
-    
+
     public boolean isIdle() {
         return !busy && queue.isEmpty();
     }
-    
+
     public void waitUntilQueueEmpty() throws IOException {
-        while (!isIdle())
+        while (!isIdle()) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 // stopped
             }
-        
+        }
+
         onStateEnd();
         state = null;
         count = 0;
     }
-    
+
     public void waitForShutdown() {
-        if (stopping)
-            while (running)
+        if (stopping) {
+            while (running) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     // stopped by server
                 }
+            }
+        }
     }
-        
+
     public QueueStatus getQueueState() {
         QueueStatus status = new QueueStatus();
-        status.queue     = queue;
+        status.queue = queue;
         status.queueDone = queueDone;
         return status;
     }

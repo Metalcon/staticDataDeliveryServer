@@ -13,23 +13,23 @@ import java.nio.file.Path;
  * manually. Most likely the directory will be located in /tmp
  */
 public class TempConfig extends Config {
-    
+
     /**
-     * @throws IOException  If no temporary directory could be created.
+     * @throws IOException
+     *             If no temporary directory could be created.
      */
     public TempConfig() throws IOException {
         super();
-        
+
         Path tmpDir = Files.createTempDirectory("sddTest");
-        
+
         Path leveldb = tmpDir.resolve("leveldb");
         leveldb.toFile().mkdir();
         setLeveldbPath(leveldb.toString());
-        
-        
+
         Path neo4j = tmpDir.resolve("neo4j");
         neo4j.toFile().mkdir();
         setNeo4jPath(neo4j.toString());
     }
-    
+
 }
