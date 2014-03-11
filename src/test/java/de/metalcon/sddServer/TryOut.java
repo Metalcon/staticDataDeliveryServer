@@ -5,17 +5,11 @@ import static org.fusesource.leveldbjni.JniDBFactory.factory;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-
-import de.metalcon.common.Muid;
 
 // import com.mongodb.BasicDBObject;
 // import com.mongodb.DB;
@@ -110,48 +104,47 @@ public class TryOut {
         neo4j.shutdown();
     }
 
-    @SuppressWarnings("deprecation")
     public static void t5() {
-        Map<Muid, Node> muidIndex = new HashMap<Muid, Node>(10 * 1000 * 1000);
-
-        GraphDatabaseService graphDb =
-                new GraphDatabaseFactory()
-                        .newEmbeddedDatabase("/usr/share/sdd/neo4j");
-
-        //        Index<Node> index = neo4j.index().forNodes("muidIndex");
-
-        long t = System.currentTimeMillis();
-
-        Transaction tx = graphDb.beginTx();
-        try {
-            int i = 0;
-            for (Node m : graphDb.getAllNodes()) {
-                //                m.delete();
-                //            }
-
-                //            for (int i = 0; i != 10 * 1000 * 1000; ++i) {
-                //                Node n = neo4j.createNode();
-                //                n.setProperty("muid", i);
-                muidIndex.put(new Muid("" + i), m);
-
-                if (i % 10000 == 0) {
-                    System.out.print(i + ":");
-                    System.out.println(Runtime.getRuntime().totalMemory());
-
-                    //                    tx.success();
-                    //                    tx.finish();
-                    //                    tx = neo4j.beginTx();
-                }
-                ++i;
-            }
-
-            tx.finish();
-        } finally {
-        }
-
-        System.out.println(System.currentTimeMillis() - t);
-
-        graphDb.shutdown();
+        //        Map<Muid, Node> muidIndex = new HashMap<Muid, Node>(10 * 1000 * 1000);
+        //
+        //        GraphDatabaseService graphDb =
+        //                new GraphDatabaseFactory()
+        //                        .newEmbeddedDatabase("/usr/share/sdd/neo4j");
+        //
+        //        //        Index<Node> index = neo4j.index().forNodes("muidIndex");
+        //
+        //        long t = System.currentTimeMillis();
+        //
+        //        Transaction tx = graphDb.beginTx();
+        //        try {
+        //            int i = 0;
+        //            for (Node m : graphDb.getAllNodes()) {
+        //                //                m.delete();
+        //                //            }
+        //
+        //                //            for (int i = 0; i != 10 * 1000 * 1000; ++i) {
+        //                //                Node n = neo4j.createNode();
+        //                //                n.setProperty("muid", i);
+        //                muidIndex.put(new Muid("" + i), m);
+        //
+        //                if (i % 10000 == 0) {
+        //                    System.out.print(i + ":");
+        //                    System.out.println(Runtime.getRuntime().totalMemory());
+        //
+        //                    //                    tx.success();
+        //                    //                    tx.finish();
+        //                    //                    tx = neo4j.beginTx();
+        //                }
+        //                ++i;
+        //            }
+        //
+        //            tx.finish();
+        //        } finally {
+        //        }
+        //
+        //        System.out.println(System.currentTimeMillis() - t);
+        //
+        //        graphDb.shutdown();
     }
 
     public static void t6() {
