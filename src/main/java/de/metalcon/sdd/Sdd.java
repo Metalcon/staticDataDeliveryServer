@@ -34,13 +34,12 @@ import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
 import de.metalcon.sdd.config.ConfigType;
-import de.metalcon.sdd.error.InconsitentTypeException;
-import de.metalcon.sdd.error.InvalidAttrException;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
-import de.metalcon.sdd.error.InvalidDetailException;
-import de.metalcon.sdd.error.InvalidReferenceException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InconsitentTypeException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidDetailException;
+import de.metalcon.sdd.exception.InvalidReferenceException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 import de.metalcon.sdd.queue.QueueAction;
 import de.metalcon.sdd.queue.UpdateGraphEntityQueueAction;
 import de.metalcon.sdd.queue.UpdateGraphRelQueueAction;
@@ -75,8 +74,7 @@ public class Sdd implements Closeable {
     private Worker worker;
 
     public Sdd(
-            Config config) throws InvalidConfigException, IOException,
-            InvalidAttrNameException {
+            Config config) throws InvalidConfigException, IOException {
         if (config == null) {
             throw new IllegalArgumentException("config was null");
         }
@@ -163,8 +161,7 @@ public class Sdd implements Closeable {
 
     public boolean
         updateEntity(long id, String type, Map<String, String> attrs)
-                throws InvalidTypeException, InvalidAttrException,
-                InvalidAttrNameException {
+                throws InvalidTypeException, InvalidAttrException {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
         }
@@ -184,13 +181,14 @@ public class Sdd implements Closeable {
             ConfigType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (attrValue == null) {
-                throw new InvalidAttrException();
+                throw new InvalidAttrException("No attr with that name: \""
+                        + attrName + "\".");
             }
 
             if (attrType.isPrimitive()) {
                 primitives.put(attrName, attrValue);
             } else if (attrType.isArray()) {
-                String[] relsStrings = attrValue.split(config.getIdDelimeter());
+                String[] relsStrings = attrValue.split(config.getIdDelimiter());
                 List<Long> rels = new LinkedList<Long>();
                 for (String relString : relsStrings) {
                     rels.add(Long.parseLong(relString));
@@ -225,7 +223,7 @@ public class Sdd implements Closeable {
             long id,
             String type,
             Map<String, String> attrs) throws InvalidTypeException,
-            InvalidAttrException, InvalidAttrNameException {
+            InvalidAttrException {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
         }
@@ -241,7 +239,7 @@ public class Sdd implements Closeable {
             ConfigType attrType = entity.getConfigEntity().getAttr(attrName);
 
             if (!attrType.isPrimitive() || attrValue == null) {
-                throw new InvalidAttrException();
+                throw new InvalidAttrException("TODO: useful error");
             }
         }
 
@@ -249,8 +247,7 @@ public class Sdd implements Closeable {
     }
 
     public boolean updateEntityRel(long id, String type, String attr, long rel)
-            throws InvalidTypeException, InvalidAttrException,
-            InvalidAttrNameException {
+            throws InvalidTypeException, InvalidAttrException {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
         }
@@ -262,7 +259,7 @@ public class Sdd implements Closeable {
 
         ConfigType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || attrType.isArray()) {
-            throw new InvalidAttrException();
+            throw new InvalidAttrException("TODO: useful error");
         }
 
         return queueAction(new UpdateGraphRelQueueAction(this, entity, attr,
@@ -271,8 +268,7 @@ public class Sdd implements Closeable {
 
     public boolean
         updateEntityRel(long id, String type, String attr, long[] rel)
-                throws InvalidTypeException, InvalidAttrException,
-                InvalidAttrNameException {
+                throws InvalidTypeException, InvalidAttrException {
         if (type == null) {
             throw new IllegalArgumentException("type was null");
         }
@@ -284,7 +280,7 @@ public class Sdd implements Closeable {
 
         ConfigType attrType = entity.getConfigEntity().getAttr(attr);
         if (attrType.isPrimitive() || !attrType.isArray() || rel == null) {
-            throw new InvalidAttrException();
+            throw new InvalidAttrException("TODO: useful error");
         }
 
         return queueAction(new UpdateGraphRelsQueueAction(this, entity, attr,
@@ -336,7 +332,7 @@ public class Sdd implements Closeable {
     }
 
     private String buildIdDetail(long id, String detail) {
-        return id + config.getIdDetailDelimeter() + detail;
+        return id + config.getIdDetailDelimiter() + detail;
     }
 
     private String buildJsonProperty(String detail) {
@@ -362,7 +358,7 @@ public class Sdd implements Closeable {
 
     public void actionUpdateGraphRel(Entity entity, String attr, long rel)
             throws InconsitentTypeException, InvalidTypeException,
-            InvalidReferenceException, InvalidAttrNameException {
+            InvalidAttrException, InvalidReferenceException {
         entity.setNode(entityGraphIdIndex.get(entity.getId()));
 
         boolean exists = false;
@@ -384,8 +380,8 @@ public class Sdd implements Closeable {
     }
 
     public void actionUpdateGraphRels(Entity entity, String attr, long[] rels)
-            throws InvalidReferenceException, InconsitentTypeException,
-            InvalidTypeException, InvalidAttrNameException {
+            throws InconsitentTypeException, InvalidTypeException,
+            InvalidAttrException, InvalidReferenceException {
         entity.setNode(entityGraphIdIndex.get(entity.getId()));
 
         Set<Long> remainingRels = new HashSet<Long>();
@@ -412,8 +408,8 @@ public class Sdd implements Closeable {
     }
 
     private void generateReference(Entity entity, String attr, long refrenceId)
-            throws InvalidReferenceException, InvalidTypeException,
-            InvalidAttrNameException, InconsitentTypeException {
+            throws InvalidAttrException, InvalidTypeException,
+            InvalidReferenceException, InconsitentTypeException {
         ConfigType attrType = entity.getConfigEntity().getAttr(attr);
 
         Node referenceNode = entityGraphIdIndex.get(refrenceId);
@@ -434,8 +430,8 @@ public class Sdd implements Closeable {
                 DynamicRelationshipType.withName(attr));
     }
 
-    public void actionUpdateJson(Entity entity) throws IOException,
-            InvalidTypeException, InvalidAttrNameException {
+    public void actionUpdateJson(Entity entity) throws InvalidTypeException,
+            InvalidAttrException {
         Set<String> modifiedDetails = new HashSet<String>();
 
         for (String detail : config.getDetails()) {
@@ -459,7 +455,7 @@ public class Sdd implements Closeable {
     }
 
     private String generateJson(Entity entity, String detail)
-            throws InvalidTypeException, InvalidAttrNameException {
+            throws InvalidTypeException, InvalidAttrException {
         ConfigEntity configEntity = entity.getConfigEntity();
         if (configEntity == null) {
             // TODO: handle this

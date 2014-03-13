@@ -17,6 +17,7 @@ public class TempConfig extends Config {
     /**
      * @throws IOException
      *             If no temporary directory could be created.
+     * @throws PathNotSetException
      */
     public TempConfig() throws IOException {
         super();

@@ -18,19 +18,17 @@ import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
 import de.metalcon.sdd.config.ConfigType;
 import de.metalcon.sdd.config.TempConfig;
-import de.metalcon.sdd.error.InvalidAttrException;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
-import de.metalcon.sdd.error.InvalidDetailException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidDetailException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class SddTest {
 
     private Sdd sdd;
 
     @Before
-    public void setUp() throws IOException, InvalidConfigException,
-            InvalidAttrNameException {
+    public void setUp() throws IOException, InvalidConfigException {
         Config config = new TempConfig();
 
         config.addDetail("detail0");
@@ -111,8 +109,7 @@ public class SddTest {
     }
 
     @Test
-    public void testUpdateInvalidType() throws InvalidAttrException,
-            InvalidAttrNameException {
+    public void testUpdateInvalidType() throws InvalidAttrException {
         try {
             sdd.updateEntityAttrs(1234L, "", new HashMap<String, String>());
             fail("invalid type wasn't caught");
@@ -121,9 +118,8 @@ public class SddTest {
     }
 
     @Test
-    public void testCreateRead() throws InvalidDetailException,
-            InvalidTypeException, InvalidAttrException, IOException,
-            InvalidAttrNameException {
+    public void testCreateRead() throws InvalidTypeException,
+            InvalidAttrException, IOException, InvalidDetailException {
         Map<String, String> attrs = new HashMap<String, String>();
         attrs.put("attr0", "YOLO");
         sdd.updateEntityAttrs(1L, "entity0", attrs);
@@ -133,8 +129,7 @@ public class SddTest {
 
     @Test
     public void testCreateCrossReference() throws InvalidTypeException,
-            InvalidAttrException, InvalidDetailException, IOException,
-            InvalidAttrNameException {
+            InvalidAttrException, IOException, InvalidDetailException {
         Map<String, String> cross1 = new HashMap<String, String>();
         cross1.put("title", "foo");
         Map<String, String> cross1n = new HashMap<String, String>();

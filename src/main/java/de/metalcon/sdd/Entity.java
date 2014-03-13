@@ -6,8 +6,8 @@ import org.neo4j.graphdb.Node;
 
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
-import de.metalcon.sdd.error.InconsitentTypeException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InconsitentTypeException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class Entity {
 

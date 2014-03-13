@@ -13,19 +13,17 @@ import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
 import de.metalcon.sdd.config.TempConfig;
-import de.metalcon.sdd.error.InvalidAttrException;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
-import de.metalcon.sdd.error.InvalidDetailException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidDetailException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class SddMetalconTest {
 
     private Sdd sdd;
 
     @Before
-    public void setUp() throws IOException, InvalidAttrNameException,
-            InvalidConfigException {
+    public void setUp() throws IOException, InvalidConfigException {
         Config config = new TempConfig();
 
         config.addDetail("page");
@@ -96,8 +94,7 @@ public class SddMetalconTest {
 
     @Test
     public void testExampleSetUp() throws InvalidTypeException,
-            InvalidAttrException, InvalidDetailException, IOException,
-            InvalidAttrNameException {
+            InvalidAttrException, IOException, InvalidDetailException {
         Map<String, String> ensiferum = new HashMap<String, String>();
         ensiferum.put("name", "Ensiferum");
         Map<String, String> iron = new HashMap<String, String>();

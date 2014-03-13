@@ -5,9 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import de.metalcon.sdd.error.InvalidAttrException;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class Update extends Servlet {
 
@@ -15,8 +14,7 @@ public class Update extends Servlet {
 
     @Override
     protected String run(HttpServletRequest request)
-            throws InvalidTypeException, InvalidAttrException,
-            InvalidAttrNameException {
+            throws InvalidTypeException, InvalidAttrException {
         Map<String, String[]> params = request.getParameterMap();
 
         long id = 0;

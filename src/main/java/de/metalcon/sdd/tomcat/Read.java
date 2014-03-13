@@ -2,7 +2,7 @@ package de.metalcon.sdd.tomcat;
 
 import javax.servlet.http.HttpServletRequest;
 
-import de.metalcon.sdd.error.InvalidDetailException;
+import de.metalcon.sdd.exception.InvalidDetailException;
 
 public class Read extends Servlet {
 
@@ -16,7 +16,7 @@ public class Read extends Servlet {
             throw new RuntimeException("no query");
         }
 
-        String[] querySplit = query.split(config.getIdDetailDelimeter(), 2);
+        String[] querySplit = query.split(config.getIdDetailDelimiter(), 2);
         if (querySplit.length != 2) {
             throw new RuntimeException("illegal query format");
         }

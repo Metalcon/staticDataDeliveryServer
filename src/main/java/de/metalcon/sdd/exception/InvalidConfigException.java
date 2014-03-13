@@ -1,5 +1,8 @@
-package de.metalcon.sdd.error;
+package de.metalcon.sdd.exception;
 
+/**
+ * Thrown when an Exception related to invalid configuration occurs.
+ */
 public class InvalidConfigException extends Exception {
 
     private static final long serialVersionUID = 8829689568298152661L;
@@ -7,6 +10,11 @@ public class InvalidConfigException extends Exception {
     public InvalidConfigException(
             String message) {
         super(message);
+    }
+
+    public InvalidConfigException(
+            Throwable cause) {
+        super(cause);
     }
 
     public InvalidConfigException(

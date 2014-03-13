@@ -4,8 +4,8 @@ import java.util.Map;
 
 import de.metalcon.sdd.Entity;
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.error.InconsitentTypeException;
-import de.metalcon.sdd.error.InvalidReferenceException;
+import de.metalcon.sdd.exception.InconsitentTypeException;
+import de.metalcon.sdd.exception.InvalidReferenceException;
 
 public class UpdateGraphEntityQueueAction extends QueueAction {
 

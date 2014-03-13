@@ -4,8 +4,8 @@ import java.util.Set;
 
 import de.metalcon.sdd.Entity;
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.error.InconsitentTypeException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InconsitentTypeException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class UpdateReferencingQueueAction extends QueueAction {
 

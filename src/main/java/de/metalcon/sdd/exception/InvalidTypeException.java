@@ -1,4 +1,4 @@
-package de.metalcon.sdd.error;
+package de.metalcon.sdd.exception;
 
 public class InvalidTypeException extends Exception {
 

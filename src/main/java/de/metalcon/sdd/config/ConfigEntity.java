@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import de.metalcon.sdd.error.InvalidAttrNameException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class ConfigEntity {
 
@@ -22,10 +23,11 @@ public class ConfigEntity {
         return Collections.unmodifiableSet(attrs.keySet());
     }
 
-    public ConfigType getAttr(String name) throws InvalidAttrNameException {
+    public ConfigType getAttr(String name) throws InvalidAttrException {
         ConfigType attr = attrs.get(name);
         if (attr == null) {
-            throw new InvalidAttrNameException();
+            throw new InvalidAttrException("No attr with that name: \"" + name
+                    + "\".");
         }
         return attr;
     }
@@ -34,16 +36,16 @@ public class ConfigEntity {
         return attrs.containsKey(name);
     }
 
-    public void addAttr(String name, String type)
-            throws InvalidAttrNameException {
+    public void addAttr(String name, String type) throws InvalidConfigException {
         addAttr(name, new ConfigType(type));
     }
 
     public void addAttr(String name, ConfigType type)
-            throws InvalidAttrNameException {
+            throws InvalidConfigException {
         if (name.equals("id") || name.equals("type")
                 || name.startsWith("json-")) {
-            throw new InvalidAttrNameException();
+            throw new InvalidConfigException("invalid attr type name \""
+                    + type.getType() + "\"");
         }
         attrs.put(name, type);
     }

@@ -13,25 +13,26 @@ import org.junit.Test;
 
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.FileConfig;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class FileConfigTest {
 
     private Config config;
 
     @Before
-    public void setUp() throws InvalidAttrNameException {
-        config = new FileConfig(Paths.get("test/fileConfigTest.xml"));
+    public void setUp() throws InvalidConfigException {
+        config =
+                new FileConfig(
+                        Paths.get("src/test/resources/fileConfigTest.xml"));
     }
 
     @Test
-    public void testLeveldbPath() {
+    public void testLeveldbPath() throws InvalidConfigException {
         assertEquals("leveldbpath", config.getLeveldbPath());
     }
 
     @Test
-    public void testNeo4jPath() {
+    public void testNeo4jPath() throws InvalidConfigException {
         assertEquals("neo4jpath", config.getNeo4jPath());
     }
 
@@ -52,8 +53,7 @@ public class FileConfigTest {
     }
 
     @Test
-    public void testValidate() throws InvalidConfigException,
-            InvalidAttrNameException {
+    public void testValidate() throws InvalidConfigException {
         config.validate();
     }
 

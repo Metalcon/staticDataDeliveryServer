@@ -12,21 +12,20 @@ import org.junit.Test;
 import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.FileConfig;
-import de.metalcon.sdd.error.InvalidAttrException;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
-import de.metalcon.sdd.error.InvalidDetailException;
-import de.metalcon.sdd.error.InvalidTypeException;
+import de.metalcon.sdd.exception.InvalidAttrException;
+import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidDetailException;
+import de.metalcon.sdd.exception.InvalidTypeException;
 
 public class SddMetalconPersistentTest {
 
     private Sdd sdd;
 
     @Before
-    public void setUp() throws InvalidAttrNameException,
-            InvalidConfigException, IOException {
+    public void setUp() throws InvalidConfigException, IOException {
         Config config =
-                new FileConfig(Paths.get("test/metalconPersistentConfig.xml"));
+                new FileConfig(
+                        Paths.get("src/test/resources/persistentConfig.xml"));
         sdd = new Sdd(config);
     }
 
@@ -37,8 +36,7 @@ public class SddMetalconPersistentTest {
 
     @Test
     public void testExampleSetUp() throws InvalidTypeException,
-            InvalidAttrException, InvalidDetailException, IOException,
-            InvalidAttrNameException {
+            InvalidAttrException, IOException, InvalidDetailException {
         int run = 1;
 
         if (run == 1) {

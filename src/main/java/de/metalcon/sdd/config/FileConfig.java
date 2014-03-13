@@ -12,18 +12,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import de.metalcon.sdd.error.InvalidAttrNameException;
+import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class FileConfig extends Config {
 
     public FileConfig(
-            Path configPath) throws InvalidAttrNameException {
+            Path configPath) throws InvalidConfigException {
         super();
 
         xmlLoad(configPath);
     }
 
-    private void xmlLoad(Path configPath) throws InvalidAttrNameException {
+    private void xmlLoad(Path configPath) throws InvalidConfigException {
         Document domDoc = null;
         try {
             domDoc =
@@ -104,7 +104,7 @@ public class FileConfig extends Config {
     }
 
     private void xmlLoadEntities(Element domEntities)
-            throws InvalidAttrNameException {
+            throws InvalidConfigException {
         for (Node domNode = domEntities.getFirstChild(); domNode != null; domNode =
                 domNode.getNextSibling()) {
             if (domNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -113,8 +113,7 @@ public class FileConfig extends Config {
         }
     }
 
-    private void xmlLoadEntity(Element domEntity)
-            throws InvalidAttrNameException {
+    private void xmlLoadEntity(Element domEntity) throws InvalidConfigException {
         xmlAssertNodeName(domEntity, "entity");
         xmlAssertHasAttribute(domEntity, "type");
 
@@ -151,7 +150,7 @@ public class FileConfig extends Config {
     }
 
     private void xmlLoadEntityAttr(ConfigEntity entity, Element domAttr)
-            throws InvalidAttrNameException {
+            throws InvalidConfigException {
         xmlAssertNodeName(domAttr, "attr");
         xmlAssertHasAttribute(domAttr, "name");
         xmlAssertHasAttribute(domAttr, "type");

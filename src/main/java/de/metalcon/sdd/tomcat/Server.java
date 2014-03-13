@@ -11,8 +11,7 @@ import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
 import de.metalcon.sdd.config.TempConfig;
-import de.metalcon.sdd.error.InvalidAttrNameException;
-import de.metalcon.sdd.error.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class Server implements ServletContextListener {
 
@@ -126,8 +125,7 @@ public class Server implements ServletContextListener {
             //            } catch (Exception e) {
             //                e.printStackTrace();
             //            }
-        } catch (IOException | InvalidConfigException
-                | InvalidAttrNameException e) {
+        } catch (IOException | InvalidConfigException e) {
             // TODO: log
             e.printStackTrace();
         }
