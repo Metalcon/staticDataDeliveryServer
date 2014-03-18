@@ -26,13 +26,14 @@ public abstract class Config {
 
     /**
      * The string used to separate multiple IDs from each other.
-     * Defaults to `,`.
+     * Defaults to <code>,</code>.
      */
     private String idDelimiter = ",";
 
     /**
-     * The string used in `id:detail` pairs used to separate id from detail.
-     * Defaults to `:`.
+     * The string used in <code>id:detail</code> pairs used to separate id from
+     * detail.
+     * Defaults to <code>:</code>.
      */
     private String idDetailDelimiter = ":";
 
@@ -111,8 +112,9 @@ public abstract class Config {
     }
 
     /**
-     * @return The string used in `id:detail` pairs used to separate id from
-     *         detail. Defaults to `:`.
+     * @return The string used in <code>id:detail</code> pairs used to separate
+     *         id from
+     *         detail. Defaults to <code>:</code>.
      */
     public String getIdDetailDelimiter() {
         return idDetailDelimiter;
@@ -130,7 +132,8 @@ public abstract class Config {
      * 
      * @param detail
      *            The detail to be checked.
-     * @return `True` if detail is set in config. `False` otherwise.
+     * @return <code>True</code> if detail is set in config. <code>False</code>
+     *         otherwise.
      */
     public boolean isValidDetail(String detail) {
         return details.contains(detail);
@@ -168,7 +171,8 @@ public abstract class Config {
      * 
      * @param type
      *            The type to be checked.
-     * @return `True` if Entity type is set in config. `False` otherwise.
+     * @return <code>True</code> if Entity type is set in config.
+     *         <code>False</code> otherwise.
      */
     public boolean isValidEntityType(String type) {
         return entities.containsKey(type);
@@ -180,7 +184,7 @@ public abstract class Config {
      * @param type
      *            The type of the entity to be added.
      * @param entity
-     *            The ConfigEntity instace to be added.
+     *            The ConfigEntity instance to be added.
      */
     public void addEntity(String type, ConfigEntity entity) {
         entities.put(type, entity);
@@ -194,8 +198,8 @@ public abstract class Config {
      * These cases are checked:
      * <ul>
      * <li>Do all Entity attributes have a valid name? (must not start with
-     * `id`, `type` or `json-`)</li>
-     * <li>Do all non primitve Entity attributes reference existing Entity
+     * <code>id</code>, <code>type</code> or <code>json-</code>)</li>
+     * <li>Do all non primitive Entity attributes reference existing Entity
      * types?</li>
      * <li>Are all defined output details for entities actually valid details?</li>
      * <li>Do all primitive output attributes have no output detail set?</li>

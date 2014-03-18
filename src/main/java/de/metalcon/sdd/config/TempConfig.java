@@ -10,14 +10,16 @@ import java.nio.file.Path;
  * Primary use of this class is for testing.
  * 
  * Temporary directories are not deleted on shutdown. You will have to do that
- * manually. Most likely the directory will be located in /tmp
+ * manually. Most likely the directory will be located in <code>/tmp</code>.
  */
 public class TempConfig extends Config {
 
     /**
+     * Constructs a new empty Configuration with only LevelDbPath and Neo4jPath
+     * set to temporary directories.
+     * 
      * @throws IOException
      *             If no temporary directory could be created.
-     * @throws PathNotSetException
      */
     public TempConfig() throws IOException {
         super();

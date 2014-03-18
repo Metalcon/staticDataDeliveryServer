@@ -14,8 +14,19 @@ import org.xml.sax.SAXException;
 
 import de.metalcon.sdd.exception.InvalidConfigException;
 
+/**
+ * Class that can parse XML file to Config.
+ */
 public class FileConfig extends Config {
 
+    /**
+     * Construct a new Config.
+     * 
+     * @param configPath
+     *            Path to the XML file containing configuration.
+     * @throws InvalidConfigException
+     *             If the file contains invalid config.
+     */
     public FileConfig(
             Path configPath) throws InvalidConfigException {
         super();

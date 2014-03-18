@@ -14,12 +14,12 @@ public class JsonPrettyPrinter {
     final public static int tabWidth = 4;
 
     /**
-     * Repeats a `String` a number of `times`.
+     * Repeats a <code>String</code> a number of <code>times</code>.
      * 
      * @param str
      *            The string to be repeated.
      * @param times
-     *            Number of times `str` should be repeated.
+     *            Number of times <code>str</code> should be repeated.
      * @return Returns the repeated string.
      */
     private static String strrepeat(String str, int times) {
