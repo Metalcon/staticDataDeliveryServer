@@ -422,7 +422,7 @@ public class Sdd implements Closeable {
         if (reference.getId() == entity.getId()) {
             throw new InvalidReferenceException("cant reference oneself");
         }
-        if (reference.getType() != attrType.getType()) {
+        if (!reference.getType().equals(attrType.getType())) {
             throw new InvalidReferenceException("reference was of invalid type");
         }
 
