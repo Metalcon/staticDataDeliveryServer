@@ -30,12 +30,12 @@ public class ConfigEntityOutput {
     }
 
     /**
-     * Get a specific output attribute by name from this output.
+     * Get the output detail for a specific output attribute.
      * 
      * @param attr
      *            The output attribute's name.
-     * @return The requested output attribute, or <code>null</code> if no output
-     *         attribute with that name exists.
+     * @return The requested output attribute's detail, or <code>null</code> if
+     *         no output attribute with that name exists.
      */
     public String getOattr(String attr) {
         return oattrs.get(attr);
