@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>de.metalcon</groupId>
+    <artifactId>tomcat-pom</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>sddMyAdmin</artifactId>
+  <name>sddMyAdmin</name>
+  <version>1.0.0-BUILD-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <repositories>
+    <repository>
+      <id>metalcon-depend</id>
+      <url>http://metalcon2.physik.uni-mainz.de:8080/mvn/</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <tomcat.deploy-plugin.path>/sddMyAdmin</tomcat.deploy-plugin.path>
+    
+    <!-- StaticDataDelivery -->
+    <sdd.version>1.0.0-BUILD-SNAPSHOT</sdd.version>
+
+    <!-- Servlet -->
+    <servlet.version>3.1.0</servlet.version>
+  </properties>
+  
+  <dependencies>
+    <!-- StaticDataDelivery -->
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>staticDataDelivery</artifactId>
+      <version>${sdd.version}</version>
+    </dependency>
+    
+    <!-- Servlet -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  
+</project>
