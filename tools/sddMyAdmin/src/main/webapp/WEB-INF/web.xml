@@ -11,28 +11,40 @@
   </listener>
   
   <servlet>
+    <servlet-name>fileServlet</servlet-name>
+    <servlet-class>de.metalcon.sdd.admin.FileServlet</servlet-class>
+    <init-param>
+      <param-name>basePath</param-name>
+      <param-value>/resources</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
     <servlet-name>Index</servlet-name>
     <servlet-class>de.metalcon.sdd.admin.Index</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Db</servlet-name>
+    <servlet-class>de.metalcon.sdd.admin.Db</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Config</servlet-name>
     <servlet-class>de.metalcon.sdd.admin.Config</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>Queue</servlet-name>
-    <servlet-class>de.metalcon.sdd.admin.Queue</servlet-class>
-  </servlet>
   
+  <servlet-mapping>
+    <servlet-name>fileServlet</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Index</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Config</servlet-name>
-    <url-pattern>/config</url-pattern>
+    <servlet-name>Db</servlet-name>
+    <url-pattern>/db</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Queue</servlet-name>
-    <url-pattern>/queue</url-pattern>
+    <servlet-name>Config</servlet-name>
+    <url-pattern>/config</url-pattern>
   </servlet-mapping>
 </web-app>

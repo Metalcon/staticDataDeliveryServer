@@ -14,7 +14,6 @@ public class Index extends Servlet {
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         StringWriter c = new StringWriter();
-        c.append("<h2>Index</h2>\n");
 
         StringWriter w = new StringWriter();
         w.append(printHtml(printHead(null), printBody(c)).toString());

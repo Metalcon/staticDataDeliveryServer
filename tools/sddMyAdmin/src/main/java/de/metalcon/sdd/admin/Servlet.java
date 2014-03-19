@@ -48,6 +48,7 @@ public abstract class Servlet extends HttpServlet {
             w.append(" - " + title);
         }
         w.append("</title>\n");
+        w.append("    <link rel=\"stylesheet\" type=\"text/css\" href=\"resources/css/page.css\"/>\n");
         w.append("  </head>\n");
         return w;
     }
@@ -56,9 +57,9 @@ public abstract class Servlet extends HttpServlet {
         StringWriter w = new StringWriter();
         w.append("  <body>\n");
         w.append("    <h1><a href=\".\">SddMyAdmin</a></h1>\n");
-        w.append("    <ul>\n");
+        w.append("    <ul id=\"nav\">\n");
         w.append("      <li><a href=\"config\">Config</a></li>\n");
-        w.append("      <li><a href=\"queue\">Queue</a></li>\n");
+        w.append("      <li><a href=\"db\">Db</a></li>\n");
         w.append("    </ul>\n");
         w.append(content.toString());
         w.append("  </body>\n");
