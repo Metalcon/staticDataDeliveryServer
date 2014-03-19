@@ -87,7 +87,7 @@ public class Db extends Servlet {
         if (!showPrettyPrinted) {
             c.append(" checked=\"checked\"");
         }
-        c.append(" /> Don't Pretty Printed</li>\n");
+        c.append(" /> Don't Pretty Print</li>\n");
         c.append("  </ul>\n");
         c.append("  <button type=\"submit\">Filter</button>\n");
         c.append("</form>");
