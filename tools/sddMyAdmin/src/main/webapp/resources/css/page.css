@@ -84,6 +84,16 @@ table {
     padding: .2em;
     padding-left: 1em;
     width: 100%;
+    border-spacing: 0;
+}
+
+td {
+    padding: .1em;
+    vertical-align: top;
+}
+
+tr:nth-child(odd) {
+    background: #CCC;
 }
 
 table td:first-child {
@@ -107,4 +117,9 @@ li {
 p {
     padding-left: .5em;
     font: .9em sans-serif;
+}
+
+pre {
+    margin: 0;
+    padding: 0;
 }

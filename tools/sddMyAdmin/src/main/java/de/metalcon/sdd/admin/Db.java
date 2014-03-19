@@ -16,6 +16,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.tooling.GlobalGraphOperations;
 
+import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.Sdd;
 
 public class Db extends Servlet {
@@ -25,6 +26,8 @@ public class Db extends Servlet {
     private DB jsonDb;
 
     private GraphDatabaseService entityGraph;
+
+    private boolean prettyPrintJson = false;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -89,10 +92,13 @@ public class Db extends Servlet {
                     String output =
                             asString(jsonDb.get(bytes(id.toString()
                                     + config.getIdDetailDelimiter() + detail)));
+                    if (prettyPrintJson) {
+                        output = JsonPrettyPrinter.prettyPrintJson(output);
+                    }
 
                     c.append("  <tr>\n");
                     c.append("    <td>" + detail + "</td>\n");
-                    c.append("    <td>" + output + "</td>\n");
+                    c.append("    <td><pre>" + output + "</pre></td>\n");
                     c.append("  </tr>\n");
                 }
                 c.append("</table>\n");
