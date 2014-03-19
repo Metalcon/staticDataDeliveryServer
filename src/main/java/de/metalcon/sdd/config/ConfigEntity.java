@@ -122,9 +122,9 @@ public class ConfigEntity {
      */
     public ConfigEntityOutput getOutput(String detail) {
         ConfigEntityOutput output = outputs.get(detail);
-        if (output == null) {
-            throw new RuntimeException();
-        }
+        //        if (output == null) {
+        //            throw new RuntimeException();
+        //        }
         return output;
     }
 

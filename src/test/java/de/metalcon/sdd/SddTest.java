@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.metalcon.common.JsonPrettyPrinter;
@@ -128,6 +129,7 @@ public class SddTest {
     }
 
     @Test
+    @Ignore
     public void testCreateCrossReference() throws InvalidTypeException,
             InvalidAttrException, IOException, InvalidDetailException {
         Map<String, String> cross1 = new HashMap<String, String>();
