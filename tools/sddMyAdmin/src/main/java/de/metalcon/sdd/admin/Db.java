@@ -74,6 +74,9 @@ public class Db extends Servlet {
                 c.append("<p>Propeties:</p>\n");
                 c.append("<table>\n");
                 for (String property : propertyKeys) {
+                    if (property.startsWith("json-")) {
+                        continue;
+                    }
                     Object value = node.getProperty(property, null);
 
                     c.append("  <tr>\n");
