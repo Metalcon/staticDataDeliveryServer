@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
@@ -22,6 +21,7 @@ import de.metalcon.sdd.exception.InvalidAttrException;
 import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidTypeException;
+import de.metalcon.utils.jsonPrettyPrinter.JsonPrettyPrinter;
 
 public class SddTest {
 

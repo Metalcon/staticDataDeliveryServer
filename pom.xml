@@ -14,7 +14,26 @@
   <name>staticDataDelivery</name>
   <version>1.0.0-BUILD-SNAPSHOT</version>
   <packaging>war</packaging>
-  
+
+  <licenses>
+    <license>
+      <name>GNU General Public License 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>lukasschmelzeisen</id>
+      <name>Lukas Schmelzeisen</name>
+      <email>l.schmelzeisen@gmx.de</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
   <repositories>
     <repository>
       <id>metalcon-depend</id>
@@ -24,6 +43,8 @@
 
   <properties>
     <tomcat.deploy-plugin.path>/staticDataDelivery</tomcat.deploy-plugin.path>
+    
+    <metalcon.json-pretty-printer.version>0.0.1</metalcon.json-pretty-printer.version>
   
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
@@ -40,6 +61,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>json-pretty-printer</artifactId>
+      <version>${metalcon.json-pretty-printer.version}</version>
+    </dependency>
+  
     <!-- LevelDB -->
     <dependency>
       <groupId>org.fusesource.leveldbjni</groupId>

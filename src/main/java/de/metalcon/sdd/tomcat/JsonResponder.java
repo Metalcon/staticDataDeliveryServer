@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONValue;
 
-import de.metalcon.common.JsonPrettyPrinter;
+import de.metalcon.utils.jsonPrettyPrinter.JsonPrettyPrinter;
 
 public class JsonResponder {
 

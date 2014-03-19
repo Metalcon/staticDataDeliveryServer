@@ -18,8 +18,8 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.tooling.GlobalGraphOperations;
 
-import de.metalcon.common.JsonPrettyPrinter;
 import de.metalcon.sdd.Sdd;
+import de.metalcon.utils.jsonPrettyPrinter.JsonPrettyPrinter;
 
 public class Db extends Servlet {
 
