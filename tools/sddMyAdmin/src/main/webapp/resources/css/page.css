@@ -92,8 +92,12 @@ td {
     vertical-align: top;
 }
 
-tr:nth-child(odd) {
+li:nth-child(odd), tr:nth-child(odd) {
     background: #CCC;
+}
+
+li:nth-child(even), tr-nth-child(even) {
+    background: #EEE;
 }
 
 table td:first-child {

@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.iq80.leveldb.DB;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.tooling.GlobalGraphOperations;
 
 import de.metalcon.common.JsonPrettyPrinter;
@@ -27,7 +29,7 @@ public class Db extends Servlet {
 
     private GraphDatabaseService entityGraph;
 
-    private boolean prettyPrintJson = false;
+    private boolean prettyPrintJson = true;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -57,27 +59,27 @@ public class Db extends Servlet {
 
         c.append("<h3>Entities</h3>\n");
 
-        for (Node node : GlobalGraphOperations.at(entityGraph).getAllNodes()) {
-            Long id = (Long) node.getProperty("id", null);
+        for (Node entity : GlobalGraphOperations.at(entityGraph).getAllNodes()) {
+            Long id = (Long) entity.getProperty("id", null);
             c.append("<h4>Node ");
             if (id == null) {
-                c.append("without id");
+                c.append("without ID");
             } else {
                 c.append(id.toString());
             }
-            c.append(" (Neo4j-ID=" + node.getId() + ")");
+            c.append(" (Neo4j-ID=" + entity.getId() + ")");
             c.append("</h4>\n");
             c.append("\n");
 
-            Iterable<String> propertyKeys = node.getPropertyKeys();
+            Iterable<String> propertyKeys = entity.getPropertyKeys();
             if (propertyKeys.iterator().hasNext()) {
-                c.append("<p>Propeties:</p>\n");
+                c.append("<p>Propeties (Neo4j-Node-Properties):</p>\n");
                 c.append("<table>\n");
                 for (String property : propertyKeys) {
                     if (property.startsWith("json-")) {
                         continue;
                     }
-                    Object value = node.getProperty(property, null);
+                    Object value = entity.getProperty(property, null);
 
                     c.append("  <tr>\n");
                     c.append("    <td>" + property + "</td>\n");
@@ -88,8 +90,48 @@ public class Db extends Servlet {
                 c.append("\n");
             }
 
+            Iterable<Relationship> referencedRels =
+                    entity.getRelationships(Direction.OUTGOING);
+            if (referencedRels.iterator().hasNext()) {
+                c.append("<p>Referenced Entities (Neo4j-Outgoing-Relationships):</p>\n");
+                c.append("<ul>\n");
+                for (Relationship referencedRel : referencedRels) {
+                    Node referenced = referencedRel.getEndNode();
+                    Long referencedId =
+                            (Long) referenced.getProperty("id", null);
+                    c.append("  <li>Node ");
+                    if (referencedId == null) {
+                        c.append(" without ID");
+                    } else {
+                        c.append(referencedId.toString());
+                    }
+                    c.append("</li>\n");
+                }
+                c.append("</ul>\n");
+            }
+
+            Iterable<Relationship> referencingRels =
+                    entity.getRelationships(Direction.INCOMING);
+            if (referencingRels.iterator().hasNext()) {
+                c.append("<p>Referencing Entities (Neo4j-Incoming-Relationships):</p>\n");
+                c.append("<ul>\n");
+                for (Relationship referencingRel : referencingRels) {
+                    Node referencing = referencingRel.getStartNode();
+                    Long referencingId =
+                            (Long) referencing.getProperty("id", null);
+                    c.append("  <li>Node ");
+                    if (referencingId == null) {
+                        c.append(" without ID");
+                    } else {
+                        c.append(referencingId.toString());
+                    }
+                    c.append("</li>\n");
+                }
+                c.append("</ul>\n");
+            }
+
             if (id != null) {
-                c.append("<p>Output:</p>\n");
+                c.append("<p>Output (LevelDB-Entries):</p>\n");
                 c.append("<table>\n");
                 for (String detail : config.getDetails()) {
                     String output =
