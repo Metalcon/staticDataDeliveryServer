@@ -3,20 +3,28 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>de.metalcon</groupId>
+    <artifactId>tomcat-pom</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>de.metalcon</groupId>
   <artifactId>staticDataDelivery</artifactId>
   <name>staticDataDelivery</name>
   <version>1.0.0-BUILD-SNAPSHOT</version>
-  
   <packaging>war</packaging>
+  
+  <repositories>
+    <repository>
+      <id>metalcon-depend</id>
+      <url>http://metalcon2.physik.uni-mainz.de:8080/mvn/</url>
+    </repository>
+  </repositories>
 
   <properties>
-    <!-- Generic -->
-    <java.version>1.7</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <tomcat.deploy-plugin.path>/staticDataDelivery</tomcat.deploy-plugin.path>
+  
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
     <!-- Neo4j -->
@@ -24,11 +32,11 @@
     <!-- JSON -->
     <json-simple.version>1.1</json-simple.version>
     
+    <!-- Servlet -->
+    <servlet.version>3.1.0</servlet.version>
+    
     <!-- Test -->
     <junit.version>4.11</junit.version>
-    
-    <!-- Tomcat -->
-    <tomcat.version>2.2</tomcat.version>
   </properties>
 
   <dependencies>
@@ -53,11 +61,11 @@
       <version>${json-simple.version}</version>
     </dependency>
     
-    <!-- Tomcat -->
+    <!-- Servlet -->
     <dependency>
-      <groupId>org.apache.tomcat.maven</groupId>
-      <artifactId>tomcat7-maven-plugin</artifactId>
-      <version>${tomcat.version}</version>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
     
@@ -76,33 +84,4 @@
       <version>5.1.26</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <configuration>
-          <show>private</show>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
