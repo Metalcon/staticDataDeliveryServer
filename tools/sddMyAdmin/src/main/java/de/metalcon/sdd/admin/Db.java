@@ -29,8 +29,6 @@ public class Db extends Servlet {
 
     private GraphDatabaseService entityGraph;
 
-    private boolean prettyPrintJson = true;
-
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -53,9 +51,46 @@ public class Db extends Servlet {
     protected StringWriter run(
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        boolean showProperties = getParam(request, "showProperties");
+        boolean showReferenced = getParam(request, "showReferenced");
+        boolean showReferencing = getParam(request, "showReferencing");
+        boolean showOutputs = getParam(request, "showOutputs");
+        boolean showPrettyPrinted = getParam(request, "showPrettyPrinted");
+
         StringWriter c = new StringWriter();
         c.append("<h2>Db</h2>\n");
         c.append("\n");
+
+        c.append("<form action=\"db\" method=\"GET\">\n");
+        c.append("  <ul>\n");
+        c.append("    <li><input type=\"checkbox\" name=\"showProperties\" value=\"false\"");
+        if (!showProperties) {
+            c.append(" checked=\"checked\"");
+        }
+        c.append(" /> Hide Properties</li>\n");
+        c.append("    <li><input type=\"checkbox\" name=\"showReferenced\" value=\"false\"");
+        if (!showReferenced) {
+            c.append(" checked=\"checked\"");
+        }
+        c.append(" /> Hide Referenced</li>\n");
+        c.append("    <li><input type=\"checkbox\" name=\"showReferencing\" value=\"false\"");
+        if (!showReferencing) {
+            c.append(" checked=\"checked\"");
+        }
+        c.append(" /> Hide Referencing</li>\n");
+        c.append("    <li><input type=\"checkbox\" name=\"showOutputs\" value=\"false\"");
+        if (!showOutputs) {
+            c.append(" checked=\"checked\"");
+        }
+        c.append(" /> Hide Outputs</li>\n");
+        c.append("    <li><input type=\"checkbox\" name=\"showPrettyPrinted\" value=\"false\"");
+        if (!showPrettyPrinted) {
+            c.append(" checked=\"checked\"");
+        }
+        c.append(" /> Don't Pretty Printed</li>\n");
+        c.append("  </ul>\n");
+        c.append("  <button type=\"submit\">Filter</button>\n");
+        c.append("</form>");
 
         c.append("<h3>Entities</h3>\n");
 
@@ -72,7 +107,7 @@ public class Db extends Servlet {
             c.append("\n");
 
             Iterable<String> propertyKeys = entity.getPropertyKeys();
-            if (propertyKeys.iterator().hasNext()) {
+            if (showProperties && propertyKeys.iterator().hasNext()) {
                 c.append("<p>Propeties (Neo4j-Node-Properties):</p>\n");
                 c.append("<table>\n");
                 for (String property : propertyKeys) {
@@ -92,7 +127,7 @@ public class Db extends Servlet {
 
             Iterable<Relationship> referencedRels =
                     entity.getRelationships(Direction.OUTGOING);
-            if (referencedRels.iterator().hasNext()) {
+            if (showReferenced && referencedRels.iterator().hasNext()) {
                 c.append("<p>Referenced Entities (Neo4j-Outgoing-Relationships):</p>\n");
                 c.append("<ul>\n");
                 for (Relationship referencedRel : referencedRels) {
@@ -112,7 +147,7 @@ public class Db extends Servlet {
 
             Iterable<Relationship> referencingRels =
                     entity.getRelationships(Direction.INCOMING);
-            if (referencingRels.iterator().hasNext()) {
+            if (showReferencing && referencingRels.iterator().hasNext()) {
                 c.append("<p>Referencing Entities (Neo4j-Incoming-Relationships):</p>\n");
                 c.append("<ul>\n");
                 for (Relationship referencingRel : referencingRels) {
@@ -130,14 +165,14 @@ public class Db extends Servlet {
                 c.append("</ul>\n");
             }
 
-            if (id != null) {
+            if (showOutputs && id != null) {
                 c.append("<p>Output (LevelDB-Entries):</p>\n");
                 c.append("<table>\n");
                 for (String detail : config.getDetails()) {
                     String output =
                             asString(jsonDb.get(bytes(id.toString()
                                     + config.getIdDetailDelimiter() + detail)));
-                    if (prettyPrintJson) {
+                    if (showPrettyPrinted) {
                         output = JsonPrettyPrinter.prettyPrintJson(output);
                     }
 
@@ -156,5 +191,16 @@ public class Db extends Servlet {
         StringWriter w = new StringWriter();
         w.append(printHtml(printHead("Db"), printBody(c)).toString());
         return w;
+    }
+
+    private boolean getParam(HttpServletRequest request, String name) {
+        String param = request.getParameter(name);
+        if (param == null) {
+            return true;
+        }
+        if (param.equals("false") || param.equals("0")) {
+            return false;
+        }
+        return true;
     }
 }
