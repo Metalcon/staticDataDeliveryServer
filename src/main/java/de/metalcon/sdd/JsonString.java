@@ -1,4 +1,4 @@
-package de.metalcon.common;
+package de.metalcon.sdd;
 
 import org.json.simple.JSONAware;
 

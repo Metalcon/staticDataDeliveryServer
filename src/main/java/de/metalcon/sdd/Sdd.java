@@ -29,7 +29,6 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.tooling.GlobalGraphOperations;
 
-import de.metalcon.common.JsonString;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigEntity;
 import de.metalcon.sdd.config.ConfigEntityOutput;
