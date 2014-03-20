@@ -84,7 +84,7 @@ public class SddMetalconTest {
         track.addOutput("small", track_small);
         config.addEntity("Track", track);
 
-        //config = new FileConfig(Paths.get("/usr/share/sdd/config.xml"));
+        //        config = new FileConfig(Paths.get("/usr/share/sdd/config.xml"));
 
         sdd = new Sdd(config);
     }

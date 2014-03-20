@@ -1,12 +1,12 @@
 package de.metalcon.sdd;
 
-import java.io.Serializable;
-
+import de.metalcon.api.responses.Response;
+import de.metalcon.api.responses.SuccessResponse;
+import de.metalcon.api.responses.errors.InternalServerErrorResponse;
+import de.metalcon.api.responses.errors.UsageErrorResponse;
 import de.metalcon.sdd.api.requests.SddReadRequest;
 import de.metalcon.sdd.api.requests.SddUpdateRequest;
-import de.metalcon.sdd.exception.InvalidAttrException;
-import de.metalcon.sdd.exception.InvalidDetailException;
-import de.metalcon.sdd.exception.InvalidTypeException;
+import de.metalcon.sdd.exception.SddUsageException;
 import de.metalcon.zmqworker.ZMQRequestHandler;
 
 public class RequestHandler implements ZMQRequestHandler {
@@ -19,27 +19,28 @@ public class RequestHandler implements ZMQRequestHandler {
     }
 
     @Override
-    public Serializable handleRequest(Object request) {
-        if (request instanceof SddReadRequest) {
-            SddReadRequest r = (SddReadRequest) request;
-            try {
+    public Response handleRequest(Object request) {
+        try {
+            if (request instanceof SddReadRequest) {
+                SddReadRequest r = (SddReadRequest) request;
+
                 String response = sdd.readEntity(r.getId(), r.getDetail());
-                System.out.println(response);
-            } catch (InvalidDetailException e) {
-                e.printStackTrace();
+            } else if (request instanceof SddUpdateRequest) {
+                SddUpdateRequest r = (SddUpdateRequest) request;
+
+                if (!sdd.updateEntity(r.getId(), r.getType(), r.getAttrs())) {
+                    return new InternalServerErrorResponse(
+                            "Could not push on queue.", "Maybe try again.");
+                }
+                return new SuccessResponse();
             }
-        } else if (request instanceof SddUpdateRequest) {
-            SddUpdateRequest r = (SddUpdateRequest) request;
-            try {
-                boolean success =
-                        sdd.updateEntity(r.getId(), r.getType(), r.getAttrs());
-                System.out.println(success);
-            } catch (InvalidTypeException | InvalidAttrException e) {
-                e.printStackTrace();
-            }
+        } catch (SddUsageException e) {
+            return new UsageErrorResponse(e, null);
         }
+        // TODO: catch SddInternalServerException when they are thrown
 
-        return null;
+        return new UsageErrorResponse("Unkown Request Type.",
+                "Use one of the types defined in staticDataDeliveryServerApi "
+                        + "package: de.metalcon.sdd.api.requests");
     }
-
 }
