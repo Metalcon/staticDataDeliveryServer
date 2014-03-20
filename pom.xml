@@ -44,9 +44,10 @@
   <properties>
     <tomcat.deploy-plugin.path>/staticDataDelivery</tomcat.deploy-plugin.path>
     
+    <metalcon.api.version>0.1.0</metalcon.api.version>
     <metalcon.staticDataDeliveryApi.version>0.0.1</metalcon.staticDataDeliveryApi.version>
     <metalcon.json-pretty-printer.version>0.0.1</metalcon.json-pretty-printer.version>
-    <metalcon.zmq-worker.version>0.0.1-SNAPSHOT</metalcon.zmq-worker.version>
+    <metalcon.zmq-worker.version>0.1.0</metalcon.zmq-worker.version>
   
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
@@ -63,6 +64,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>api</artifactId>
+      <version>${metalcon.api.version}</version>
+    </dependency>
     <dependency>
       <groupId>de.metalcon</groupId>
       <artifactId>staticDataDeliveryApi</artifactId>
