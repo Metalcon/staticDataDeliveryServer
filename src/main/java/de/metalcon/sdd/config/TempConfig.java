@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * Temporary directories are not deleted on shutdown. You will have to do that
  * manually. Most likely the directory will be located in <code>/tmp</code>.
  */
-public class TempConfig extends Config {
+public class TempConfig {
 
     /**
      * Constructs a new empty Configuration with only LevelDbPath and Neo4jPath
@@ -21,18 +21,17 @@ public class TempConfig extends Config {
      * @throws IOException
      *             If no temporary directory could be created.
      */
-    public TempConfig() throws IOException {
-        super();
 
+    public static void makeConfigTemporary(Config config) throws IOException {
         Path tmpDir = Files.createTempDirectory("sddTest");
 
-        Path leveldb = tmpDir.resolve("leveldb");
-        leveldb.toFile().mkdir();
-        setLeveldbPath(leveldb.toString());
+        Path leveldbPath = tmpDir.resolve("leveldb");
+        leveldbPath.toFile().mkdir();
+        config.setLeveldbPath(leveldbPath.toString());
 
-        Path neo4j = tmpDir.resolve("neo4j");
-        neo4j.toFile().mkdir();
-        setNeo4jPath(neo4j.toString());
+        Path neo4jPath = tmpDir.resolve("neo4j");
+        neo4jPath.toFile().mkdir();
+        config.setNeo4jPath(neo4jPath.toString());
     }
 
 }

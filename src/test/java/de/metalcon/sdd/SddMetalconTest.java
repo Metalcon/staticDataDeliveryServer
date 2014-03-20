@@ -24,7 +24,7 @@ public class SddMetalconTest {
 
     @Before
     public void setUp() throws IOException, InvalidConfigException {
-        Config config = new TempConfig();
+        Config config = new Config();
 
         config.addDetail("page");
         config.addDetail("big");
@@ -83,6 +83,8 @@ public class SddMetalconTest {
         track_small.addOattr("name", "");
         track.addOutput("small", track_small);
         config.addEntity("Track", track);
+
+        TempConfig.makeConfigTemporary(config);
 
         //        config = new FileConfig(Paths.get("/usr/share/sdd/config.xml"));
 

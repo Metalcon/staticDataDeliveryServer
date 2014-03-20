@@ -12,7 +12,7 @@ import de.metalcon.sdd.exception.InvalidConfigException;
 /**
  * Class that stores all configuration values for SDD.
  */
-public abstract class Config {
+public class Config {
 
     /**
      * Path where LevelDB data is stored.

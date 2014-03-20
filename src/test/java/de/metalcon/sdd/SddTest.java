@@ -29,7 +29,7 @@ public class SddTest {
 
     @Before
     public void setUp() throws IOException, InvalidConfigException {
-        Config config = new TempConfig();
+        Config config = new Config();
 
         config.addDetail("detail0");
         config.addDetail("detail1");
@@ -85,6 +85,8 @@ public class SddTest {
         cross2_detail1.addOattr("title", "");
         cross2.addOutput("detail1", cross1_detail1);
         config.addEntity("cross2", cross2);
+
+        TempConfig.makeConfigTemporary(config);
 
         sdd = new Sdd(config);
     }

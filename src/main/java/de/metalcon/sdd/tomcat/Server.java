@@ -22,7 +22,7 @@ public class Server implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            config = new TempConfig();
+            config = new Config();
 
             try {
                 config.addDetail("page");
@@ -85,6 +85,8 @@ public class Server implements ServletContextListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            TempConfig.makeConfigTemporary(config);
 
             sdd = new Sdd(config);
 
