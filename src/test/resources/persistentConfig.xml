@@ -19,7 +19,7 @@
         <oattr attr="name"/>
         <oattr attr="records" detail="big"/>
       </output>
-      <output detail="page">
+      <output detail="big">
         <oattr attr="name"/>
         <oattr attr="records" detail="small"/>
       </output>
