@@ -198,11 +198,17 @@ public class Sdd implements Closeable {
             }
         }
 
-        boolean worked = updateEntityAttrs(id, type, primitives);
+        if (!updateEntityAttrs(id, type, primitives)) {
+            return false;
+        }
+
         for (Map.Entry<String, Long> r : entityRel.entrySet()) {
             String attr = r.getKey();
             long rel = r.getValue();
-            worked = worked && updateEntityRel(id, type, attr, rel);
+
+            if (!updateEntityRel(id, type, attr, rel)) {
+                return false;
+            }
         }
         for (Map.Entry<String, List<Long>> r : entityRels.entrySet()) {
             String attr = r.getKey();
@@ -213,9 +219,13 @@ public class Sdd implements Closeable {
             for (long rel : relList) {
                 rels[i++] = rel;
             }
-            worked = worked && updateEntityRel(id, type, attr, rels);
+
+            if (!updateEntityRel(id, type, attr, rels)) {
+                return false;
+            }
         }
-        return worked;
+
+        return true;
     }
 
     public boolean updateEntityAttrs(
