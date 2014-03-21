@@ -1,5 +1,8 @@
 package de.metalcon.sdd.config;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +20,7 @@ public class Config {
     public static final TransactionMode TRANSACTION_MODE_DEFAULT =
             TransactionMode.SINGLE;
 
-    private String levelDbPath = LEVELDB_PATH_DEFAULT;
+    private String leveldbPath = LEVELDB_PATH_DEFAULT;
 
     private String neo4jPath = NEO4J_PATH_DEFAULT;
 
@@ -27,16 +30,37 @@ public class Config {
 
     private Map<String, ConfigNode> nodes = new HashMap<String, ConfigNode>();
 
-    public String getLevelDbPath() {
-        return levelDbPath;
+    public String getLeveldbPath() {
+        return leveldbPath;
+    }
+
+    public void setLeveldbPath(String leveldbPath) {
+        if (leveldbPath == null) {
+            throw new IllegalArgumentException("leveldbPath was null.");
+        }
+        this.leveldbPath = leveldbPath;
     }
 
     public String getNeo4jPath() {
         return neo4jPath;
     }
 
+    public void setNeo4jPath(String neo4jPath) {
+        if (neo4jPath == null) {
+            throw new IllegalArgumentException("neo4jPath was null.");
+        }
+        this.neo4jPath = neo4jPath;
+    }
+
     public TransactionMode getTransactionMode() {
         return transactionMode;
+    }
+
+    public void setTransactionMode(TransactionMode transactionMode) {
+        if (transactionMode == null) {
+            throw new IllegalArgumentException("transactionMode was null");
+        }
+        this.transactionMode = transactionMode;
     }
 
     public Set<String> getDetails() {
@@ -139,5 +163,17 @@ public class Config {
                 }
             }
         }
+    }
+
+    public void makeTemporary() throws IOException {
+        Path tmpDir = Files.createTempDirectory("sddTemp");
+
+        Path leveldbPath = tmpDir.resolve("leveldb");
+        leveldbPath.toFile().mkdir();
+        setLeveldbPath(leveldbPath.toString());
+
+        Path neo4jPath = tmpDir.resolve("neo4j");
+        neo4jPath.toFile().mkdir();
+        setNeo4jPath(neo4jPath.toString());
     }
 }
