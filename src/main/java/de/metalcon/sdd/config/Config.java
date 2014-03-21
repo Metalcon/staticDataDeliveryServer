@@ -69,8 +69,8 @@ public class Config {
     }
 
     /**
-     * @return Returns the ConfigNode for type or <code>NULL</code> if no node
-     *         with that type was configured.
+     * @return The ConfigNode for type or <code>NULL</code> if no node with that
+     *         type was configured.
      */
     public ConfigNode getNode(String type) {
         if (type == null) {
