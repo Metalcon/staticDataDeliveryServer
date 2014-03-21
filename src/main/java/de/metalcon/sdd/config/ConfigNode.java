@@ -115,8 +115,21 @@ public class ConfigNode {
         outputs.put(detail, output);
     }
 
-    public boolean dependsOn(String nodeType, Set<String> modifiedDetails) {
-        // TODO: implement
+    public boolean dependsOn(
+            String modifiedNodeType,
+            Set<String> modifiedDetails) {
+        for (ConfigNodeOutput output : outputs.values()) {
+            for (String outRelation : output.getOutRelations()) {
+                String outRelationDetail =
+                        output.getOutRelationDetail(outRelation);
+                RelationType relationType = relations.get(outRelation);
+                if (modifiedNodeType.equals(relationType.getType())
+                        && modifiedDetails.contains(outRelationDetail)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void checkName(String name) throws InvalidConfigException {
