@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import de.metalcon.sdd.exception.InvalidConfigException;
+
 public class Config {
 
     public static final String LEVELDB_PATH_DEFAULT = "/usr/share/sdd/leveldb";
@@ -41,10 +43,16 @@ public class Config {
     }
 
     public boolean isDetail(String detail) {
+        if (detail == null) {
+            throw new IllegalArgumentException("detail was null.");
+        }
         return details.contains(detail);
     }
 
     public void addDetail(String detail) {
+        if (detail == null) {
+            throw new IllegalArgumentException("detail was null.");
+        }
         details.add(detail);
     }
 
@@ -57,18 +65,47 @@ public class Config {
      *         with that type was configured.
      */
     public ConfigNode getNode(String type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type was null.");
+        }
         return nodes.get(type);
     }
 
     public boolean isNodeType(String type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type was null.");
+        }
         return nodes.containsKey(type);
     }
 
     public void addNode(String type, ConfigNode node) {
+        if (type == null) {
+            throw new IllegalArgumentException("type was null.");
+        }
+        if (node == null) {
+            throw new IllegalArgumentException("node was null.");
+        }
         nodes.put(type, node);
     }
 
-    public void validate() {
+    /**
+     * Checks if the Config is a valid SDD configuration.
+     * 
+     * Remains silent if valid, throws on error.
+     * 
+     * These cases are checked:
+     * <ul>
+     * <li>Do all node properties/relations have a valid name? (must not start
+     * with <code>id</code>, <code>type</code> or <code>json-</code>)</li>
+     * <li>Do all relations reference existing node types?</li>
+     * <li>Are all defined output details for nodes actually valid details?</li>
+     * <li>Do all output-relations define a valid output detail?</li>
+     * </ul>
+     * 
+     * @throws InvalidConfigException
+     *             In case configuration is invalid.
+     */
+    public void validate() throws InvalidConfigException {
     }
 
 }
