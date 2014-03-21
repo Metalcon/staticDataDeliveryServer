@@ -2,7 +2,7 @@
 <sdd-config>
   <leveldb path="/usr/share/sdd/leveldb"/>
   <neo4j path="/usr/share/sdd/neo4j"/>
-  <transaction>single</transaction>
+  <transaction-mode>single</transaction-mode>
   
   <details>
     <detail name="nested"/>
