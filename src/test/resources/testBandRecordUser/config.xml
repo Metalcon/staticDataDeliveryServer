@@ -17,15 +17,15 @@
       <relation name="users" type="User[]"/>
 
       <output detail="nested">
-        <oproperty property="name"/>
-        <oproperty property="desc"/>
-        <orelation relation="records" detail="properties"/>
-        <orelation relation="users" detail="properties"/>
+        <out-property property="name"/>
+        <out-property property="desc"/>
+        <out-relation relation="records" detail="properties"/>
+        <out-relation relation="users" detail="properties"/>
       </output>
 
       <output detail="properties">
-        <oproperty property="name"/>
-        <oproperty property="desc"/>
+        <out-property property="name"/>
+        <out-property property="desc"/>
       </output>
     </node>
 
@@ -36,15 +36,15 @@
       <relation name="users" type="User[]"/>
 
       <output detail="nested">
-        <oproperty property="name"/>
-        <oproperty property="release"/>
-        <orelation relation="records" detail="properties"/>
-        <orelation relation="users" detail="properties"/>
+        <out-property property="name"/>
+        <out-property property="release"/>
+        <out-relation relation="records" detail="properties"/>
+        <out-relation relation="users" detail="properties"/>
       </output>
 
       <output detail="properties">
-        <oproperty propert="name"/>
-        <oproperty propert="release"/>
+        <out-property propert="name"/>
+        <out-property propert="release"/>
       </output>
     </node>
 
@@ -54,13 +54,13 @@
       <relation name="records" type="Record[]"/>
 
       <output detail="nested">
-        <oproperty name="name"/>
-        <orelation relation="records" detail="properties"/>
-        <orelation relation="users" detail="properties"/>
+        <out-property name="name"/>
+        <out-relation relation="records" detail="properties"/>
+        <out-relation relation="users" detail="properties"/>
       </output>
 
       <output detail="properties">
-        <oproperty name="name"/>
+        <out-property name="name"/>
       </output>
     </node>
   </nodes>
