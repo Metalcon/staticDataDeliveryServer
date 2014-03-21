@@ -96,18 +96,48 @@ public class Config {
      * 
      * These cases are checked:
      * <ul>
-     * <li>Do all node properties/relations have a valid name? (must not start
-     * with <code>id</code>, <code>type</code> or <code>json-</code>)</li>
      * <li>Do all relations reference existing node types?</li>
      * <li>Are all defined output details for nodes actually valid details?</li>
-     * <li>Do all output-relations define a valid output detail?</li>
+     * <li>Do all out-relations define a valid output detail?</li>
      * </ul>
      * 
      * @throws InvalidConfigException
      *             In case configuration is invalid.
      */
     public void validate() throws InvalidConfigException {
-        // TODO: implement
-    }
+        // TODO: Check whether we have write access on paths.
 
+        // Check nodes
+        for (String nodeType : getNodeTypes()) {
+            ConfigNode node = getNode(nodeType);
+
+            // Check outputs
+            for (String detail : node.getOutputDetails()) {
+                ConfigNodeOutput output = node.getOutput(detail);
+
+                if (!isDetail(detail)) {
+                    throw new InvalidConfigException("Invalid output detail \""
+                            + detail + "\" on node \"" + nodeType + "\".");
+                }
+
+                // Check out-relations
+                for (String outRelation : output.getOutRelations()) {
+                    String outRelationDetail =
+                            output.getOutRelationDetail(outRelation);
+
+                    if (node.getRelationType(outRelation) == null) {
+                        throw new InvalidConfigException("Invalid relation \""
+                                + outRelation + " for out-relation on node \""
+                                + nodeType + "\".");
+                    }
+
+                    if (!isDetail(outRelationDetail)) {
+                        throw new InvalidConfigException("Invalid detail \""
+                                + outRelationDetail + "\" for out-relation \""
+                                + outRelation + "\" on node \"" + node + "\".");
+                    }
+                }
+            }
+        }
+    }
 }
