@@ -17,9 +17,9 @@ public class Worker implements Runnable {
         public Queue<QueueAction> queueDone;
     }
 
-    public static final int graphTransactionCount = 20;
+    public static final int graphTransactionCount = 1;
 
-    public static final int jsonTransactionCount = 20;
+    public static final int jsonTransactionCount = 1;
 
     private Sdd sdd;
 
