@@ -148,4 +148,53 @@ public class SddMetalconTest {
                 32L, "page")));
     }
 
+    @Test
+    public void easeOfApi() throws InvalidTypeException, InvalidAttrException,
+            InvalidDetailException, IOException {
+        Map<String, String> ensiferum = new HashMap<String, String>();
+        ensiferum.put("name", "Ensiferum");
+        sdd.updateEntity(1, "Band", ensiferum);
+        sdd.waitUntilQueueEmpty();
+        System.out.println(sdd.readEntity(1, "big"));
+        System.out.println(sdd.readEntity(1, "small"));
+        System.out.println(sdd.readEntity(1, "page"));
+
+        Map<String, String> tool = new HashMap<String, String>();
+        tool.put("name", "tool");
+        // TODO: why is it not possible to create an entry which is not indexd? Why is there no clear error message.
+        //        tool.put("foo", "bar");
+        sdd.updateEntity(2, "Record", tool);
+        // TODO: why can't I request an entity as long as there are transactions on the queue?
+        //        System.out.println(sdd.readEntity(1, "page"));
+        sdd.waitUntilQueueEmpty();
+        System.out.println(sdd.readEntity(2, "page"));
+
+        // TODO: why do I have to say again I am updating a band? by design (id = 1) the compnent should know its a band
+        sdd.updateEntityRel(1, "Band", "records", new long[] {
+            2
+        });
+        // TODO: why do I also need the link towards the other direction?
+        sdd.updateEntityRel(2, "Record", "band", 1);
+        sdd.waitUntilQueueEmpty();
+        System.out.println(sdd.readEntity(2, "page"));
+        System.out.println(sdd.readEntity(1, "page"));
+
+        /**
+         * overall the api is hard to use. I am not sure if this is the internal
+         * API for the core of the component which might be fine to be so strict
+         * but I would not recommend this api to go public
+         */
+
+        /**
+         * why did't you go and follow the blueprints api?
+         */
+
+        /**
+         * if this api is supposed to stay like that then the public functions
+         * of sdd need java doc.
+         * 
+         */
+
+    }
+
 }
