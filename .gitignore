@@ -1,0 +1,20 @@
+# Maven output directory
+target/
+# Eclipse files
+.classpath
+.project
+# Eclipse directories
+.metadata/
+.settings/
+bin/
+
+# Java class files
+*.class
+
+# package files #
+*.jar
+*.war
+*.ear
+
+# backup files
+*~
