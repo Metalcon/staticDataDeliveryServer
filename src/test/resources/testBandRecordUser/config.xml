@@ -2,7 +2,7 @@
 <sdd-config>
   <leveldb path="/usr/share/sdd/leveldb"/>
   <neo4j path="/usr/share/sdd/neo4j"/>
-  <transaction-mode>single</transaction-mode>
+  <transactions mode="single"/>
   
   <details>
     <detail name="nested"/>
@@ -43,8 +43,8 @@
       </output>
 
       <output detail="properties">
-        <out-property propert="name"/>
-        <out-property propert="release"/>
+        <out-property property="name"/>
+        <out-property property="release"/>
       </output>
     </node>
 
@@ -54,13 +54,13 @@
       <relation name="records" type="Record[]"/>
 
       <output detail="nested">
-        <out-property name="name"/>
+        <out-property property="name"/>
         <out-relation relation="records" detail="properties"/>
         <out-relation relation="users" detail="properties"/>
       </output>
 
       <output detail="properties">
-        <out-property name="name"/>
+        <out-property property="name"/>
       </output>
     </node>
   </nodes>
