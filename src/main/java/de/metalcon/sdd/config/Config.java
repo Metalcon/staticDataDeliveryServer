@@ -1,5 +1,6 @@
 package de.metalcon.sdd.config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class Config {
     }
 
     public Set<String> getDetails() {
-        return details;
+        return Collections.unmodifiableSet(details);
     }
 
     public boolean isDetail(String detail) {
@@ -56,8 +57,15 @@ public class Config {
         details.add(detail);
     }
 
-    public Map<String, ConfigNode> getNodes() {
-        return nodes;
+    public Set<String> getNodeTypes() {
+        return Collections.unmodifiableSet(nodes.keySet());
+    }
+
+    public boolean isNodeType(String type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type was null.");
+        }
+        return nodes.containsKey(type);
     }
 
     /**
@@ -69,13 +77,6 @@ public class Config {
             throw new IllegalArgumentException("type was null.");
         }
         return nodes.get(type);
-    }
-
-    public boolean isNodeType(String type) {
-        if (type == null) {
-            throw new IllegalArgumentException("type was null.");
-        }
-        return nodes.containsKey(type);
     }
 
     public void addNode(String type, ConfigNode node) {
@@ -106,6 +107,7 @@ public class Config {
      *             In case configuration is invalid.
      */
     public void validate() throws InvalidConfigException {
+        // TODO: implement
     }
 
 }
