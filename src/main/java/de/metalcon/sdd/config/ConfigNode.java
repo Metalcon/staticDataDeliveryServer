@@ -90,7 +90,7 @@ public class ConfigNode {
         relations.put(relation, relationType);
     }
 
-    public Set<String> getOutputs() {
+    public Set<String> getOutputDetails() {
         return Collections.unmodifiableSet(outputs.keySet());
     }
 
@@ -98,11 +98,11 @@ public class ConfigNode {
      * @return The node's output for that detail or <code>NULL</code> if the
      *         node doesn't have output for that detail configured.
      */
-    public ConfigNodeOutput getOutput(String output) {
-        if (output == null) {
-            throw new IllegalArgumentException("output was null.");
+    public ConfigNodeOutput getOutput(String detail) {
+        if (detail == null) {
+            throw new IllegalArgumentException("detail was null.");
         }
-        return outputs.get(output);
+        return outputs.get(detail);
     }
 
     public void addOutput(String detail, ConfigNodeOutput output) {
