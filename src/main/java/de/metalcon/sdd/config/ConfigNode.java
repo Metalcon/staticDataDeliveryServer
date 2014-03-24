@@ -134,12 +134,12 @@ public class ConfigNode {
 
     private void checkName(String name) throws InvalidConfigException {
         if (name.equals("id") || name.equals("type")
-                || name.startsWith("json-")) {
+                || name.startsWith("output-")) {
             throw new InvalidConfigException(
                     "Invalid name: \""
                             + name
                             + "\". "
-                            + "It must not be \"id\", \"type\" or start with \"json-\".");
+                            + "It must not be \"id\", \"type\" or start with \"output-\".");
         }
     }
 
