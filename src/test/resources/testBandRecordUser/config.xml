@@ -32,7 +32,7 @@
     <node type="Record">
       <property name="name" type="String"/>
       <property name="release" type="String"/>
-      <relation name="bands" type="Band[]]"/>
+      <relation name="bands" type="Band[]"/>
       <relation name="users" type="User[]"/>
 
       <output detail="nested">
