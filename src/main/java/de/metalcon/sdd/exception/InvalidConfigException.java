@@ -1,7 +1,7 @@
 package de.metalcon.sdd.exception;
 
 /**
- * Thrown in case of invlaid configuration.
+ * Thrown in case of invalid configuration.
  */
 public class InvalidConfigException extends SddUsageException {
 
