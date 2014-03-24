@@ -27,6 +27,7 @@ import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.InvalidRelationException;
@@ -127,9 +128,19 @@ public class Sdd implements AutoCloseable {
         return config;
     }
 
-    public String read(long nodeId, String detail) {
-        // TODO: implement read()
-        return null;
+    public String read(long nodeId, String detail)
+            throws InvalidDetailException {
+        if (detail == null) {
+            throw new IllegalArgumentException("detail was null");
+        }
+
+        if (!config.isDetail(detail)) {
+            throw new InvalidDetailException();
+        }
+
+        String idDetail = buildIdDetail(nodeId, detail);
+        return JniDBFactory
+                .asString(outputDb.get(JniDBFactory.bytes(idDetail)));
     }
 
     public void setProperties(
