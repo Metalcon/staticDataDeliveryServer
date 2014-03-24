@@ -31,14 +31,25 @@ public class DeleteRelationsAction extends Action {
 
     @Override
     public boolean equals(Object other) {
-        // TODO Auto-generated method stub
+        if (other == this) {
+            return true;
+        }
+
+        // we define that two distinct DeleteRelationsActions are never equal
         return false;
     }
 
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return 0;
+        int hash = 82378;
+        int mult = 379;
+
+        hash = hash * mult + ((Long) nodeId).hashCode();
+        hash = hash * mult + nodeType.hashCode();
+        hash = hash * mult + relationType.hashCode();
+        hash = hash * mult + toIds.hashCode();
+
+        return hash;
     }
 
 }

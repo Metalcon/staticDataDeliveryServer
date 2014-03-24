@@ -29,14 +29,23 @@ public class SetPropertiesAction extends Action {
 
     @Override
     public boolean equals(Object other) {
-        // TODO Auto-generated method stub
+        if (other == this) {
+            return true;
+        }
+
+        // we define that two distinct SetPropertiesActions are never equal
         return false;
     }
 
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+        int hash = 54237;
+        int mult = 613;
 
+        hash = hash * mult + ((Long) nodeId).hashCode();
+        hash = hash * mult + nodeType.hashCode();
+        hash = hash * mult + properties.hashCode();
+
+        return hash;
+    }
 }

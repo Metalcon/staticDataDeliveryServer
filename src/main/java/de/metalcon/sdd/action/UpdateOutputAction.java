@@ -19,14 +19,24 @@ public class UpdateOutputAction extends Action {
 
     @Override
     public boolean equals(Object other) {
-        // TODO Auto-generated method stub
-        return false;
+        if (other == this) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        UpdateOutputAction o = (UpdateOutputAction) other;
+        return nodeId == o.nodeId;
     }
 
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return 0;
+        int hash = 66494;
+        int mult = 877;
+
+        hash = hash * mult + ((Long) nodeId).hashCode();
+
+        return hash;
     }
 
 }

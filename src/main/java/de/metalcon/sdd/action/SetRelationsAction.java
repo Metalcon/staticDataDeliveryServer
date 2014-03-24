@@ -31,14 +31,25 @@ public class SetRelationsAction extends Action {
 
     @Override
     public boolean equals(Object other) {
-        // TODO Auto-generated method stub
+        if (other == this) {
+            return true;
+        }
+
+        // we define that two distinct SetRelationsAction are never equal
         return false;
     }
 
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return 0;
+        int hash = 24097;
+        int mult = 859;
+
+        hash = hash * mult + ((Long) nodeId).hashCode();
+        hash = hash * mult + nodeType.hashCode();
+        hash = hash * mult + relationType.hashCode();
+        hash = hash * mult + toIds.hashCode();
+
+        return hash;
     }
 
 }

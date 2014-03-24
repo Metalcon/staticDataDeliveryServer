@@ -25,14 +25,25 @@ public class UpdateReferencingAction extends Action {
 
     @Override
     public boolean equals(Object other) {
-        // TODO Auto-generated method stub
-        return false;
+        if (other == this) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        UpdateReferencingAction o = (UpdateReferencingAction) other;
+        return nodeId == o.nodeId && modifiedDetails.equals(o.modifiedDetails);
     }
 
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return 0;
+        int hash = 19236;
+        int mult = 211;
+
+        hash = hash * mult + ((Long) nodeId).hashCode();
+        hash = hash * mult + modifiedDetails.hashCode();
+
+        return hash;
     }
 
 }
