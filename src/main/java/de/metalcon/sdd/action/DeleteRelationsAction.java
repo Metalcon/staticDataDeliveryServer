@@ -26,7 +26,7 @@ public class DeleteRelationsAction extends Action {
 
     @Override
     public void runAction(Sdd sdd) throws SddException {
-        // TODO Auto-generated method stub
+        sdd.actionDeleteRelations(nodeId, nodeType, relationType, toIds);
     }
 
     @Override

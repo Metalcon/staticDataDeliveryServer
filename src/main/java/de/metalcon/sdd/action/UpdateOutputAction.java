@@ -14,7 +14,7 @@ public class UpdateOutputAction extends Action {
 
     @Override
     public void runAction(Sdd sdd) throws SddException {
-        // TODO Auto-generated method stub
+        sdd.actionUpdateOutput(nodeId);
     }
 
     @Override

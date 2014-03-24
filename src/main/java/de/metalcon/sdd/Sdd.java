@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import org.fusesource.leveldbjni.JniDBFactory;
 import org.iq80.leveldb.DB;
@@ -250,7 +251,19 @@ public class Sdd implements AutoCloseable {
         throw new UnsupportedOperationException();
     }
 
+    public void actionUpdateOutput(long nodeId) {
+        // TODO: implement updateOutput()
+        throw new UnsupportedOperationException();
+    }
+
+    public void
+        actionUpdateReferencing(long nodeId, Set<String> modifiedDetails) {
+        // TODO: implement updateReferencing()
+        throw new UnsupportedOperationException();
+    }
+
     public void actionCommit() {
+        // TODO: implement commit()
         throw new UnsupportedOperationException();
     }
 

@@ -26,7 +26,7 @@ public class AddRelationsAction extends Action {
 
     @Override
     public void runAction(Sdd sdd) throws SddException {
-        // TODO Auto-generated method stub
+        sdd.actionAddRelations(nodeId, nodeType, relationType, toIds);
     }
 
     @Override
