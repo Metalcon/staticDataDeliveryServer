@@ -135,6 +135,18 @@ public class Config {
         for (String nodeType : getNodeTypes()) {
             ConfigNode node = getNode(nodeType);
 
+            // Check relations
+            for (String relation : node.getRelations()) {
+                RelationType relationType = node.getRelationType(relation);
+
+                if (!isNodeType(relationType.getType())) {
+                    throw new InvalidConfigException(
+                            "Invalid Relation type for \"" + relation
+                                    + "\" on node \"" + nodeType + "\": \""
+                                    + relationType.getType() + "\".");
+                }
+            }
+
             // Check outputs
             for (String detail : node.getOutputDetails()) {
                 ConfigNodeOutput output = node.getOutput(detail);
