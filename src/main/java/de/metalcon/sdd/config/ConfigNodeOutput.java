@@ -14,6 +14,9 @@ public class ConfigNodeOutput {
 
     private Map<String, String> outRelations = new HashMap<String, String>();
 
+    /* package */ConfigNodeOutput() {
+    }
+
     public Set<String> getOutProperties() {
         return Collections.unmodifiableSet(outProperties);
     }

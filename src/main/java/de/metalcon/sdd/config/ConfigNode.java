@@ -18,6 +18,9 @@ public class ConfigNode {
     private Map<String, ConfigNodeOutput> outputs =
             new HashMap<String, ConfigNodeOutput>();
 
+    /* package */ConfigNode() {
+    }
+
     public Set<String> getProperties() {
         return Collections.unmodifiableSet(properties.keySet());
     }

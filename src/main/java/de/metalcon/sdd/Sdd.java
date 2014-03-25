@@ -24,9 +24,6 @@ import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 
-import de.metalcon.sdd.action.Action;
-import de.metalcon.sdd.action.UpdateOutputAction;
-import de.metalcon.sdd.action.UpdateReferencingAction;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.ConfigNodeOutput;
@@ -219,7 +216,7 @@ public class Sdd implements AutoCloseable {
         }
     }
 
-    public void actionSetProperties(
+    /* package */void actionSetProperties(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
@@ -240,7 +237,7 @@ public class Sdd implements AutoCloseable {
      *            If this is <code>0L</code>, it deletes the relation.
      * @throws InvalidNodeTypeException
      */
-    public void actionSetRelation(
+    /* package */void actionSetRelation(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
@@ -263,7 +260,7 @@ public class Sdd implements AutoCloseable {
         actions.add(new UpdateOutputAction(this, nodeId));
     }
 
-    public void actionSetRelations(
+    /* package */void actionSetRelations(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
@@ -280,7 +277,7 @@ public class Sdd implements AutoCloseable {
         actionAddRelations(actions, nodeId, nodeType, relation, toIds);
     }
 
-    public void actionAddRelations(
+    /* package */void actionAddRelations(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
@@ -299,12 +296,12 @@ public class Sdd implements AutoCloseable {
         actions.add(new UpdateOutputAction(this, nodeId));
     }
 
-    public void actionDelete(Queue<Action> actions, long nodeId) {
+    /* package */void actionDelete(Queue<Action> actions, long nodeId) {
         // TODO: implement delete()
         throw new UnsupportedOperationException();
     }
 
-    public void actionDeleteRelations(
+    /* package */void actionDeleteRelations(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
@@ -314,7 +311,7 @@ public class Sdd implements AutoCloseable {
         throw new UnsupportedOperationException();
     }
 
-    public void actionUpdateOutput(Queue<Action> actions, long nodeId)
+    /* package */void actionUpdateOutput(Queue<Action> actions, long nodeId)
             throws InvalidNodeException, OutputGenerationException,
             InvalidDetailException {
         // TODO: move vertex into parameters to avoid lookup?
@@ -336,6 +333,84 @@ public class Sdd implements AutoCloseable {
         }
 
         actions.add(new UpdateReferencingAction(this, nodeId, modifiedDetails));
+    }
+
+    /* package */void actionUpdateReferencing(
+            Queue<Action> actions,
+            long nodeId,
+            Set<String> modifiedDetails) throws InvalidNodeException {
+        // TODO: move vertex into parameters to avoid lookup?
+        Vertex node = getNode(nodeId);
+        String nodeType = getNodeType(node);
+
+        for (Vertex referencingNode : node.getVertices(Direction.IN)) {
+            long referencingNodeId = getNodeId(referencingNode);
+            String referencingNodeType = getNodeType(referencingNode);
+            ConfigNode configNode = config.getNode(referencingNodeType);
+
+            if (configNode.dependsOn(nodeType, modifiedDetails)) {
+                actions.add(new UpdateOutputAction(this, referencingNodeId));
+            }
+        }
+    }
+
+    private String buildIdDetail(long nodeId, String detail) {
+        return nodeId + ID_DETAIL_DELIMITER + detail;
+    }
+
+    private String buildOutputProperty(String detail) {
+        return NODEDB_OUTPUT_PREFIX + detail;
+    }
+
+    private Vertex getNode(long nodeId) throws InvalidNodeException {
+        try {
+            return getNode(nodeId, null, false);
+        } catch (InvalidNodeTypeException e) {
+            // Shouldn't be able to occur
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private Vertex getNode(long nodeId, String nodeType, boolean create)
+            throws InvalidNodeException, InvalidNodeTypeException {
+        Vertex node = nodeDbIndex.get(nodeId);
+        if (node != null) {
+            String type = getNodeType(node);
+            if (type == null || (nodeType != null && !nodeType.equals(type))) {
+                throw new InvalidNodeException();
+            }
+            return node;
+        }
+
+        if (!create || nodeType == null) {
+            throw new InvalidNodeException();
+        }
+
+        if (!config.isNodeType(nodeType)) {
+            throw new InvalidNodeTypeException();
+        }
+
+        node = nodeDb.addVertex(null);
+        node.setProperty(NODEDB_ID, nodeId);
+        node.setProperty(NODEDB_TYPE, nodeType);
+        nodeDbIndex.put(nodeId, node);
+        return node;
+    }
+
+    private long getNodeId(Vertex node) throws InvalidNodeException {
+        Long nodeId = node.getProperty(NODEDB_ID);
+        if (nodeId == null) {
+            throw new InvalidNodeException();
+        }
+        return nodeId;
+    }
+
+    private String getNodeType(Vertex node) throws InvalidNodeException {
+        String type = node.getProperty(NODEDB_TYPE);
+        if (type == null || !config.isNodeType(type)) {
+            throw new InvalidNodeException();
+        }
+        return type;
     }
 
     private String generateOutput(Vertex node, long nodeId, String detail)
@@ -400,84 +475,6 @@ public class Sdd implements AutoCloseable {
         } catch (IOException e) {
             throw new OutputGenerationException(e);
         }
-    }
-
-    public void actionUpdateReferencing(
-            Queue<Action> actions,
-            long nodeId,
-            Set<String> modifiedDetails) throws InvalidNodeException {
-        // TODO: move vertex into parameters to avoid lookup?
-        Vertex node = getNode(nodeId);
-        String nodeType = getNodeType(node);
-
-        for (Vertex referencingNode : node.getVertices(Direction.IN)) {
-            long referencingNodeId = getNodeId(referencingNode);
-            String referencingNodeType = getNodeType(referencingNode);
-            ConfigNode configNode = config.getNode(referencingNodeType);
-
-            if (configNode.dependsOn(nodeType, modifiedDetails)) {
-                actions.add(new UpdateOutputAction(this, referencingNodeId));
-            }
-        }
-    }
-
-    private Vertex getNode(long nodeId) throws InvalidNodeException {
-        try {
-            return getNode(nodeId, null, false);
-        } catch (InvalidNodeTypeException e) {
-            // Shouldn't be able to occur
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private Vertex getNode(long nodeId, String nodeType, boolean create)
-            throws InvalidNodeException, InvalidNodeTypeException {
-        Vertex node = nodeDbIndex.get(nodeId);
-        if (node != null) {
-            String type = getNodeType(node);
-            if (type == null || (nodeType != null && !nodeType.equals(type))) {
-                throw new InvalidNodeException();
-            }
-            return node;
-        }
-
-        if (!create || nodeType == null) {
-            throw new InvalidNodeException();
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-
-        node = nodeDb.addVertex(null);
-        node.setProperty(NODEDB_ID, nodeId);
-        node.setProperty(NODEDB_TYPE, nodeType);
-        nodeDbIndex.put(nodeId, node);
-        return node;
-    }
-
-    private long getNodeId(Vertex node) throws InvalidNodeException {
-        Long nodeId = node.getProperty(NODEDB_ID);
-        if (nodeId == null) {
-            throw new InvalidNodeException();
-        }
-        return nodeId;
-    }
-
-    private String getNodeType(Vertex node) throws InvalidNodeException {
-        String type = node.getProperty(NODEDB_TYPE);
-        if (type == null || !config.isNodeType(type)) {
-            throw new InvalidNodeException();
-        }
-        return type;
-    }
-
-    private String buildIdDetail(long nodeId, String detail) {
-        return nodeId + ID_DETAIL_DELIMITER + detail;
-    }
-
-    private String buildOutputProperty(String detail) {
-        return NODEDB_OUTPUT_PREFIX + detail;
     }
 
 }

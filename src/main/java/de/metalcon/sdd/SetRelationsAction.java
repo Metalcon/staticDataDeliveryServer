@@ -1,8 +1,7 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
 import java.util.Queue;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
@@ -19,7 +18,7 @@ public class SetRelationsAction extends Action {
 
     private long[] toIds;
 
-    public SetRelationsAction(
+    /* package */SetRelationsAction(
             Sdd sdd,
             long nodeId,
             String nodeType,

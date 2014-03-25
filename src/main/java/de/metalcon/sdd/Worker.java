@@ -4,7 +4,6 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import de.metalcon.sdd.action.Action;
 import de.metalcon.sdd.exception.EmptyTransactionException;
 
 public class Worker implements Runnable {

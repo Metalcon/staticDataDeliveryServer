@@ -8,7 +8,7 @@ public class RelationType {
 
     private boolean isArray;
 
-    public RelationType(
+    /* package */RelationType(
             String relationType) {
         if (relationType == null) {
             throw new IllegalArgumentException("relationType was null.");

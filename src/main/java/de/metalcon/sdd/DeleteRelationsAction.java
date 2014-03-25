@@ -1,55 +1,60 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
-import java.util.Map;
 import java.util.Queue;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
+import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
 
-public class SetPropertiesAction extends Action {
+public class DeleteRelationsAction extends Action {
 
     private long nodeId;
 
     private String nodeType;
 
-    private Map<String, String> properties;
+    private String relation;
 
-    public SetPropertiesAction(
+    private long[] toIds;
+
+    /* package */DeleteRelationsAction(
             Sdd sdd,
             long nodeId,
             String nodeType,
-            Map<String, String> properties) throws InvalidPropertyException,
-            InvalidNodeTypeException {
+            String relation,
+            long[] toIds) throws InvalidNodeTypeException,
+            InvalidRelationException {
         super(sdd);
+
+        // TODO: check duplicates
 
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
-        if (properties == null) {
-            throw new IllegalArgumentException("properties was null.");
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
+        }
+        if (toIds == null) {
+            throw new IllegalArgumentException("toIds was null.");
         }
 
         if (!config.isNodeType(nodeType)) {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
-        for (String property : properties.keySet()) {
-            if (!configNode.isProperty(property)) {
-                throw new InvalidPropertyException();
-            }
+        if (!configNode.isRelation(relation)) {
+            throw new InvalidRelationException();
         }
 
         this.nodeId = nodeId;
         this.nodeType = nodeType;
-        this.properties = properties;
+        this.relation = relation;
+        this.toIds = toIds;
     }
 
     @Override
     public void runAction(Queue<Action> actions) throws SddException {
-        sdd.actionSetProperties(actions, nodeId, nodeType, properties);
+        sdd.actionDeleteRelations(actions, nodeId, nodeType, relation, toIds);
     }
 
     @Override
@@ -58,19 +63,21 @@ public class SetPropertiesAction extends Action {
             return true;
         }
 
-        // we define that two distinct SetPropertiesActions are never equal
+        // we define that two distinct DeleteRelationsActions are never equal
         return false;
     }
 
     @Override
     public int hashCode() {
-        int hash = 54237;
-        int mult = 613;
+        int hash = 82378;
+        int mult = 379;
 
         hash = hash * mult + ((Long) nodeId).hashCode();
         hash = hash * mult + nodeType.hashCode();
-        hash = hash * mult + properties.hashCode();
+        hash = hash * mult + relation.hashCode();
+        hash = hash * mult + toIds.hashCode();
 
         return hash;
     }
+
 }

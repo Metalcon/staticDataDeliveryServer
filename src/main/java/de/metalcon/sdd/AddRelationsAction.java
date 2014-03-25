@@ -1,14 +1,13 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
 import java.util.Queue;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
 
-public class DeleteRelationsAction extends Action {
+public class AddRelationsAction extends Action {
 
     private long nodeId;
 
@@ -18,7 +17,7 @@ public class DeleteRelationsAction extends Action {
 
     private long[] toIds;
 
-    public DeleteRelationsAction(
+    /* package */AddRelationsAction(
             Sdd sdd,
             long nodeId,
             String nodeType,
@@ -55,7 +54,7 @@ public class DeleteRelationsAction extends Action {
 
     @Override
     public void runAction(Queue<Action> actions) throws SddException {
-        sdd.actionDeleteRelations(actions, nodeId, nodeType, relation, toIds);
+        sdd.actionAddRelations(actions, nodeId, nodeType, relation, toIds);
     }
 
     @Override
@@ -64,14 +63,14 @@ public class DeleteRelationsAction extends Action {
             return true;
         }
 
-        // we define that two distinct DeleteRelationsActions are never equal
+        // we define that two AddRelationsActions are never equal
         return false;
     }
 
     @Override
     public int hashCode() {
-        int hash = 82378;
-        int mult = 379;
+        int hash = 77257;
+        int mult = 239;
 
         hash = hash * mult + ((Long) nodeId).hashCode();
         hash = hash * mult + nodeType.hashCode();

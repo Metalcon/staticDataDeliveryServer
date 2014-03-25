@@ -1,9 +1,8 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
 import java.util.Queue;
 import java.util.Set;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.SddException;
 
@@ -13,7 +12,7 @@ public class UpdateReferencingAction extends Action {
 
     private Set<String> modifiedDetails;
 
-    public UpdateReferencingAction(
+    /* package */UpdateReferencingAction(
             Sdd sdd,
             long nodeId,
             Set<String> modifiedDetails) throws InvalidDetailException {

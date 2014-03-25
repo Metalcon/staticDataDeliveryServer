@@ -5,15 +5,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import de.metalcon.sdd.action.Action;
-import de.metalcon.sdd.action.AddRelationsAction;
-import de.metalcon.sdd.action.DeleteAction;
-import de.metalcon.sdd.action.DeleteRelationsAction;
-import de.metalcon.sdd.action.SetPropertiesAction;
-import de.metalcon.sdd.action.SetRelationAction;
-import de.metalcon.sdd.action.SetRelationsAction;
-import de.metalcon.sdd.action.UpdateOutputAction;
-import de.metalcon.sdd.action.UpdateReferencingAction;
 import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidDetailException;

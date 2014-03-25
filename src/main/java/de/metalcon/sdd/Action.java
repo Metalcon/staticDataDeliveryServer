@@ -1,11 +1,10 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.exception.SddException;
 
@@ -36,7 +35,7 @@ public abstract class Action implements Comparable<Action> {
 
     protected Config config;
 
-    public Action(
+    protected Action(
             Sdd sdd) {
         if (sdd == null) {
             throw new IllegalArgumentException("sdd was null.");

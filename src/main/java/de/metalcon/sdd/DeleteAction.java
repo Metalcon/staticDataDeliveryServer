@@ -1,15 +1,14 @@
-package de.metalcon.sdd.action;
+package de.metalcon.sdd;
 
 import java.util.Queue;
 
-import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.SddException;
 
-public class UpdateOutputAction extends Action {
+public class DeleteAction extends Action {
 
     private long nodeId;
 
-    public UpdateOutputAction(
+    /* package */DeleteAction(
             Sdd sdd,
             long nodeId) {
         super(sdd);
@@ -19,7 +18,7 @@ public class UpdateOutputAction extends Action {
 
     @Override
     public void runAction(Queue<Action> actions) throws SddException {
-        sdd.actionUpdateOutput(actions, nodeId);
+        sdd.actionDelete(actions, nodeId);
     }
 
     @Override
@@ -27,17 +26,15 @@ public class UpdateOutputAction extends Action {
         if (other == this) {
             return true;
         }
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
-        UpdateOutputAction o = (UpdateOutputAction) other;
-        return nodeId == o.nodeId;
+
+        // we define that two distinct DeleteActions are never equal
+        return false;
     }
 
     @Override
     public int hashCode() {
-        int hash = 66494;
-        int mult = 877;
+        int hash = 47220;
+        int mult = 421;
 
         hash = hash * mult + ((Long) nodeId).hashCode();
 
