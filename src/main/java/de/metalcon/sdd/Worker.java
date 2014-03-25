@@ -22,7 +22,7 @@ public class Worker implements Runnable {
     private BlockingQueue<WriteTransaction> transactions =
             new LinkedBlockingDeque<WriteTransaction>();
 
-    public Worker(
+    /* package */Worker(
             Sdd sdd) {
         this.sdd = sdd;
     }
