@@ -1,7 +1,8 @@
 package de.metalcon.sdd;
 
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import de.metalcon.sdd.action.Action;
 import de.metalcon.sdd.exception.EmptyTransactionException;
@@ -19,7 +20,7 @@ public class Worker implements Runnable {
     private boolean busy = false;
 
     private BlockingQueue<WriteTransaction> transactions =
-            new PriorityBlockingQueue<WriteTransaction>();
+            new LinkedBlockingDeque<WriteTransaction>();
 
     public Worker(
             Sdd sdd) {
@@ -37,10 +38,14 @@ public class Worker implements Runnable {
                     WriteTransaction transaction = transactions.take();
                     busy = true;
 
-                    for (Action action : transaction.getActions()) {
-                        action.runAction(sdd);
+                    Queue<Action> actions = transaction.getActions();
+                    sdd.startTransaction();
+                    while (!actions.isEmpty()) {
+                        Action action = actions.poll();
+                        System.out.println(action.getClass());
+                        action.runAction(sdd, actions);
                     }
-                    sdd.actionCommit();
+                    sdd.endTransaction();
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
@@ -99,7 +104,7 @@ public class Worker implements Runnable {
         if (stopping) {
             while (running) {
                 try {
-                    Thread.sleep(10);
+                    thread.join();
                 } catch (InterruptedException e) {
                     // stopped by server
                 }

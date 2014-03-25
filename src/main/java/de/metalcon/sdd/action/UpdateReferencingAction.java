@@ -1,5 +1,6 @@
 package de.metalcon.sdd.action;
 
+import java.util.Queue;
 import java.util.Set;
 
 import de.metalcon.sdd.Sdd;
@@ -19,8 +20,8 @@ public class UpdateReferencingAction extends Action {
     }
 
     @Override
-    public void runAction(Sdd sdd) throws SddException {
-        sdd.actionUpdateReferencing(nodeId, modifiedDetails);
+    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+        sdd.actionUpdateReferencing(actions, nodeId, modifiedDetails);
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.metalcon.sdd.action;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.SddException;
@@ -34,7 +35,8 @@ public abstract class Action implements Comparable<Action> {
         insertCount = ++insertCounter;
     }
 
-    public abstract void runAction(Sdd sdd) throws SddException;
+    public abstract void runAction(Sdd sdd, Queue<Action> actions)
+            throws SddException;
 
     @Override
     public int compareTo(Action other) {

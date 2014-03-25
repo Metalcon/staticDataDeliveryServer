@@ -1,5 +1,7 @@
 package de.metalcon.sdd.action;
 
+import java.util.Queue;
+
 import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.SddException;
 
@@ -13,8 +15,8 @@ public class DeleteAction extends Action {
     }
 
     @Override
-    public void runAction(Sdd sdd) throws SddException {
-        sdd.actionDelete(nodeId);
+    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+        sdd.actionDelete(actions, nodeId);
     }
 
     @Override

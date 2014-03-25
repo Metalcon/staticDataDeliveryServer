@@ -1,9 +1,9 @@
 package de.metalcon.sdd;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import de.metalcon.sdd.action.Action;
 import de.metalcon.sdd.action.AddRelationsAction;
@@ -12,9 +12,14 @@ import de.metalcon.sdd.action.DeleteRelationsAction;
 import de.metalcon.sdd.action.SetPropertiesAction;
 import de.metalcon.sdd.action.SetRelationAction;
 import de.metalcon.sdd.action.SetRelationsAction;
+import de.metalcon.sdd.action.UpdateOutputAction;
+import de.metalcon.sdd.action.UpdateReferencingAction;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
+import de.metalcon.sdd.config.RelationType;
+import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyTransactionException;
+import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.InvalidRelationException;
@@ -25,7 +30,9 @@ public class WriteTransaction {
 
     private Sdd sdd;
 
-    private List<Action> actions = new LinkedList<Action>();
+    private boolean commited = false;
+
+    private Queue<Action> actions = new LinkedList<Action>();
 
     /* package */WriteTransaction(
             Sdd sdd) {
@@ -33,19 +40,28 @@ public class WriteTransaction {
         config = sdd.getConfig();
     }
 
-    /* package */List<Action> getActions() {
-        return Collections.unmodifiableList(actions);
-    }
+    public boolean commit() throws EmptyTransactionException,
+            AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
 
-    public boolean commit() throws EmptyTransactionException {
-        return sdd.commit(this);
+        boolean result = sdd.commit(this);
+        if (result) {
+            commited = true;
+        }
+        return result;
     }
 
     public void setProperties(
             long nodeId,
             String nodeType,
             Map<String, String> properties) throws InvalidNodeTypeException,
-            InvalidPropertyException {
+            InvalidPropertyException, AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
@@ -73,38 +89,52 @@ public class WriteTransaction {
     public void setRelation(
             long nodeId,
             String nodeType,
-            String relationType,
+            String relation,
             long toId) throws InvalidNodeTypeException,
-            InvalidRelationException {
+            InvalidRelationException, AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
         }
 
         if (!config.isNodeType(nodeType)) {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
+        if (!configNode.isRelation(relation)) {
+            throw new InvalidRelationException();
+        }
+        RelationType relationType = configNode.getRelationType(relation);
+        if (relationType.isArray()) {
             throw new InvalidRelationException();
         }
 
-        actions.add(new SetRelationAction(nodeId, nodeType, relationType, toId));
+        actions.add(new SetRelationAction(nodeId, nodeType, relation, toId));
     }
 
     public void setRelations(
             long nodeId,
             String nodeType,
-            String relationType,
+            String relation,
             long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException {
+            InvalidRelationException, AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
+        // TODO: check duplicates
+
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
         }
         if (toIds == null) {
             throw new IllegalArgumentException("toIds was null.");
@@ -114,25 +144,34 @@ public class WriteTransaction {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
+        if (!configNode.isRelation(relation)) {
+            throw new InvalidRelationException();
+        }
+        RelationType relationType = configNode.getRelationType(relation);
+        if (!relationType.isArray()) {
             throw new InvalidRelationException();
         }
 
-        actions.add(new SetRelationsAction(nodeId, nodeType, relationType,
-                toIds));
+        actions.add(new SetRelationsAction(nodeId, nodeType, relation, toIds));
     }
 
     public void addRelations(
             long nodeId,
             String nodeType,
-            String relationType,
+            String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException {
+            InvalidNodeTypeException, AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
+        // TODO: check duplicates
+
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
         }
         if (toIds == null) {
             throw new IllegalArgumentException("toIds was null.");
@@ -142,29 +181,38 @@ public class WriteTransaction {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
+        if (!configNode.isRelation(relation)) {
             throw new InvalidRelationException();
         }
 
-        actions.add(new AddRelationsAction(nodeId, nodeType, relationType,
-                toIds));
+        actions.add(new AddRelationsAction(nodeId, nodeType, relation, toIds));
     }
 
-    public void delete(long nodeId) {
+    public void delete(long nodeId) throws AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
         actions.add(new DeleteAction(nodeId));
     }
 
     public void deleteRelations(
             long nodeId,
             String nodeType,
-            String relationType,
+            String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException {
+            InvalidNodeTypeException, AlreadyCommitedException {
+        if (commited) {
+            throw new AlreadyCommitedException();
+        }
+
+        // TODO: check duplicates
+
         if (nodeType == null) {
             throw new IllegalArgumentException("nodeType was null.");
         }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
         }
         if (toIds == null) {
             throw new IllegalArgumentException("toIds was null.");
@@ -174,12 +222,35 @@ public class WriteTransaction {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
+        if (!configNode.isRelation(relation)) {
             throw new InvalidRelationException();
         }
 
-        actions.add(new DeleteRelationsAction(nodeId, nodeType, relationType,
-                toIds));
+        actions.add(new DeleteRelationsAction(nodeId, nodeType, relation, toIds));
+    }
+
+    /* package */Queue<Action> getActions() {
+        return actions;
+    }
+
+    /* package */void updateOutput(long nodeId) {
+        actions.add(new UpdateOutputAction(nodeId));
+    }
+
+    /* package */void
+        updateReferencing(long nodeId, Set<String> modifiedDetails)
+                throws InvalidDetailException {
+        if (modifiedDetails == null) {
+            throw new IllegalArgumentException("modifiedDetails was null.");
+        }
+
+        for (String detail : modifiedDetails) {
+            if (!config.isDetail(detail)) {
+                throw new InvalidDetailException();
+            }
+        }
+
+        actions.add(new UpdateReferencingAction(nodeId, modifiedDetails));
     }
 
 }
