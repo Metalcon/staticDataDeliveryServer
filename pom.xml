@@ -46,13 +46,15 @@
   <properties>
     <metalcon.api.version>0.1.0</metalcon.api.version>
     <metalcon.static-data-delivery-server-api>0.1.0</metalcon.static-data-delivery-server-api>
-    <metalcon.json-pretty-printer.version>0.0.1</metalcon.json-pretty-printer.version>
     <metalcon.zmq-worker.version>0.1.0</metalcon.zmq-worker.version>
     
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
     <!-- Blueprints -->
     <blueprints.version>2.4.0</blueprints.version>
+    
+    <!-- JSON -->
+    <jackson.version>2.3.2</jackson.version>
     
     <!-- Test -->
     <junit.version>4.11</junit.version>
@@ -69,11 +71,6 @@
       <artifactId>static-data-delivery-server-api</artifactId>
       <version>${metalcon.static-data-delivery-server-api.version}</version>
     </dependency>-->
-    <dependency>
-      <groupId>de.metalcon</groupId>
-      <artifactId>json-pretty-printer</artifactId>
-      <version>${metalcon.json-pretty-printer.version}</version>
-    </dependency>
     <dependency>
       <groupId>de.metalcon</groupId>
       <artifactId>zmq-worker</artifactId>
@@ -95,6 +92,12 @@
       <groupId>com.tinkerpop.blueprints</groupId>
       <artifactId>blueprints-neo4j-graph</artifactId>
       <version>${blueprints.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     
     <dependency>
