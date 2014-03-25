@@ -74,9 +74,13 @@ public class Config {
         return details.contains(detail);
     }
 
-    public void addDetail(String detail) {
+    public void addDetail(String detail) throws InvalidConfigException {
         if (detail == null) {
             throw new IllegalArgumentException("detail was null.");
+        }
+        if (isDetail(detail)) {
+            throw new InvalidConfigException("Duplicate detail definition: \""
+                    + detail + "\".");
         }
         details.add(detail);
     }
@@ -103,12 +107,17 @@ public class Config {
         return nodes.get(type);
     }
 
-    public void addNode(String type, ConfigNode node) {
+    public void addNode(String type, ConfigNode node)
+            throws InvalidConfigException {
         if (type == null) {
             throw new IllegalArgumentException("type was null.");
         }
         if (node == null) {
             throw new IllegalArgumentException("node was null.");
+        }
+        if (isNodeType(type)) {
+            throw new InvalidConfigException("Duplicate node definition: \""
+                    + type + "\".");
         }
         nodes.put(type, node);
     }

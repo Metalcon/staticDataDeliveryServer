@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class ConfigNode {
@@ -48,6 +49,10 @@ public class ConfigNode {
             throw new IllegalArgumentException("propertyType was null.");
         }
         checkName(property);
+        if (isProperty(property)) {
+            throw new InvalidConfigException(
+                    "Duplicate property definition: \"" + property + "\".");
+        }
         if (!propertyType.equals("String")) {
             throw new InvalidConfigException("Invalid property type: \""
                     + propertyType + "\". "
@@ -87,6 +92,10 @@ public class ConfigNode {
             throw new IllegalArgumentException("relationType was null.");
         }
         checkName(relation);
+        if (isRelation(relation)) {
+            throw new InvalidConfigException(
+                    "Duplicate relation definition: \"" + relation + "\".");
+        }
         relations.put(relation, relationType);
     }
 
@@ -105,13 +114,20 @@ public class ConfigNode {
         return outputs.get(detail);
     }
 
-    public void addOutput(String detail, ConfigNodeOutput output) {
+    public void addOutput(String detail, ConfigNodeOutput output)
+            throws InvalidConfigException {
         if (detail == null) {
             throw new IllegalArgumentException("detail was null.");
         }
         if (output == null) {
             throw new IllegalArgumentException("output was null.");
         }
+
+        if (outputs.containsKey(detail)) {
+            throw new InvalidConfigException("Duplicate detail definition: \""
+                    + detail + "\".");
+        }
+
         outputs.put(detail, output);
     }
 
@@ -133,13 +149,12 @@ public class ConfigNode {
     }
 
     private void checkName(String name) throws InvalidConfigException {
-        if (name.equals("id") || name.equals("type")
-                || name.startsWith("output-")) {
-            throw new InvalidConfigException(
-                    "Invalid name: \""
-                            + name
-                            + "\". "
-                            + "It must not be \"id\", \"type\" or start with \"output-\".");
+        if (name.equals(Sdd.NODEDB_ID) || name.equals(Sdd.NODEDB_TYPE)
+                || name.startsWith(Sdd.NODEDB_OUTPUT_PREFIX)) {
+            throw new InvalidConfigException("Invalid name: \"" + name + "\". "
+                    + "It must not be \"" + Sdd.NODEDB_ID + "\", \""
+                    + Sdd.NODEDB_TYPE + "\" or start with \""
+                    + Sdd.NODEDB_OUTPUT_PREFIX + "\".");
         }
     }
 

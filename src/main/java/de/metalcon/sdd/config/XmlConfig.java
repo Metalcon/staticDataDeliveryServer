@@ -106,7 +106,7 @@ public class XmlConfig extends Config {
     }
 
     private void xmlLoadDetails(Element domDetails)
-            throws InvalidXmlConfigException {
+            throws InvalidConfigException {
         xmlAssertNodeName(domDetails, "details");
         for (Node domIter = domDetails.getFirstChild(); domIter != null; domIter =
                 domIter.getNextSibling()) {
@@ -117,8 +117,7 @@ public class XmlConfig extends Config {
         }
     }
 
-    private void xmlLoadDetail(Element domDetail)
-            throws InvalidXmlConfigException {
+    private void xmlLoadDetail(Element domDetail) throws InvalidConfigException {
         xmlAssertNodeName(domDetail, "detail");
         xmlAssertHasAttribute(domDetail, "name");
         addDetail(domDetail.getAttribute("name"));
@@ -201,7 +200,7 @@ public class XmlConfig extends Config {
     }
 
     private void xmlLoadOutput(ConfigNode node, Element domOutput)
-            throws InvalidXmlConfigException {
+            throws InvalidConfigException {
         xmlAssertNodeName(domOutput, "output");
         xmlAssertHasAttribute(domOutput, "detail");
 
@@ -232,11 +231,13 @@ public class XmlConfig extends Config {
                 }
             }
         }
+
+        node.addOutput(outputDetail, output);
     }
 
     private void xmlLoadOutProperty(
             ConfigNodeOutput output,
-            Element domOutProperty) throws InvalidXmlConfigException {
+            Element domOutProperty) throws InvalidConfigException {
         xmlAssertNodeName(domOutProperty, "out-property");
         xmlAssertHasAttribute(domOutProperty, "property");
         output.addOutPropery(domOutProperty.getAttribute("property"));
@@ -244,7 +245,7 @@ public class XmlConfig extends Config {
 
     private void xmlLoadOutRelation(
             ConfigNodeOutput output,
-            Element domOutRelation) throws InvalidXmlConfigException {
+            Element domOutRelation) throws InvalidConfigException {
         xmlAssertNodeName(domOutRelation, "out-relation");
         xmlAssertHasAttribute(domOutRelation, "relation");
         xmlAssertHasAttribute(domOutRelation, "detail");
