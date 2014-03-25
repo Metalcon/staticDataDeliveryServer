@@ -17,18 +17,22 @@ import de.metalcon.sdd.exception.InvalidXmlConfigException;
 public class XmlConfig extends Config {
 
     public XmlConfig(
-            String configFile) throws SAXException, IOException,
-            ParserConfigurationException, InvalidConfigException {
+            String configFile) throws InvalidConfigException {
         super();
 
         xmlLoad(configFile);
     }
 
-    private void xmlLoad(String configFile) throws SAXException, IOException,
-            ParserConfigurationException, InvalidConfigException {
-        Document domDoc =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                        .parse(Paths.get(configFile).toFile());
+    private void xmlLoad(String configFile) throws InvalidConfigException {
+        Document domDoc = null;
+        try {
+            domDoc =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder()
+                            .parse(Paths.get(configFile).toFile());
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new InvalidXmlConfigException("Couldn't open XML file: \""
+                    + configFile + "\".", e);
+        }
 
         domDoc.normalize();
 

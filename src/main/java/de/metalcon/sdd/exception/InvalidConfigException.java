@@ -12,4 +12,15 @@ public class InvalidConfigException extends SddUsageException {
         super(message);
     }
 
+    public InvalidConfigException(
+            Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidConfigException(
+            String message,
+            Throwable cause) {
+        super(message, cause);
+    }
+
 }

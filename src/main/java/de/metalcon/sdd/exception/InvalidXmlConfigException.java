@@ -12,4 +12,15 @@ public class InvalidXmlConfigException extends InvalidConfigException {
         super(message);
     }
 
+    public InvalidXmlConfigException(
+            Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidXmlConfigException(
+            String message,
+            Throwable cause) {
+        super(message, cause);
+    }
+
 }
