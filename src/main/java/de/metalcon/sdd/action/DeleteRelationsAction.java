@@ -3,6 +3,9 @@ package de.metalcon.sdd.action;
 import java.util.Queue;
 
 import de.metalcon.sdd.Sdd;
+import de.metalcon.sdd.config.ConfigNode;
+import de.metalcon.sdd.exception.InvalidNodeTypeException;
+import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
 
 public class DeleteRelationsAction extends Action {
@@ -16,10 +19,34 @@ public class DeleteRelationsAction extends Action {
     private long[] toIds;
 
     public DeleteRelationsAction(
+            Sdd sdd,
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) {
+            long[] toIds) throws InvalidNodeTypeException,
+            InvalidRelationException {
+        super(sdd);
+
+        // TODO: check duplicates
+
+        if (nodeType == null) {
+            throw new IllegalArgumentException("nodeType was null.");
+        }
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
+        }
+        if (toIds == null) {
+            throw new IllegalArgumentException("toIds was null.");
+        }
+
+        if (!config.isNodeType(nodeType)) {
+            throw new InvalidNodeTypeException();
+        }
+        ConfigNode configNode = config.getNode(nodeType);
+        if (!configNode.isRelation(relation)) {
+            throw new InvalidRelationException();
+        }
+
         this.nodeId = nodeId;
         this.nodeType = nodeType;
         this.relation = relation;
@@ -27,7 +54,7 @@ public class DeleteRelationsAction extends Action {
     }
 
     @Override
-    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) throws SddException {
         sdd.actionDeleteRelations(actions, nodeId, nodeType, relation, toIds);
     }
 

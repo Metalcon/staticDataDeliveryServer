@@ -10,12 +10,15 @@ public class DeleteAction extends Action {
     private long nodeId;
 
     public DeleteAction(
+            Sdd sdd,
             long nodeId) {
+        super(sdd);
+
         this.nodeId = nodeId;
     }
 
     @Override
-    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) throws SddException {
         sdd.actionDelete(actions, nodeId);
     }
 

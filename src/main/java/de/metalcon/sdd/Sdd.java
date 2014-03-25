@@ -193,6 +193,13 @@ public class Sdd implements AutoCloseable {
     }
 
     /* package */void startTransaction() {
+        if (outputDbBatch != null) {
+            try {
+                outputDbBatch.close();
+            } catch (IOException e) {
+                // We don't care
+            }
+        }
         outputDbBatch = outputDb.createWriteBatch();
 
         // Delete all changes since last commit, should be none if no exception
@@ -206,6 +213,7 @@ public class Sdd implements AutoCloseable {
         try {
             outputDb.write(outputDbBatch);
             outputDbBatch.close();
+            outputDbBatch = null;
         } catch (IOException e) {
             throw new IOException("Couldn't close OutputDB WriteBatch", e);
         }
@@ -224,7 +232,7 @@ public class Sdd implements AutoCloseable {
             node.setProperty(property.getKey(), property.getValue());
         }
 
-        actions.add(new UpdateOutputAction(nodeId));
+        actions.add(new UpdateOutputAction(this, nodeId));
     }
 
     /**
@@ -252,7 +260,7 @@ public class Sdd implements AutoCloseable {
         Vertex relNode = getNode(toId, relationType.getType(), true);
         nodeDb.addEdge(null, node, relNode, relation);
 
-        actions.add(new UpdateOutputAction(nodeId));
+        actions.add(new UpdateOutputAction(this, nodeId));
     }
 
     public void actionSetRelations(
@@ -288,7 +296,7 @@ public class Sdd implements AutoCloseable {
             nodeDb.addEdge(null, node, relNode, relation);
         }
 
-        actions.add(new UpdateOutputAction(nodeId));
+        actions.add(new UpdateOutputAction(this, nodeId));
     }
 
     public void actionDelete(Queue<Action> actions, long nodeId) {
@@ -307,7 +315,8 @@ public class Sdd implements AutoCloseable {
     }
 
     public void actionUpdateOutput(Queue<Action> actions, long nodeId)
-            throws InvalidNodeException, OutputGenerationException {
+            throws InvalidNodeException, OutputGenerationException,
+            InvalidDetailException {
         // TODO: move vertex into parameters to avoid lookup?
         Vertex node = getNode(nodeId);
         Set<String> modifiedDetails = new HashSet<String>();
@@ -326,7 +335,7 @@ public class Sdd implements AutoCloseable {
             }
         }
 
-        actions.add(new UpdateReferencingAction(nodeId, modifiedDetails));
+        actions.add(new UpdateReferencingAction(this, nodeId, modifiedDetails));
     }
 
     private String generateOutput(Vertex node, long nodeId, String detail)
@@ -407,7 +416,7 @@ public class Sdd implements AutoCloseable {
             ConfigNode configNode = config.getNode(referencingNodeType);
 
             if (configNode.dependsOn(nodeType, modifiedDetails)) {
-                actions.add(new UpdateOutputAction(referencingNodeId));
+                actions.add(new UpdateOutputAction(this, referencingNodeId));
             }
         }
     }

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.metalcon.sdd.Sdd;
+import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.exception.SddException;
 
 public abstract class Action implements Comparable<Action> {
@@ -31,12 +32,22 @@ public abstract class Action implements Comparable<Action> {
 
     private int insertCount;
 
-    public Action() {
+    protected Sdd sdd;
+
+    protected Config config;
+
+    public Action(
+            Sdd sdd) {
+        if (sdd == null) {
+            throw new IllegalArgumentException("sdd was null.");
+        }
+
         insertCount = ++insertCounter;
+        this.sdd = sdd;
+        config = sdd.getConfig();
     }
 
-    public abstract void runAction(Sdd sdd, Queue<Action> actions)
-            throws SddException;
+    public abstract void runAction(Queue<Action> actions) throws SddException;
 
     @Override
     public int compareTo(Action other) {

@@ -42,8 +42,7 @@ public class Worker implements Runnable {
                     sdd.startTransaction();
                     while (!actions.isEmpty()) {
                         Action action = actions.poll();
-                        System.out.println(action.getClass());
-                        action.runAction(sdd, actions);
+                        action.runAction(actions);
                     }
                     sdd.endTransaction();
                 } catch (InterruptedException e) {

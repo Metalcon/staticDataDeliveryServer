@@ -3,6 +3,10 @@ package de.metalcon.sdd.action;
 import java.util.Queue;
 
 import de.metalcon.sdd.Sdd;
+import de.metalcon.sdd.config.ConfigNode;
+import de.metalcon.sdd.config.RelationType;
+import de.metalcon.sdd.exception.InvalidNodeTypeException;
+import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
 
 public class SetRelationAction extends Action {
@@ -16,10 +20,34 @@ public class SetRelationAction extends Action {
     private long toId;
 
     public SetRelationAction(
+            Sdd sdd,
             long nodeId,
             String nodeType,
             String relation,
-            long toId) {
+            long toId) throws InvalidRelationException,
+            InvalidNodeTypeException {
+        super(sdd);
+
+        if (nodeType == null) {
+            throw new IllegalArgumentException("nodeType was null.");
+        }
+        if (relation == null) {
+            throw new IllegalArgumentException("relation was null.");
+        }
+
+        if (!config.isNodeType(nodeType)) {
+            throw new InvalidNodeTypeException();
+        }
+
+        ConfigNode configNode = config.getNode(nodeType);
+        if (!configNode.isRelation(relation)) {
+            throw new InvalidRelationException();
+        }
+        RelationType relationType = configNode.getRelationType(relation);
+        if (relationType.isArray()) {
+            throw new InvalidRelationException();
+        }
+
         this.nodeId = nodeId;
         this.nodeType = nodeType;
         this.relation = relation;
@@ -27,7 +55,7 @@ public class SetRelationAction extends Action {
     }
 
     @Override
-    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) throws SddException {
         sdd.actionSetRelation(actions, nodeId, nodeType, relation, toId);
     }
 

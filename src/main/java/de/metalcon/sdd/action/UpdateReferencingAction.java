@@ -4,6 +4,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import de.metalcon.sdd.Sdd;
+import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.SddException;
 
 public class UpdateReferencingAction extends Action {
@@ -13,14 +14,27 @@ public class UpdateReferencingAction extends Action {
     private Set<String> modifiedDetails;
 
     public UpdateReferencingAction(
+            Sdd sdd,
             long nodeId,
-            Set<String> modifiedDetails) {
+            Set<String> modifiedDetails) throws InvalidDetailException {
+        super(sdd);
+
+        if (modifiedDetails == null) {
+            throw new IllegalArgumentException("modifiedDetails was null.");
+        }
+
+        for (String detail : modifiedDetails) {
+            if (!config.isDetail(detail)) {
+                throw new InvalidDetailException();
+            }
+        }
+
         this.nodeId = nodeId;
         this.modifiedDetails = modifiedDetails;
     }
 
     @Override
-    public void runAction(Sdd sdd, Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) throws SddException {
         sdd.actionUpdateReferencing(actions, nodeId, modifiedDetails);
     }
 
