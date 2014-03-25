@@ -1,6 +1,5 @@
 package de.metalcon.sdd;
 
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -19,10 +18,8 @@ public class Worker implements Runnable {
 
     private boolean busy = false;
 
-    private BlockingQueue<Queue<Action>> transactions =
-            new PriorityBlockingQueue<Queue<Action>>();
-
-    private Queue<Action> currentTransaction = null;
+    private BlockingQueue<WriteTransaction> transactions =
+            new PriorityBlockingQueue<WriteTransaction>();
 
     public Worker(
             Sdd sdd) {
@@ -37,19 +34,13 @@ public class Worker implements Runnable {
             while (!stopping) {
                 try {
                     busy = false;
-                    if (currentTransaction == null) {
-                        // waits until transaction has been queued
-                        currentTransaction = transactions.take();
-                    }
-                    Action action = currentTransaction.poll();
+                    WriteTransaction transaction = transactions.take();
                     busy = true;
 
-                    action.runAction(sdd);
-
-                    if (currentTransaction.isEmpty()) {
-                        sdd.actionCommit();
-                        currentTransaction = null;
+                    for (Action action : transaction.getActions()) {
+                        action.runAction(sdd);
                     }
+                    sdd.actionCommit();
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
@@ -67,12 +58,12 @@ public class Worker implements Runnable {
         stopping = false;
     }
 
-    public boolean queueTransaction(Queue<Action> transaction)
+    public boolean queueTransaction(WriteTransaction transaction)
             throws EmptyTransactionException {
         if (transaction == null) {
             throw new IllegalArgumentException("transaction was null.");
         }
-        if (transaction.isEmpty()) {
+        if (transaction.getActions().isEmpty()) {
             throw new EmptyTransactionException();
         }
         return transactions.offer(transaction);

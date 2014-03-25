@@ -3,9 +3,7 @@ package de.metalcon.sdd;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import org.fusesource.leveldbjni.JniDBFactory;
@@ -16,21 +14,10 @@ import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 
-import de.metalcon.sdd.action.Action;
-import de.metalcon.sdd.action.AddRelationsAction;
-import de.metalcon.sdd.action.DeleteAction;
-import de.metalcon.sdd.action.DeleteRelationsAction;
-import de.metalcon.sdd.action.SetPropertiesAction;
-import de.metalcon.sdd.action.SetRelationAction;
-import de.metalcon.sdd.action.SetRelationsAction;
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidDetailException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class Sdd implements AutoCloseable {
 
@@ -49,8 +36,6 @@ public class Sdd implements AutoCloseable {
     private Map<Long, Vertex> nodeDbIndex;
 
     private Worker worker;
-
-    private Queue<Action> transaction;
 
     public Sdd(
             Config config) throws InvalidConfigException, IOException {
@@ -93,9 +78,6 @@ public class Sdd implements AutoCloseable {
         // startup worker thread
         worker = new Worker(this);
         worker.start();
-
-        // start with empty transaction
-        transaction = new LinkedList<Action>();
     }
 
     @Override
@@ -128,6 +110,10 @@ public class Sdd implements AutoCloseable {
         return config;
     }
 
+    /**
+     * @return The node's output in detail or <code>NULL</code> if that node
+     *         doesn't exist.
+     */
     public String read(long nodeId, String detail)
             throws InvalidDetailException {
         if (detail == null) {
@@ -143,152 +129,8 @@ public class Sdd implements AutoCloseable {
                 .asString(outputDb.get(JniDBFactory.bytes(idDetail)));
     }
 
-    public void setProperties(
-            long nodeId,
-            String nodeType,
-            Map<String, String> properties) throws InvalidNodeTypeException,
-            InvalidPropertyException {
-        if (nodeType == null) {
-            throw new IllegalArgumentException("nodeType was null.");
-        }
-        if (properties == null) {
-            throw new IllegalArgumentException("properties was null.");
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-        ConfigNode configNode = config.getNode(nodeType);
-        for (String property : properties.keySet()) {
-            if (!configNode.isProperty(property)) {
-                throw new InvalidPropertyException();
-            }
-        }
-
-        transaction.add(new SetPropertiesAction(nodeId, nodeType, properties));
-    }
-
-    /**
-     * @param toId
-     *            If this is <code>0L</code>, it deletes the relation.
-     */
-    public void setRelation(
-            long nodeId,
-            String nodeType,
-            String relationType,
-            long toId) throws InvalidNodeTypeException,
-            InvalidRelationException {
-        if (nodeType == null) {
-            throw new IllegalArgumentException("nodeType was null.");
-        }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-        ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
-            throw new InvalidRelationException();
-        }
-
-        transaction.add(new SetRelationAction(nodeId, nodeType, relationType,
-                toId));
-    }
-
-    public void setRelations(
-            long nodeId,
-            String nodeType,
-            String relationType,
-            long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException {
-        if (nodeType == null) {
-            throw new IllegalArgumentException("nodeType was null.");
-        }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
-        }
-        if (toIds == null) {
-            throw new IllegalArgumentException("toIds was null.");
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-        ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
-            throw new InvalidRelationException();
-        }
-
-        transaction.add(new SetRelationsAction(nodeId, nodeType, relationType,
-                toIds));
-    }
-
-    public void addRelations(
-            long nodeId,
-            String nodeType,
-            String relationType,
-            long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException {
-        if (nodeType == null) {
-            throw new IllegalArgumentException("nodeType was null.");
-        }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
-        }
-        if (toIds == null) {
-            throw new IllegalArgumentException("toIds was null.");
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-        ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
-            throw new InvalidRelationException();
-        }
-
-        transaction.add(new AddRelationsAction(nodeId, nodeType, relationType,
-                toIds));
-    }
-
-    public void delete(long nodeId) {
-        transaction.add(new DeleteAction(nodeId));
-    }
-
-    public void deleteRelations(
-            long nodeId,
-            String nodeType,
-            String relationType,
-            long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException {
-        if (nodeType == null) {
-            throw new IllegalArgumentException("nodeType was null.");
-        }
-        if (relationType == null) {
-            throw new IllegalArgumentException("relationType was null.");
-        }
-        if (toIds == null) {
-            throw new IllegalArgumentException("toIds was null.");
-        }
-
-        if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
-        }
-        ConfigNode configNode = config.getNode(nodeType);
-        if (!configNode.isRelation(relationType)) {
-            throw new InvalidRelationException();
-        }
-
-        transaction.add(new DeleteRelationsAction(nodeId, nodeType,
-                relationType, toIds));
-    }
-
-    public boolean commit() throws EmptyTransactionException {
-        boolean result = worker.queueTransaction(transaction);
-        transaction = new LinkedList<Action>();
-        return result;
+    public WriteTransaction createWriteTransaction() {
+        return new WriteTransaction(this);
     }
 
     public void waitUntilQueueEmpty() {
@@ -296,7 +138,12 @@ public class Sdd implements AutoCloseable {
     }
 
     // =========================================================================
-    // ACTIONS
+    // IMPLEMENTATION
+
+    /* package */boolean commit(WriteTransaction transaction)
+            throws EmptyTransactionException {
+        return worker.queueTransaction(transaction);
+    }
 
     public void actionSetProperties(
             long nodeId,
