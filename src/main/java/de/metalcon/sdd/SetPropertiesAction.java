@@ -35,6 +35,9 @@ public class SetPropertiesAction extends Action {
             throw new InvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
+        if (properties.size() == 0) {
+            throw new InvalidPropertyException("properties was empty.");
+        }
         for (String property : properties.keySet()) {
             if (!configNode.isProperty(property)) {
                 throw new InvalidPropertyException();

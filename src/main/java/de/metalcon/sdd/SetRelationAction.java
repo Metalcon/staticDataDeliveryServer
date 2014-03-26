@@ -18,6 +18,10 @@ public class SetRelationAction extends Action {
 
     private long toId;
 
+    /**
+     * @param toId
+     *            If this is <code>0L</code>, it deletes the relation.
+     */
     /* package */SetRelationAction(
             Sdd sdd,
             long nodeId,

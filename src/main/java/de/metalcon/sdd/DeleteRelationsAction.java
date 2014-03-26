@@ -3,6 +3,7 @@ package de.metalcon.sdd;
 import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
+import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
@@ -44,6 +45,14 @@ public class DeleteRelationsAction extends Action {
         ConfigNode configNode = config.getNode(nodeType);
         if (!configNode.isRelation(relation)) {
             throw new InvalidRelationException();
+        }
+        RelationType relationType = configNode.getRelationType(relation);
+        if (!relationType.isArray()) {
+            throw new InvalidRelationException();
+        }
+
+        if (toIds.length == 0) {
+            throw new IllegalArgumentException("toIds was empty.");
         }
 
         this.nodeId = nodeId;
