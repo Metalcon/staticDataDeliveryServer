@@ -37,6 +37,11 @@ import de.metalcon.sdd.exception.OutputGenerationException;
 
 public class Sdd implements AutoCloseable {
 
+    // TODO: BUG: adding a node that hasn't set properties.
+    // TODO: BUG: fix ClosedByInterruptException
+    // TODO: aggregate multiple same addRelations in same transaction into one
+    // TODO: generally clean up transactions?
+
     public static final String ID_DETAIL_DELIMITER = ":";
 
     public static final String ID_DELIMITER = ",";
@@ -434,6 +439,8 @@ public class Sdd implements AutoCloseable {
                 for (String relation : configNodeOutput.getOutRelations()) {
                     RelationType relationType =
                             configNode.getRelationType(relation);
+                    String relationDetail =
+                            configNodeOutput.getOutRelationDetail(relation);
                     Object relOutput = null;
 
                     Iterable<Vertex> relNodes =
@@ -442,7 +449,7 @@ public class Sdd implements AutoCloseable {
                         if (relNodes.iterator().hasNext()) {
                             Vertex relNode = relNodes.iterator().next();
                             String relNodeOutput =
-                                    relNode.getProperty(buildOutputProperty(detail));
+                                    relNode.getProperty(buildOutputProperty(relationDetail));
                             // If relNodeOutput isn't set yet, it should be
                             // generated through UpdateReferencingActions
                             if (relNodeOutput != null) {
@@ -454,14 +461,16 @@ public class Sdd implements AutoCloseable {
                         List<JsonNode> relOutputs = new LinkedList<JsonNode>();
                         for (Vertex relNode : relNodes) {
                             String relNodeOutput =
-                                    relNode.getProperty(buildOutputProperty(detail));
+                                    relNode.getProperty(buildOutputProperty(relationDetail));
                             // If relNodeOutput isn't set yet, it should be
                             // generated through UpdateReferencingActions
                             if (relNodeOutput != null) {
                                 relOutputs.add(objectMapper
                                         .readTree(relNodeOutput));
                             }
+                            // System.out.println(relNodeOutput);
                         }
+                        // System.out.println("\n\n###\n\n");
                         if (!relOutputs.isEmpty()) {
                             relOutput = relOutputs;
                         }

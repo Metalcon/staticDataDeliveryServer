@@ -25,15 +25,23 @@ public class SddTest {
     private Sdd sdd;
 
     @Before
-    public void setUp() throws InvalidConfigException, IOException,
-            InvalidDetailException, InvalidNodeTypeException,
-            InvalidPropertyException, EmptyTransactionException,
-            AlreadyCommitedException, InvalidRelationException {
+    public void setUp() throws InvalidConfigException, IOException {
         config = new XmlConfig("src/test/resources/testConfig.xml");
         config.makeTemporary();
 
         sdd = new Sdd(config);
+    }
 
+    @After
+    public void tearDown() throws IOException {
+        sdd.close();
+    }
+
+    @Test
+    public void testSdd() throws InvalidNodeTypeException,
+            InvalidPropertyException, AlreadyCommitedException,
+            InvalidRelationException, EmptyTransactionException,
+            InvalidDetailException {
         WriteTransaction tx = sdd.createWriteTransaction();
         Map<String, String> emptyprops = new HashMap<String, String>();
         tx.setProperties(31L, "Node1", emptyprops);
@@ -54,15 +62,6 @@ public class SddTest {
 
         System.out.println("sdd.read(31L, \"detail1\") = "
                 + sdd.read(31L, "detail1"));
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        sdd.close();
-    }
-
-    @Test
-    public void testSdd() {
     }
 
 }

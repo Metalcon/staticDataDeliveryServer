@@ -13,6 +13,7 @@
     <node type="Band">
       <property name="name" type="String"/>
       <property name="desc" type="String"/>
+      <property name="picid" type="String"/>
       <relation name="records" type="Record[]"/>
       <relation name="users" type="User[]"/>
 
@@ -38,7 +39,7 @@
       <output detail="nested">
         <out-property property="name"/>
         <out-property property="release"/>
-        <out-relation relation="records" detail="properties"/>
+        <out-relation relation="bands" detail="properties"/>
         <out-relation relation="users" detail="properties"/>
       </output>
 
@@ -50,13 +51,14 @@
 
     <node type="User">
       <property name="name" type="String"/>
+      <property name="picid" type="String"/>
       <relation name="bands" type="Band[]"/>
       <relation name="records" type="Record[]"/>
 
       <output detail="nested">
         <out-property property="name"/>
+        <out-relation relation="bands" detail="properties"/>
         <out-relation relation="records" detail="properties"/>
-        <out-relation relation="users" detail="properties"/>
       </output>
 
       <output detail="properties">
