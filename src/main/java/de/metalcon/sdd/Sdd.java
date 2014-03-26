@@ -359,11 +359,11 @@ public class Sdd implements AutoCloseable {
         }
     }
 
-    private String buildIdDetail(long nodeId, String detail) {
+    private static String buildIdDetail(long nodeId, String detail) {
         return nodeId + ID_DETAIL_DELIMITER + detail;
     }
 
-    private String buildOutputProperty(String detail) {
+    private static String buildOutputProperty(String detail) {
         return NODEDB_OUTPUT_PREFIX + detail;
     }
 
