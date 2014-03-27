@@ -43,6 +43,7 @@ public class Sdd implements AutoCloseable {
     // TODO: generally clean up transactions?
     // TODO: check ids not == 0L. add tests.
     // TODO: implement reset property
+    // TODO: implement some sort of queue status
 
     public static final String ID_DETAIL_DELIMITER = ":";
 

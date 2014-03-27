@@ -16,6 +16,7 @@ public class SetRelationTest extends ActionTestBase {
     public void testValidArguments() throws InvalidNodeTypeException,
             InvalidRelationException, AlreadyCommitedException {
         tx.setRelation(NODE_ID, "Node1", "relation2", TO_ID);
+        tx.setRelation(NODE_ID, "Node1", "relation2", 0L);
     }
 
     @Test(

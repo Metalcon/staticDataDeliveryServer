@@ -26,6 +26,9 @@ public class SetRelationsTest extends ActionTestBase {
 
         tx.setRelations(NODE_ID, "Node1", "relation1", TO_IDS2);
         tx.setRelations(NODE_ID, "Node2", "relation1", TO_IDS2);
+
+        tx.setRelations(NODE_ID, "Node1", "relation1", new long[] {});
+        tx.setRelations(NODE_ID, "Node2", "relation1", new long[] {});
     }
 
     @Test(
