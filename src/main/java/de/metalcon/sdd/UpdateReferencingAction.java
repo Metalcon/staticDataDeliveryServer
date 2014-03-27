@@ -3,6 +3,7 @@ package de.metalcon.sdd;
 import java.util.Queue;
 import java.util.Set;
 
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.SddException;
 
@@ -15,13 +16,17 @@ public class UpdateReferencingAction extends Action {
     /* package */UpdateReferencingAction(
             Sdd sdd,
             long nodeId,
-            Set<String> modifiedDetails) throws InvalidDetailException {
+            Set<String> modifiedDetails) throws InvalidDetailException,
+            EmptyIdException {
         super(sdd);
 
         if (modifiedDetails == null) {
             throw new IllegalArgumentException("modifiedDetails was null.");
         }
 
+        if (nodeId == Sdd.EMPTY_ID) {
+            throw new EmptyIdException();
+        }
         for (String detail : modifiedDetails) {
             if (!config.isDetail(detail)) {
                 throw new InvalidDetailException();

@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
@@ -20,7 +21,7 @@ public class SetRelationAction extends Action {
 
     /**
      * @param toId
-     *            If this is <code>0L</code>, it deletes the relation.
+     *            If this is <code>Sdd.EMPTY_ID</code>, it deletes the relation.
      */
     /* package */SetRelationAction(
             Sdd sdd,
@@ -28,7 +29,7 @@ public class SetRelationAction extends Action {
             String nodeType,
             String relation,
             long toId) throws InvalidRelationException,
-            InvalidNodeTypeException {
+            InvalidNodeTypeException, EmptyIdException {
         super(sdd);
 
         if (nodeType == null) {
@@ -38,10 +39,12 @@ public class SetRelationAction extends Action {
             throw new IllegalArgumentException("relation was null.");
         }
 
+        if (nodeId == Sdd.EMPTY_ID) {
+            throw new EmptyIdException();
+        }
         if (!config.isNodeType(nodeType)) {
             throw new InvalidNodeTypeException();
         }
-
         ConfigNode configNode = config.getNode(nodeType);
         if (!configNode.isRelation(relation)) {
             throw new InvalidRelationException();

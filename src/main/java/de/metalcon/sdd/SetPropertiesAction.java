@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.SddException;
@@ -21,7 +22,7 @@ public class SetPropertiesAction extends Action {
             long nodeId,
             String nodeType,
             Map<String, String> properties) throws InvalidPropertyException,
-            InvalidNodeTypeException {
+            InvalidNodeTypeException, EmptyIdException {
         super(sdd);
 
         if (nodeType == null) {
@@ -31,6 +32,9 @@ public class SetPropertiesAction extends Action {
             throw new IllegalArgumentException("properties was null.");
         }
 
+        if (nodeId == Sdd.EMPTY_ID) {
+            throw new EmptyIdException();
+        }
         if (!config.isNodeType(nodeType)) {
             throw new InvalidNodeTypeException();
         }

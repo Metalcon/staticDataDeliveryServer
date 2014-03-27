@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
 import de.metalcon.sdd.exception.SddException;
@@ -24,7 +25,7 @@ public class DeleteRelationsAction extends Action {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException {
+            InvalidRelationException, EmptyIdException {
         super(sdd);
 
         // TODO: check duplicates
@@ -39,6 +40,9 @@ public class DeleteRelationsAction extends Action {
             throw new IllegalArgumentException("toIds was null.");
         }
 
+        if (nodeId == Sdd.EMPTY_ID) {
+            throw new EmptyIdException();
+        }
         if (!config.isNodeType(nodeType)) {
             throw new InvalidNodeTypeException();
         }
@@ -50,9 +54,13 @@ public class DeleteRelationsAction extends Action {
         if (!relationType.isArray()) {
             throw new InvalidRelationException();
         }
-
         if (toIds.length == 0) {
             throw new IllegalArgumentException("toIds was empty.");
+        }
+        for (long toId : toIds) {
+            if (toId == Sdd.EMPTY_ID) {
+                throw new EmptyIdException();
+            }
         }
 
         this.nodeId = nodeId;

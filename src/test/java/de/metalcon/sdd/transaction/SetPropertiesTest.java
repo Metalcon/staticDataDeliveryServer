@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import de.metalcon.sdd.exception.AlreadyCommitedException;
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 
@@ -44,7 +45,8 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testValidArguments() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException, AlreadyCommitedException,
+            EmptyIdException {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             tx.setProperties(NODE_ID, "Node1", properties);
         }
@@ -57,21 +59,24 @@ public class SetPropertiesTest extends ActionTestBase {
     @Test(
             expected = InvalidNodeTypeException.class)
     public void testInvalidNodeType() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException, AlreadyCommitedException,
+            EmptyIdException {
         tx.setProperties(NODE_ID, "UnkownNodeType", NODE1_PROPERTIES.get(0));
     }
 
     @Test(
             expected = InvalidPropertyException.class)
     public void testEmptyProperty() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException, AlreadyCommitedException,
+            EmptyIdException {
         tx.setProperties(NODE_ID, "Node1", new HashMap<String, String>());
     }
 
     @Test(
             expected = InvalidPropertyException.class)
     public void testInvalidProperty() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException, AlreadyCommitedException,
+            EmptyIdException {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("UnkownProperty", "foo");
         tx.setProperties(NODE_ID, "Node1", properties);

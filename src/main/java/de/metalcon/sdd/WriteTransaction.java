@@ -3,11 +3,10 @@ package de.metalcon.sdd;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 import de.metalcon.sdd.exception.AlreadyCommitedException;
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.EmptyTransactionException;
-import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.InvalidRelationException;
@@ -42,7 +41,8 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             Map<String, String> properties) throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException, AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -59,7 +59,8 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long toId) throws InvalidNodeTypeException,
-            InvalidRelationException, AlreadyCommitedException {
+            InvalidRelationException, AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -72,7 +73,8 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException, AlreadyCommitedException {
+            InvalidRelationException, AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -86,7 +88,8 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException {
+            InvalidNodeTypeException, AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -95,7 +98,8 @@ public class WriteTransaction {
                 toIds));
     }
 
-    public void delete(long nodeId) throws AlreadyCommitedException {
+    public void delete(long nodeId) throws AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -108,7 +112,8 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException {
+            InvalidNodeTypeException, AlreadyCommitedException,
+            EmptyIdException {
         if (commited) {
             throw new AlreadyCommitedException();
         }
@@ -119,16 +124,6 @@ public class WriteTransaction {
 
     /* package */Queue<Action> getActions() {
         return actions;
-    }
-
-    /* package */void updateOutput(long nodeId) {
-        actions.add(new UpdateOutputAction(sdd, nodeId));
-    }
-
-    /* package */void
-        updateReferencing(long nodeId, Set<String> modifiedDetails)
-                throws InvalidDetailException {
-        actions.add(new UpdateReferencingAction(sdd, nodeId, modifiedDetails));
     }
 
 }

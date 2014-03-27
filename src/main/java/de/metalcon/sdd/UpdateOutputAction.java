@@ -2,6 +2,7 @@ package de.metalcon.sdd;
 
 import java.util.Queue;
 
+import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.SddException;
 
 public class UpdateOutputAction extends Action {
@@ -10,8 +11,12 @@ public class UpdateOutputAction extends Action {
 
     /* package */UpdateOutputAction(
             Sdd sdd,
-            long nodeId) {
+            long nodeId) throws EmptyIdException {
         super(sdd);
+
+        if (nodeId == Sdd.EMPTY_ID) {
+            throw new EmptyIdException();
+        }
 
         this.nodeId = nodeId;
     }
