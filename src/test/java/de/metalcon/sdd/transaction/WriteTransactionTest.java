@@ -7,6 +7,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import de.metalcon.sdd.StaticSddTestBase;
+import de.metalcon.sdd.TestAction;
 import de.metalcon.sdd.WriteTransaction;
 import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
@@ -39,7 +40,8 @@ public class WriteTransactionTest extends StaticSddTestBase {
 
             int numActions = random.nextInt(TEST_VALID_ACTIONS_MAX_ACTIONS) + 1;
             for (int j = 0; j != numActions; ++j) {
-                performValidAction(tx, random.nextInt(NUM_VALID_ACTIONS));
+                TestAction.performValidAction(tx,
+                        random.nextInt(TestAction.NUM_VALID_ACTIONS));
             }
 
             tx.commit();
@@ -61,9 +63,9 @@ public class WriteTransactionTest extends StaticSddTestBase {
             InvalidNodeTypeException, InvalidPropertyException,
             InvalidRelationException, AlreadyCommitedException,
             EmptyIdException {
-        for (int i = 0; i != NUM_VALID_ACTIONS; ++i) {
+        for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             tx = sdd.createWriteTransaction();
-            performValidAction(tx, i);
+            TestAction.performValidAction(tx, i);
             tx.commit();
             try {
                 tx.commit();
@@ -78,13 +80,13 @@ public class WriteTransactionTest extends StaticSddTestBase {
             InvalidPropertyException, AlreadyCommitedException,
             EmptyTransactionException, InvalidRelationException,
             EmptyIdException {
-        for (int i = 0; i != NUM_VALID_ACTIONS; ++i) {
-            for (int j = 0; j != NUM_VALID_ACTIONS; ++j) {
+        for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
+            for (int j = 0; j != TestAction.NUM_VALID_ACTIONS; ++j) {
                 tx = sdd.createWriteTransaction();
-                performValidAction(tx, i);
+                TestAction.performValidAction(tx, i);
                 tx.commit();
                 try {
-                    performValidAction(tx, j);
+                    TestAction.performValidAction(tx, j);
                     fail("Expected AlreadyCommitedException");
                 } catch (AlreadyCommitedException e) {
                 }
