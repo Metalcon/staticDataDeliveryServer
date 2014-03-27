@@ -11,19 +11,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidXmlConfigException;
 
 public class XmlConfig extends Config {
 
     public XmlConfig(
-            String configFile) throws InvalidConfigException {
+            String configFile) {
         super();
 
         xmlLoad(configFile);
     }
 
-    private void xmlLoad(String configFile) throws InvalidConfigException {
+    private void xmlLoad(String configFile) {
         Document domDoc = null;
         try {
             domDoc =
@@ -71,22 +70,19 @@ public class XmlConfig extends Config {
         }
     }
 
-    private void xmlLoadLeveldb(Element domLeveldb)
-            throws InvalidXmlConfigException {
+    private void xmlLoadLeveldb(Element domLeveldb) {
         xmlAssertNodeName(domLeveldb, "leveldb");
         xmlAssertHasAttribute(domLeveldb, "path");
         setLeveldbPath(domLeveldb.getAttribute("path"));
     }
 
-    private void xmlLoadNeo4j(Element domNeo4j)
-            throws InvalidXmlConfigException {
+    private void xmlLoadNeo4j(Element domNeo4j) {
         xmlAssertNodeName(domNeo4j, "neo4j");
         xmlAssertHasAttribute(domNeo4j, "path");
         setNeo4jPath(domNeo4j.getAttribute("path"));
     }
 
-    private void xmlLoadTransactions(Element domTransactionMode)
-            throws InvalidXmlConfigException {
+    private void xmlLoadTransactions(Element domTransactionMode) {
         xmlAssertNodeName(domTransactionMode, "transactions");
         xmlAssertHasAttribute(domTransactionMode, "mode");
         String mode = domTransactionMode.getAttribute("mode");
@@ -105,8 +101,7 @@ public class XmlConfig extends Config {
         }
     }
 
-    private void xmlLoadDetails(Element domDetails)
-            throws InvalidConfigException {
+    private void xmlLoadDetails(Element domDetails) {
         xmlAssertNodeName(domDetails, "details");
         for (Node domIter = domDetails.getFirstChild(); domIter != null; domIter =
                 domIter.getNextSibling()) {
@@ -117,13 +112,13 @@ public class XmlConfig extends Config {
         }
     }
 
-    private void xmlLoadDetail(Element domDetail) throws InvalidConfigException {
+    private void xmlLoadDetail(Element domDetail) {
         xmlAssertNodeName(domDetail, "detail");
         xmlAssertHasAttribute(domDetail, "name");
         addDetail(domDetail.getAttribute("name"));
     }
 
-    private void xmlLoadNodes(Element domNodes) throws InvalidConfigException {
+    private void xmlLoadNodes(Element domNodes) {
         xmlAssertNodeName(domNodes, "nodes");
         for (Node domIter = domNodes.getFirstChild(); domIter != null; domIter =
                 domIter.getNextSibling()) {
@@ -134,7 +129,7 @@ public class XmlConfig extends Config {
         }
     }
 
-    private void xmlLoadNode(Element domNode) throws InvalidConfigException {
+    private void xmlLoadNode(Element domNode) {
         xmlAssertNodeName(domNode, "node");
         xmlAssertHasAttribute(domNode, "type");
 
@@ -181,8 +176,7 @@ public class XmlConfig extends Config {
         addNode(nodeType, node);
     }
 
-    private void xmlLoadProperty(ConfigNode node, Element domProperty)
-            throws InvalidConfigException {
+    private void xmlLoadProperty(ConfigNode node, Element domProperty) {
         xmlAssertNodeName(domProperty, "property");
         xmlAssertHasAttribute(domProperty, "name");
         xmlAssertHasAttribute(domProperty, "type");
@@ -190,8 +184,7 @@ public class XmlConfig extends Config {
                 domProperty.getAttribute("type"));
     }
 
-    private void xmlLoadRelation(ConfigNode node, Element domRelation)
-            throws InvalidConfigException {
+    private void xmlLoadRelation(ConfigNode node, Element domRelation) {
         xmlAssertNodeName(domRelation, "relation");
         xmlAssertHasAttribute(domRelation, "name");
         xmlAssertHasAttribute(domRelation, "type");
@@ -199,8 +192,7 @@ public class XmlConfig extends Config {
                 domRelation.getAttribute("type")));
     }
 
-    private void xmlLoadOutput(ConfigNode node, Element domOutput)
-            throws InvalidConfigException {
+    private void xmlLoadOutput(ConfigNode node, Element domOutput) {
         xmlAssertNodeName(domOutput, "output");
         xmlAssertHasAttribute(domOutput, "detail");
 
@@ -237,7 +229,7 @@ public class XmlConfig extends Config {
 
     private void xmlLoadOutProperty(
             ConfigNodeOutput output,
-            Element domOutProperty) throws InvalidConfigException {
+            Element domOutProperty) {
         xmlAssertNodeName(domOutProperty, "out-property");
         xmlAssertHasAttribute(domOutProperty, "property");
         output.addOutPropery(domOutProperty.getAttribute("property"));
@@ -245,7 +237,7 @@ public class XmlConfig extends Config {
 
     private void xmlLoadOutRelation(
             ConfigNodeOutput output,
-            Element domOutRelation) throws InvalidConfigException {
+            Element domOutRelation) {
         xmlAssertNodeName(domOutRelation, "out-relation");
         xmlAssertHasAttribute(domOutRelation, "relation");
         xmlAssertHasAttribute(domOutRelation, "detail");
@@ -253,8 +245,7 @@ public class XmlConfig extends Config {
                 domOutRelation.getAttribute("detail"));
     }
 
-    private void xmlAssertNodeName(Element domElement, String expectedNodeName)
-            throws InvalidXmlConfigException {
+    private void xmlAssertNodeName(Element domElement, String expectedNodeName) {
         if (!domElement.getNodeName().equals(expectedNodeName)) {
             throw new InvalidXmlConfigException("Invalid XML Element \""
                     + domElement.getNodeName() + "\". Expected Node Name: \""
@@ -264,7 +255,7 @@ public class XmlConfig extends Config {
 
     private void xmlAssertHasAttribute(
             Element domElement,
-            String expectedAttribute) throws InvalidXmlConfigException {
+            String expectedAttribute) {
         if (!domElement.hasAttribute(expectedAttribute)) {
             throw new InvalidXmlConfigException("Expected Attribute \""
                     + expectedAttribute + "\" on XML Element: \""

@@ -28,8 +28,6 @@ import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.ConfigNodeOutput;
 import de.metalcon.sdd.config.RelationType;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidNodeException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
@@ -88,7 +86,7 @@ public class Sdd implements AutoCloseable {
     private Worker worker;
 
     public Sdd(
-            Config config) throws InvalidConfigException, IOException {
+            Config config) throws IOException {
         if (config == null) {
             throw new IllegalArgumentException("config was null.");
         }
@@ -165,8 +163,7 @@ public class Sdd implements AutoCloseable {
      * @return The node's output in detail or <code>NULL</code> if that node
      *         doesn't exist.
      */
-    public String read(long nodeId, String detail)
-            throws InvalidDetailException {
+    public String read(long nodeId, String detail) {
         if (detail == null) {
             throw new IllegalArgumentException("detail was null");
         }
@@ -229,8 +226,7 @@ public class Sdd implements AutoCloseable {
             Queue<Action> actions,
             long nodeId,
             String nodeType,
-            Map<String, String> properties) throws InvalidNodeException,
-            InvalidNodeTypeException, EmptyIdException {
+            Map<String, String> properties) {
         Vertex node = getNode(nodeId, nodeType, true);
 
         for (Map.Entry<String, String> property : properties.entrySet()) {
@@ -244,16 +240,13 @@ public class Sdd implements AutoCloseable {
     /**
      * @param toId
      *            If this is <code>0L</code>, it deletes the relation.
-     * @throws InvalidNodeTypeException
-     * @throws EmptyIdException
      */
     /* package */void actionSetRelation(
             Queue<Action> actions,
             long nodeId,
             String nodeType,
             String relation,
-            long toId) throws InvalidNodeException, InvalidNodeTypeException,
-            EmptyIdException {
+            long toId) {
         // TODO: only remove edges that are not toId, and only create new edge
         // if needed
 
@@ -276,8 +269,7 @@ public class Sdd implements AutoCloseable {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidNodeException,
-            InvalidNodeTypeException, EmptyIdException {
+            long[] toIds) {
         // TODO: only remove edges that are not in toIds, and only create
         // remaining needed edges
 
@@ -294,8 +286,7 @@ public class Sdd implements AutoCloseable {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidNodeException,
-            InvalidNodeTypeException, EmptyIdException {
+            long[] toIds) {
         Vertex node = getNode(nodeId, nodeType, true);
 
         ConfigNode configNode = config.getNode(nodeType);
@@ -324,9 +315,7 @@ public class Sdd implements AutoCloseable {
         throw new UnsupportedOperationException();
     }
 
-    /* package */void actionUpdateOutput(Queue<Action> actions, long nodeId)
-            throws InvalidNodeException, OutputGenerationException,
-            InvalidDetailException, EmptyIdException {
+    /* package */void actionUpdateOutput(Queue<Action> actions, long nodeId) {
         // TODO: move vertex into parameters to avoid lookup?
         Vertex node = getNode(nodeId);
         Set<String> modifiedDetails = new HashSet<String>();
@@ -351,8 +340,7 @@ public class Sdd implements AutoCloseable {
     /* package */void actionUpdateReferencing(
             Queue<Action> actions,
             long nodeId,
-            Set<String> modifiedDetails) throws InvalidNodeException,
-            EmptyIdException {
+            Set<String> modifiedDetails) {
         // TODO: move vertex into parameters to avoid lookup?
         Vertex node = getNode(nodeId);
         String nodeType = getNodeType(node);
@@ -376,7 +364,7 @@ public class Sdd implements AutoCloseable {
         return NODEDB_OUTPUT_PREFIX + detail;
     }
 
-    private Vertex getNode(long nodeId) throws InvalidNodeException {
+    private Vertex getNode(long nodeId) {
         try {
             return getNode(nodeId, null, false);
         } catch (InvalidNodeTypeException e) {
@@ -385,8 +373,7 @@ public class Sdd implements AutoCloseable {
         }
     }
 
-    private Vertex getNode(long nodeId, String nodeType, boolean create)
-            throws InvalidNodeException, InvalidNodeTypeException {
+    private Vertex getNode(long nodeId, String nodeType, boolean create) {
         Vertex node = nodeDbIndex.get(nodeId);
         if (node != null) {
             String type = getNodeType(node);
@@ -411,7 +398,7 @@ public class Sdd implements AutoCloseable {
         return node;
     }
 
-    private long getNodeId(Vertex node) throws InvalidNodeException {
+    private long getNodeId(Vertex node) {
         Long nodeId = node.getProperty(NODEDB_ID);
         if (nodeId == null) {
             throw new InvalidNodeException();
@@ -419,7 +406,7 @@ public class Sdd implements AutoCloseable {
         return nodeId;
     }
 
-    private String getNodeType(Vertex node) throws InvalidNodeException {
+    private String getNodeType(Vertex node) {
         String type = node.getProperty(NODEDB_TYPE);
         if (type == null || !config.isNodeType(type)) {
             throw new InvalidNodeException();
@@ -427,8 +414,7 @@ public class Sdd implements AutoCloseable {
         return type;
     }
 
-    private String generateOutput(Vertex node, long nodeId, String detail)
-            throws InvalidNodeException, OutputGenerationException {
+    private String generateOutput(Vertex node, long nodeId, String detail) {
         try {
             String nodeType = getNodeType(node);
 

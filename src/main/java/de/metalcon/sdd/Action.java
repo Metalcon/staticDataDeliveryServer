@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.exception.SddException;
 
 public abstract class Action implements Comparable<Action> {
 
@@ -46,7 +45,7 @@ public abstract class Action implements Comparable<Action> {
         config = sdd.getConfig();
     }
 
-    public abstract void runAction(Queue<Action> actions) throws SddException;
+    public abstract void runAction(Queue<Action> actions);
 
     @Override
     public int compareTo(Action other) {

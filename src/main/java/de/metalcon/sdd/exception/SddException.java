@@ -6,7 +6,7 @@ package de.metalcon.sdd.exception;
  * Only immediate subclasses of this should be SddInternalServerException and
  * SddUsageException, other Exceptions should subclass those.
  */
-public abstract class SddException extends Exception {
+public abstract class SddException extends RuntimeException {
 
     private static final long serialVersionUID = -2537157851779990259L;
 

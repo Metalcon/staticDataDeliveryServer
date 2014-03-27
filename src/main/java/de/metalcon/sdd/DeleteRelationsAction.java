@@ -7,7 +7,6 @@ import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
-import de.metalcon.sdd.exception.SddException;
 
 public class DeleteRelationsAction extends Action {
 
@@ -24,8 +23,7 @@ public class DeleteRelationsAction extends Action {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException, EmptyIdException {
+            long[] toIds) {
         super(sdd);
 
         // TODO: check duplicates
@@ -70,7 +68,7 @@ public class DeleteRelationsAction extends Action {
     }
 
     @Override
-    public void runAction(Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) {
         sdd.actionDeleteRelations(actions, nodeId, nodeType, relation, toIds);
     }
 

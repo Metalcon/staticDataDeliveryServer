@@ -21,7 +21,7 @@ public class ConfigNodeOutput {
         return Collections.unmodifiableSet(outProperties);
     }
 
-    public void addOutPropery(String outProperty) throws InvalidConfigException {
+    public void addOutPropery(String outProperty) {
         if (outProperty == null) {
             throw new IllegalArgumentException("outProperty was null.");
         }
@@ -49,8 +49,7 @@ public class ConfigNodeOutput {
         return outRelations.get(outRelation);
     }
 
-    public void addOutRelation(String outRelation, String outRelationDetail)
-            throws InvalidConfigException {
+    public void addOutRelation(String outRelation, String outRelationDetail) {
         if (outRelation == null) {
             throw new IllegalArgumentException("outRelation was null.");
         }

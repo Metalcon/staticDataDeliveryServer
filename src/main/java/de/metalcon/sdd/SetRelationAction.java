@@ -7,7 +7,6 @@ import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidRelationException;
-import de.metalcon.sdd.exception.SddException;
 
 public class SetRelationAction extends Action {
 
@@ -28,8 +27,7 @@ public class SetRelationAction extends Action {
             long nodeId,
             String nodeType,
             String relation,
-            long toId) throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+            long toId) {
         super(sdd);
 
         if (nodeType == null) {
@@ -61,7 +59,7 @@ public class SetRelationAction extends Action {
     }
 
     @Override
-    public void runAction(Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) {
         sdd.actionSetRelation(actions, nodeId, nodeType, relation, toId);
     }
 

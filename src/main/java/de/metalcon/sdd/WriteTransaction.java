@@ -4,11 +4,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.InvalidRelationException;
-
 public class WriteTransaction {
 
     private Sdd sdd;
@@ -40,8 +35,7 @@ public class WriteTransaction {
     public void setProperties(
             long nodeId,
             String nodeType,
-            Map<String, String> properties) throws InvalidNodeTypeException,
-            InvalidPropertyException, EmptyIdException {
+            Map<String, String> properties) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }
@@ -57,8 +51,7 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             String relation,
-            long toId) throws InvalidNodeTypeException,
-            InvalidRelationException, EmptyIdException {
+            long toId) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }
@@ -70,8 +63,7 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException, EmptyIdException {
+            long[] toIds) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }
@@ -84,8 +76,7 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+            long[] toIds) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }
@@ -94,7 +85,7 @@ public class WriteTransaction {
                 toIds));
     }
 
-    public void delete(long nodeId) throws EmptyIdException {
+    public void delete(long nodeId) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }
@@ -106,8 +97,7 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             String relation,
-            long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+            long[] toIds) {
         if (commited) {
             throw new IllegalStateException("Arealdy commited.");
         }

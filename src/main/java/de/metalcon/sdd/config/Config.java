@@ -74,7 +74,7 @@ public class Config {
         return details.contains(detail);
     }
 
-    public void addDetail(String detail) throws InvalidConfigException {
+    public void addDetail(String detail) {
         if (detail == null) {
             throw new IllegalArgumentException("detail was null.");
         }
@@ -107,8 +107,7 @@ public class Config {
         return nodes.get(type);
     }
 
-    public void addNode(String type, ConfigNode node)
-            throws InvalidConfigException {
+    public void addNode(String type, ConfigNode node) {
         if (type == null) {
             throw new IllegalArgumentException("type was null.");
         }
@@ -133,11 +132,8 @@ public class Config {
      * <li>Are all defined output details for nodes actually valid details?</li>
      * <li>Do all out-relations define a valid output detail?</li>
      * </ul>
-     * 
-     * @throws InvalidConfigException
-     *             In case configuration is invalid.
      */
-    public void validate() throws InvalidConfigException {
+    public void validate() {
         // TODO: Check whether we have write access on paths.
 
         // Check nodes

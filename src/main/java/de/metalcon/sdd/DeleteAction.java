@@ -3,7 +3,6 @@ package de.metalcon.sdd;
 import java.util.Queue;
 
 import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.SddException;
 
 public class DeleteAction extends Action {
 
@@ -11,7 +10,7 @@ public class DeleteAction extends Action {
 
     /* package */DeleteAction(
             Sdd sdd,
-            long nodeId) throws EmptyIdException {
+            long nodeId) {
         super(sdd);
 
         if (nodeId == Sdd.EMPTY_ID) {
@@ -22,7 +21,7 @@ public class DeleteAction extends Action {
     }
 
     @Override
-    public void runAction(Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) {
         sdd.actionDelete(actions, nodeId);
     }
 

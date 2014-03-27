@@ -7,7 +7,6 @@ import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.SddException;
 
 public class SetPropertiesAction extends Action {
 
@@ -21,8 +20,7 @@ public class SetPropertiesAction extends Action {
             Sdd sdd,
             long nodeId,
             String nodeType,
-            Map<String, String> properties) throws InvalidPropertyException,
-            InvalidNodeTypeException, EmptyIdException {
+            Map<String, String> properties) {
         super(sdd);
 
         if (nodeType == null) {
@@ -54,7 +52,7 @@ public class SetPropertiesAction extends Action {
     }
 
     @Override
-    public void runAction(Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) {
         sdd.actionSetProperties(actions, nodeId, nodeType, properties);
     }
 

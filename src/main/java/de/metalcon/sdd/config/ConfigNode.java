@@ -43,8 +43,7 @@ public class ConfigNode {
         return properties.get(property);
     }
 
-    public void addProperty(String property, String propertyType)
-            throws InvalidConfigException {
+    public void addProperty(String property, String propertyType) {
         if (property == null) {
             throw new IllegalArgumentException("property was null.");
         }
@@ -86,8 +85,7 @@ public class ConfigNode {
         return relations.get(relation);
     }
 
-    public void addRelation(String relation, RelationType relationType)
-            throws InvalidConfigException {
+    public void addRelation(String relation, RelationType relationType) {
         if (relation == null) {
             throw new IllegalArgumentException("relation was null.");
         }
@@ -117,8 +115,7 @@ public class ConfigNode {
         return outputs.get(detail);
     }
 
-    public void addOutput(String detail, ConfigNodeOutput output)
-            throws InvalidConfigException {
+    public void addOutput(String detail, ConfigNodeOutput output) {
         if (detail == null) {
             throw new IllegalArgumentException("detail was null.");
         }
@@ -151,7 +148,7 @@ public class ConfigNode {
         return false;
     }
 
-    private void checkName(String name) throws InvalidConfigException {
+    private void checkName(String name) {
         if (name.equals(Sdd.NODEDB_ID) || name.equals(Sdd.NODEDB_TYPE)
                 || name.startsWith(Sdd.NODEDB_OUTPUT_PREFIX)) {
             throw new InvalidConfigException("Invalid name: \"" + name + "\". "

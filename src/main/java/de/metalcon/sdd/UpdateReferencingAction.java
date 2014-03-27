@@ -5,7 +5,6 @@ import java.util.Set;
 
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidDetailException;
-import de.metalcon.sdd.exception.SddException;
 
 public class UpdateReferencingAction extends Action {
 
@@ -16,8 +15,7 @@ public class UpdateReferencingAction extends Action {
     /* package */UpdateReferencingAction(
             Sdd sdd,
             long nodeId,
-            Set<String> modifiedDetails) throws InvalidDetailException,
-            EmptyIdException {
+            Set<String> modifiedDetails) {
         super(sdd);
 
         if (modifiedDetails == null) {
@@ -38,7 +36,7 @@ public class UpdateReferencingAction extends Action {
     }
 
     @Override
-    public void runAction(Queue<Action> actions) throws SddException {
+    public void runAction(Queue<Action> actions) {
         sdd.actionUpdateReferencing(actions, nodeId, modifiedDetails);
     }
 
