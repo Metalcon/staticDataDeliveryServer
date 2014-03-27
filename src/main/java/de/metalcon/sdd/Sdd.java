@@ -29,7 +29,6 @@ import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.ConfigNodeOutput;
 import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidDetailException;
 import de.metalcon.sdd.exception.InvalidNodeException;
@@ -195,8 +194,7 @@ public class Sdd implements AutoCloseable {
     // =========================================================================
     // IMPLEMENTATION
 
-    /* package */boolean commit(WriteTransaction transaction)
-            throws EmptyTransactionException {
+    /* package */boolean commit(WriteTransaction transaction) {
         return worker.queueTransaction(transaction);
     }
 

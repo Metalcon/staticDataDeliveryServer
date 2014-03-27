@@ -14,9 +14,7 @@ import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.WriteTransaction;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
-import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidConfigException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
@@ -50,8 +48,7 @@ public class Parse {
 
     @Test
     @Ignore
-    public void parse() throws EmptyTransactionException,
-            AlreadyCommitedException, InvalidNodeTypeException,
+    public void parse() throws InvalidNodeTypeException,
             InvalidPropertyException, InvalidRelationException,
             EmptyIdException {
         parseBand();
@@ -62,8 +59,7 @@ public class Parse {
         parseUserRecord();
     }
 
-    private void parseBand() throws EmptyTransactionException,
-            AlreadyCommitedException, InvalidNodeTypeException,
+    private void parseBand() throws InvalidNodeTypeException,
             InvalidPropertyException, EmptyIdException {
         System.out.println("Bands");
 
@@ -118,8 +114,7 @@ public class Parse {
     }
 
     private void parseRecord() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyTransactionException, EmptyIdException {
+            InvalidPropertyException, EmptyIdException {
         System.out.println("Records");
         Iterable<String[]> records =
                 new CsvIteratable(
@@ -171,8 +166,7 @@ public class Parse {
     }
 
     private void parseUser() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyTransactionException, EmptyIdException {
+            InvalidPropertyException, EmptyIdException {
         System.out.println("Users");
         Iterable<String[]> users =
                 new CsvIteratable(
@@ -224,8 +218,7 @@ public class Parse {
     }
 
     private void parseBandRecord() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyTransactionException, EmptyIdException {
+            InvalidNodeTypeException, EmptyIdException {
         System.out.println("BandRecord");
         Iterable<String[]> bandRecords =
                 new CsvIteratable(
@@ -279,8 +272,7 @@ public class Parse {
     }
 
     private void parseUserBand() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyTransactionException, EmptyIdException {
+            InvalidNodeTypeException, EmptyIdException {
         System.out.println("UserBand");
         Iterable<String[]> userBands =
                 new CsvIteratable(
@@ -334,8 +326,7 @@ public class Parse {
     }
 
     private void parseUserRecord() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyTransactionException, EmptyIdException {
+            InvalidNodeTypeException, EmptyIdException {
         System.out.println("UserRecord");
         Iterable<String[]> userRecords =
                 new CsvIteratable(

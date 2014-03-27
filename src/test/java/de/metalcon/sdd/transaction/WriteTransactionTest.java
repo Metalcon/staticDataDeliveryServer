@@ -9,9 +9,7 @@ import org.junit.Test;
 import de.metalcon.sdd.StaticSddTestBase;
 import de.metalcon.sdd.TestAction;
 import de.metalcon.sdd.WriteTransaction;
-import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.InvalidRelationException;
@@ -32,8 +30,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
 
     @Test
     public void testValidActions() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            InvalidRelationException, EmptyTransactionException,
+            InvalidPropertyException, InvalidRelationException,
             EmptyIdException {
         for (int i = 0; i != TEST_VALID_ACTIONS_NUM_ROUNDS; ++i) {
             tx = sdd.createWriteTransaction();
@@ -49,19 +46,18 @@ public class WriteTransactionTest extends StaticSddTestBase {
     }
 
     @Test
-    public void testEmptyCommit() throws AlreadyCommitedException {
+    public void testEmptyCommit() {
         tx = sdd.createWriteTransaction();
         try {
             tx.commit();
             fail("Expected EmptyTransactionException.");
-        } catch (EmptyTransactionException e) {
+        } catch (IllegalStateException e) {
         }
     }
 
     @Test
-    public void testAlreadyCommited1() throws EmptyTransactionException,
-            InvalidNodeTypeException, InvalidPropertyException,
-            InvalidRelationException, AlreadyCommitedException,
+    public void testAlreadyCommited1() throws InvalidNodeTypeException,
+            InvalidPropertyException, InvalidRelationException,
             EmptyIdException {
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             tx = sdd.createWriteTransaction();
@@ -70,15 +66,14 @@ public class WriteTransactionTest extends StaticSddTestBase {
             try {
                 tx.commit();
                 fail("Expected AlreadyCommitedException.");
-            } catch (AlreadyCommitedException e) {
+            } catch (IllegalStateException e) {
             }
         }
     }
 
     @Test
     public void testAlreadyCommited2() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyTransactionException, InvalidRelationException,
+            InvalidPropertyException, InvalidRelationException,
             EmptyIdException {
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             for (int j = 0; j != TestAction.NUM_VALID_ACTIONS; ++j) {
@@ -88,7 +83,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
                 try {
                     TestAction.performValidAction(tx, j);
                     fail("Expected AlreadyCommitedException");
-                } catch (AlreadyCommitedException e) {
+                } catch (IllegalStateException e) {
                 }
             }
         }

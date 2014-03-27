@@ -3,7 +3,6 @@ package de.metalcon.sdd;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
@@ -35,8 +34,7 @@ public class TestAction {
 
     public static void performValidAction(WriteTransaction tx, int action)
             throws InvalidNodeTypeException, InvalidPropertyException,
-            AlreadyCommitedException, InvalidRelationException,
-            EmptyIdException {
+            InvalidRelationException, EmptyIdException {
         switch (action) {
             case 0:
                 tx.setProperties(NODE_ID, NODE_TYPE, PROPERTIES);

@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.EmptyTransactionException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
 import de.metalcon.sdd.exception.InvalidRelationException;
@@ -24,12 +22,14 @@ public class WriteTransaction {
         this.sdd = sdd;
     }
 
-    public boolean commit() throws EmptyTransactionException,
-            AlreadyCommitedException {
+    public boolean commit() {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
+        if (getActions().isEmpty()) {
+            throw new IllegalStateException("Empty transaction.");
+        }
         boolean result = sdd.commit(this);
         if (result) {
             commited = true;
@@ -41,10 +41,9 @@ public class WriteTransaction {
             long nodeId,
             String nodeType,
             Map<String, String> properties) throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidPropertyException, EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new SetPropertiesAction(sdd, nodeId, nodeType, properties));
@@ -59,10 +58,9 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long toId) throws InvalidNodeTypeException,
-            InvalidRelationException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidRelationException, EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new SetRelationAction(sdd, nodeId, nodeType, relation, toId));
@@ -73,10 +71,9 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidNodeTypeException,
-            InvalidRelationException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidRelationException, EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new SetRelationsAction(sdd, nodeId, nodeType, relation,
@@ -88,20 +85,18 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidNodeTypeException, EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new AddRelationsAction(sdd, nodeId, nodeType, relation,
                 toIds));
     }
 
-    public void delete(long nodeId) throws AlreadyCommitedException,
-            EmptyIdException {
+    public void delete(long nodeId) throws EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new DeleteAction(sdd, nodeId));
@@ -112,10 +107,9 @@ public class WriteTransaction {
             String nodeType,
             String relation,
             long[] toIds) throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidNodeTypeException, EmptyIdException {
         if (commited) {
-            throw new AlreadyCommitedException();
+            throw new IllegalStateException("Arealdy commited.");
         }
 
         actions.add(new DeleteRelationsAction(sdd, nodeId, nodeType, relation,

@@ -10,7 +10,6 @@ import java.util.Map;
 import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
 import de.metalcon.sdd.exception.InvalidPropertyException;
@@ -48,8 +47,7 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testValidArguments() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyIdException {
+            InvalidPropertyException, EmptyIdException {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             tx.setProperties(NODE_ID, "Node1", properties);
         }
@@ -61,7 +59,7 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testEmptyId() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException {
+            InvalidPropertyException {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             try {
                 tx.setProperties(Sdd.EMPTY_ID, "Node1", properties);
@@ -73,7 +71,7 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testInvalidNodeType() throws InvalidPropertyException,
-            AlreadyCommitedException, EmptyIdException {
+            EmptyIdException {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             try {
                 tx.setProperties(NODE_ID, "UnkownNodeType", properties);
@@ -85,7 +83,7 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testEmptyProperty() throws InvalidNodeTypeException,
-            AlreadyCommitedException, EmptyIdException {
+            EmptyIdException {
         try {
             tx.setProperties(NODE_ID, "Node1", new HashMap<String, String>());
             fail("Expected InvalidPropertyException.");
@@ -95,7 +93,7 @@ public class SetPropertiesTest extends ActionTestBase {
 
     @Test
     public void testInvalidProperty() throws InvalidNodeTypeException,
-            AlreadyCommitedException, EmptyIdException {
+            EmptyIdException {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("UnkownProperty", "foo");
         try {

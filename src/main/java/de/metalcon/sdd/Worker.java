@@ -4,8 +4,6 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import de.metalcon.sdd.exception.EmptyTransactionException;
-
 public class Worker implements Runnable {
 
     private Sdd sdd;
@@ -61,13 +59,9 @@ public class Worker implements Runnable {
         stopping = false;
     }
 
-    public boolean queueTransaction(WriteTransaction transaction)
-            throws EmptyTransactionException {
+    public boolean queueTransaction(WriteTransaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("transaction was null.");
-        }
-        if (transaction.getActions().isEmpty()) {
-            throw new EmptyTransactionException();
         }
         return transactions.offer(transaction);
     }
