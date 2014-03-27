@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>de.metalcon</groupId>
+    <artifactId>pom</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <artifactId>static-data-delivery-server</artifactId>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+  
+  <name>staticDataDelivery</name>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>lukasschmelzeisen</id>
+      <name>Lukas Schmelzeisen</name>
+      <email>l.schmelzeisen@gmx.de</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>metalcon-depend</id>
+      <url>http://metalcon2.physik.uni-mainz.de:8080/mvn/</url>
+    </repository>
+  </repositories>
+  
+  <properties>
+    <metalcon.api.version>0.1.0</metalcon.api.version>
+    <metalcon.static-data-delivery-server-api>0.1.0</metalcon.static-data-delivery-server-api>
+    <metalcon.zmq-worker.version>0.1.0</metalcon.zmq-worker.version>
+    
+    <!-- LevelDB -->
+    <leveldb.version>1.7</leveldb.version>
+    <!-- Blueprints -->
+    <blueprints.version>2.4.0</blueprints.version>
+    
+    <!-- JSON -->
+    <jackson.version>2.3.2</jackson.version>
+    
+    <!-- Test -->
+    <junit.version>4.11</junit.version>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>api</artifactId>
+      <version>${metalcon.api.version}</version>
+    </dependency>
+    <!--<dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>static-data-delivery-server-api</artifactId>
+      <version>${metalcon.static-data-delivery-server-api.version}</version>
+    </dependency>-->
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>zmq-worker</artifactId>
+      <version>${metalcon.zmq-worker.version}</version>
+    </dependency>
+  
+    <dependency>
+      <groupId>org.fusesource.leveldbjni</groupId>
+      <artifactId>leveldbjni-all</artifactId>
+      <version>${leveldb.version}</version>
+    </dependency>
+  
+    <dependency>
+      <groupId>com.tinkerpop.blueprints</groupId>
+      <artifactId>blueprints-core</artifactId>
+      <version>${blueprints.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tinkerpop.blueprints</groupId>
+      <artifactId>blueprints-neo4j-graph</artifactId>
+      <version>${blueprints.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
