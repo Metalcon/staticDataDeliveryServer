@@ -46,12 +46,14 @@ public class WriteTransactionTest extends StaticSddTestBase {
         }
     }
 
-    @Test(
-            expected = EmptyTransactionException.class)
-    public void testEmptyCommit() throws EmptyTransactionException,
-            AlreadyCommitedException {
+    @Test
+    public void testEmptyCommit() throws AlreadyCommitedException {
         tx = sdd.createWriteTransaction();
-        tx.commit();
+        try {
+            tx.commit();
+            fail("Expected EmptyTransactionException.");
+        } catch (EmptyTransactionException e) {
+        }
     }
 
     @Test

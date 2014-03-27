@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
@@ -48,6 +49,7 @@ public class Parse {
     }
 
     @Test
+    @Ignore
     public void parse() throws EmptyTransactionException,
             AlreadyCommitedException, InvalidNodeTypeException,
             InvalidPropertyException, InvalidRelationException,

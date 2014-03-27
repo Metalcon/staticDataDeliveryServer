@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
@@ -32,6 +33,7 @@ public class Read {
     }
 
     @Test
+    @Ignore
     public void read() throws InvalidDetailException, FileNotFoundException {
         long t1 = System.currentTimeMillis();
         System.out.println(sdd.read(Parse.BAND_ID_PREFIX + 1L, "nested"));

@@ -1,5 +1,7 @@
 package de.metalcon.sdd.transaction;
 
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
@@ -56,30 +59,50 @@ public class SetPropertiesTest extends ActionTestBase {
         }
     }
 
-    @Test(
-            expected = InvalidNodeTypeException.class)
-    public void testInvalidNodeType() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyIdException {
-        tx.setProperties(NODE_ID, "UnkownNodeType", NODE1_PROPERTIES.get(0));
+    @Test
+    public void testEmptyId() throws InvalidNodeTypeException,
+            InvalidPropertyException, AlreadyCommitedException {
+        for (Map<String, String> properties : NODE1_PROPERTIES) {
+            try {
+                tx.setProperties(Sdd.EMPTY_ID, "Node1", properties);
+                fail("Expected EmptyIdException.");
+            } catch (EmptyIdException e) {
+            }
+        }
     }
 
-    @Test(
-            expected = InvalidPropertyException.class)
+    @Test
+    public void testInvalidNodeType() throws InvalidPropertyException,
+            AlreadyCommitedException, EmptyIdException {
+        for (Map<String, String> properties : NODE1_PROPERTIES) {
+            try {
+                tx.setProperties(NODE_ID, "UnkownNodeType", properties);
+                fail("Expected InvalidNodeTypeException.");
+            } catch (InvalidNodeTypeException e) {
+            }
+        }
+    }
+
+    @Test
     public void testEmptyProperty() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyIdException {
-        tx.setProperties(NODE_ID, "Node1", new HashMap<String, String>());
+            AlreadyCommitedException, EmptyIdException {
+        try {
+            tx.setProperties(NODE_ID, "Node1", new HashMap<String, String>());
+            fail("Expected InvalidPropertyException.");
+        } catch (InvalidPropertyException e) {
+        }
     }
 
-    @Test(
-            expected = InvalidPropertyException.class)
+    @Test
     public void testInvalidProperty() throws InvalidNodeTypeException,
-            InvalidPropertyException, AlreadyCommitedException,
-            EmptyIdException {
+            AlreadyCommitedException, EmptyIdException {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("UnkownProperty", "foo");
-        tx.setProperties(NODE_ID, "Node1", properties);
+        try {
+            tx.setProperties(NODE_ID, "Node1", properties);
+            fail("Expected InvalidPropertyException.");
+        } catch (InvalidPropertyException e) {
+        }
     }
 
 }

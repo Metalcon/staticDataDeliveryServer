@@ -42,8 +42,7 @@ public class Sdd implements AutoCloseable {
     // TODO: BUG: fix ClosedByInterruptException
     // TODO: aggregate multiple same addRelations in same transaction into one
     // TODO: generally clean up transactions?
-    // TODO: check ids not == 0L. add tests.
-    // TODO: implement reset property
+    // TODO: implement reset property (.put("myProperty", null))
     // TODO: implement some sort of queue status
 
     public static final String ID_DETAIL_DELIMITER = ":";

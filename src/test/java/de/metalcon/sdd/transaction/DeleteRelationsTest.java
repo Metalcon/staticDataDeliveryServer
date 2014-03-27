@@ -1,7 +1,10 @@
 package de.metalcon.sdd.transaction;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
+import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.exception.AlreadyCommitedException;
 import de.metalcon.sdd.exception.EmptyIdException;
 import de.metalcon.sdd.exception.InvalidNodeTypeException;
@@ -11,55 +14,98 @@ public class DeleteRelationsTest extends ActionTestBase {
 
     private static final long NODE_ID = 1L;
 
-    private static final long[] TO_IDS1 = {
-        2L
-    };
-
-    private static final long[] TO_IDS2 = {
-        2L, 3L
+    private static final long[][] TO_IDS = {
+        {
+            2L
+        }, {
+            2L, 3L
+        }
     };
 
     @Test
     public void testValidArguments() throws InvalidRelationException,
             InvalidNodeTypeException, AlreadyCommitedException,
             EmptyIdException {
-        tx.deleteRelations(NODE_ID, "Node1", "relation1", TO_IDS1);
-        tx.deleteRelations(NODE_ID, "Node2", "relation1", TO_IDS1);
-
-        tx.deleteRelations(NODE_ID, "Node1", "relation1", TO_IDS2);
-        tx.deleteRelations(NODE_ID, "Node2", "relation1", TO_IDS2);
+        for (long[] toIds : TO_IDS) {
+            tx.deleteRelations(NODE_ID, "Node1", "relation1", toIds);
+            tx.deleteRelations(NODE_ID, "Node2", "relation1", toIds);
+        }
     }
 
-    @Test(
-            expected = InvalidNodeTypeException.class)
+    @Test
+    public void testEmptyId1() throws InvalidRelationException,
+            InvalidNodeTypeException, AlreadyCommitedException {
+        for (long[] toIds : TO_IDS) {
+            try {
+                tx.deleteRelations(Sdd.EMPTY_ID, "Node1", "relation1", toIds);
+                fail("Expected EmptyIdException.");
+            } catch (EmptyIdException e) {
+            }
+        }
+    }
+
+    @Test
+    public void testEmptyId2() throws InvalidRelationException,
+            InvalidNodeTypeException, AlreadyCommitedException {
+        for (long[] toIds : TO_IDS) {
+            long[] toIdsWithEmpty = new long[toIds.length + 1];
+            System.arraycopy(toIds, 0, toIdsWithEmpty, 0, toIds.length);
+            toIdsWithEmpty[toIds.length] = Sdd.EMPTY_ID;
+            try {
+                tx.deleteRelations(NODE_ID, "Node1", "relation1",
+                        toIdsWithEmpty);
+                fail("Expected EmptyIdException.");
+            } catch (EmptyIdException e) {
+            }
+        }
+    }
+
+    @Test
     public void testInvalidNodeType() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyIdException {
-        tx.deleteRelations(NODE_ID, "UnkownNodeType", "relation1", TO_IDS1);
+            AlreadyCommitedException, EmptyIdException {
+        for (long[] toIds : TO_IDS) {
+            try {
+                tx.deleteRelations(NODE_ID, "UnkownNodeType", "relation1",
+                        toIds);
+                fail("Expected InvalidNodeTypeException.");
+            } catch (InvalidNodeTypeException e) {
+            }
+        }
     }
 
-    @Test(
-            expected = InvalidRelationException.class)
-    public void testInvalidRelation1() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyIdException {
-        tx.deleteRelations(NODE_ID, "Node1", "UnkownRelation", TO_IDS1);
+    @Test
+    public void testInvalidRelation1() throws InvalidNodeTypeException,
+            AlreadyCommitedException, EmptyIdException {
+        for (long[] toIds : TO_IDS) {
+            try {
+                tx.deleteRelations(NODE_ID, "Node1", "UnkownRelation", toIds);
+                fail("Expected InvalidRelationException.");
+            } catch (InvalidRelationException e) {
+            }
+        }
     }
 
-    @Test(
-            expected = InvalidRelationException.class)
-    public void testInvalidRelation2() throws InvalidRelationException,
-            InvalidNodeTypeException, AlreadyCommitedException,
-            EmptyIdException {
-        tx.deleteRelations(NODE_ID, "Node1", "relation2", TO_IDS1);
+    @Test
+    public void testInvalidRelation2() throws InvalidNodeTypeException,
+            AlreadyCommitedException, EmptyIdException {
+        for (long[] toIds : TO_IDS) {
+            try {
+                tx.deleteRelations(NODE_ID, "Node1", "relation2", toIds);
+                fail("Expected InvalidRelationException.");
+            } catch (InvalidRelationException e) {
+            }
+        }
     }
 
-    @Test(
-            expected = IllegalArgumentException.class)
+    @Test
     public void testEmptyToIds() throws InvalidRelationException,
             InvalidNodeTypeException, AlreadyCommitedException,
             EmptyIdException {
-        tx.deleteRelations(NODE_ID, "Node1", "relation1", new long[] {});
+        try {
+            tx.deleteRelations(NODE_ID, "Node1", "relation1", new long[] {});
+            fail("Expected IllegalArgumentException.");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
 }
