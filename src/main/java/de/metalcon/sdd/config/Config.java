@@ -184,6 +184,7 @@ public class Config {
 
     public void makeTemporary() throws IOException {
         Path tmpDir = Files.createTempDirectory("sddTemp");
+        tmpDir.toFile().deleteOnExit();
 
         Path leveldbPath = tmpDir.resolve("leveldb");
         leveldbPath.toFile().mkdir();
