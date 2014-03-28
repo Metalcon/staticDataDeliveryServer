@@ -1,12 +1,12 @@
 package de.metalcon.sdd;
 
+import static de.metalcon.sdd.DynamicSddTestBase.closeSdd;
+import static de.metalcon.sdd.DynamicSddTestBase.createSdd;
+
 import java.io.IOException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-
-import de.metalcon.sdd.config.Config;
-import de.metalcon.sdd.config.XmlConfig;
 
 public abstract class StaticSddTestBase {
 
@@ -14,15 +14,12 @@ public abstract class StaticSddTestBase {
 
     @BeforeClass
     public static void setUpStatic() throws IOException {
-        Config config = new XmlConfig("src/test/resources/testConfig.xml");
-        config.makeTemporary();
-        sdd = new Sdd(config);
+        sdd = createSdd();
     }
 
     @AfterClass
     public static void tearDownStatic() throws IOException {
-        sdd.waitUntilQueueEmpty();
-        sdd.close();
+        closeSdd(sdd);
     }
 
 }

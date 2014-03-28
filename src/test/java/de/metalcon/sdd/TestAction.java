@@ -24,7 +24,7 @@ public class TestAction {
     public static final long TO_ID = 2L;
 
     public static final long[] TO_IDS = new long[] {
-        2L, 3L
+        3L, 4L
     };
 
     public static void performValidAction(WriteTransaction tx, int action) {

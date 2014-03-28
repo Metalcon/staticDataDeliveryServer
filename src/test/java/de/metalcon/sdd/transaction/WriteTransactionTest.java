@@ -1,20 +1,19 @@
 package de.metalcon.sdd.transaction;
 
+import static de.metalcon.sdd.DynamicSddTestBase.closeSdd;
+import static de.metalcon.sdd.DynamicSddTestBase.createSdd;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.junit.Test;
 
-import de.metalcon.sdd.StaticSddTestBase;
+import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.TestAction;
 import de.metalcon.sdd.WriteTransaction;
 
-public class WriteTransactionTest extends StaticSddTestBase {
-
-    // TODO: Test sometimes ends fine with TransactionFailureException printed
-    // in output. Test result is still ok. Will probably be fixed if
-    // TransactionFailureException in Sdd is fixed.
+public class WriteTransactionTest {
 
     private static final int TEST_VALID_ACTIONS_NUM_ROUNDS = 100;
 
@@ -22,11 +21,12 @@ public class WriteTransactionTest extends StaticSddTestBase {
 
     private Random random = new Random();
 
-    private WriteTransaction tx;
-
     @Test
-    public void testValidActions() {
+    public void testValidActions() throws IOException {
+        Sdd sdd;
+        WriteTransaction tx;
         for (int i = 0; i != TEST_VALID_ACTIONS_NUM_ROUNDS; ++i) {
+            sdd = createSdd();
             tx = sdd.createWriteTransaction();
 
             int numActions = random.nextInt(TEST_VALID_ACTIONS_MAX_ACTIONS) + 1;
@@ -36,22 +36,28 @@ public class WriteTransactionTest extends StaticSddTestBase {
             }
 
             tx.commit();
+            closeSdd(sdd);
         }
     }
 
     @Test
-    public void testEmptyCommit() {
-        tx = sdd.createWriteTransaction();
+    public void testEmptyCommit() throws IOException {
+        Sdd sdd = createSdd();
+        WriteTransaction tx = sdd.createWriteTransaction();
         try {
             tx.commit();
             fail("Expected EmptyTransactionException.");
         } catch (IllegalStateException e) {
         }
+        closeSdd(sdd);
     }
 
     @Test
-    public void testAlreadyCommited1() {
+    public void testAlreadyCommited1() throws IOException {
+        Sdd sdd;
+        WriteTransaction tx;
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
+            sdd = createSdd();
             tx = sdd.createWriteTransaction();
             TestAction.performValidAction(tx, i);
             tx.commit();
@@ -60,13 +66,17 @@ public class WriteTransactionTest extends StaticSddTestBase {
                 fail("Expected AlreadyCommitedException.");
             } catch (IllegalStateException e) {
             }
+            closeSdd(sdd);
         }
     }
 
     @Test
-    public void testAlreadyCommited2() {
+    public void testAlreadyCommited2() throws IOException {
+        Sdd sdd;
+        WriteTransaction tx;
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             for (int j = 0; j != TestAction.NUM_VALID_ACTIONS; ++j) {
+                sdd = createSdd();
                 tx = sdd.createWriteTransaction();
                 TestAction.performValidAction(tx, i);
                 tx.commit();
@@ -75,6 +85,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
                     fail("Expected AlreadyCommitedException");
                 } catch (IllegalStateException e) {
                 }
+                closeSdd(sdd);
             }
         }
     }
