@@ -33,7 +33,6 @@ import de.metalcon.sdd.config.RelationType;
 
 public class Sdd implements AutoCloseable {
 
-    // TODO: BUG: adding a node that hasn't set properties.
     // TODO: BUG: fix ClosedByInterruptException
     // TODO: aggregate multiple same addRelations in same transaction into one
     // TODO: generally clean up transactions?
