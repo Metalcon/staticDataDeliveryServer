@@ -4,9 +4,6 @@ import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class DeleteRelationsAction extends Action {
 
@@ -39,25 +36,25 @@ public class DeleteRelationsAction extends Action {
         }
 
         if (nodeId == Sdd.EMPTY_ID) {
-            throw new EmptyIdException();
+            throw ExceptionFactory.createEmptyIdException();
         }
         if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
+            throw ExceptionFactory.createInvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
         if (!configNode.isRelation(relation)) {
-            throw new InvalidRelationException();
+            throw ExceptionFactory.createInvalidRelationException();
         }
         RelationType relationType = configNode.getRelationType(relation);
         if (!relationType.isArray()) {
-            throw new InvalidRelationException();
+            throw ExceptionFactory.createInvalidRelationException();
         }
         if (toIds.length == 0) {
             throw new IllegalArgumentException("toIds was empty.");
         }
         for (long toId : toIds) {
             if (toId == Sdd.EMPTY_ID) {
-                throw new EmptyIdException();
+                throw ExceptionFactory.createEmptyIdException();
             }
         }
 

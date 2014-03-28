@@ -2,8 +2,6 @@ package de.metalcon.sdd;
 
 import java.util.Queue;
 
-import de.metalcon.sdd.exception.EmptyIdException;
-
 public class UpdateOutputAction extends Action {
 
     private long nodeId;
@@ -14,7 +12,7 @@ public class UpdateOutputAction extends Action {
         super(sdd);
 
         if (nodeId == Sdd.EMPTY_ID) {
-            throw new EmptyIdException();
+            throw ExceptionFactory.createEmptyIdException();
         }
 
         this.nodeId = nodeId;

@@ -10,9 +10,6 @@ import java.util.Map;
 import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
 
 public class SetPropertiesTest extends ActionTestBase {
 
@@ -46,8 +43,7 @@ public class SetPropertiesTest extends ActionTestBase {
     }
 
     @Test
-    public void testValidArguments() throws InvalidNodeTypeException,
-            InvalidPropertyException, EmptyIdException {
+    public void testValidArguments() {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             tx.setProperties(NODE_ID, "Node1", properties);
         }
@@ -58,48 +54,44 @@ public class SetPropertiesTest extends ActionTestBase {
     }
 
     @Test
-    public void testEmptyId() throws InvalidNodeTypeException,
-            InvalidPropertyException {
+    public void testEmptyId() {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             try {
                 tx.setProperties(Sdd.EMPTY_ID, "Node1", properties);
                 fail("Expected EmptyIdException.");
-            } catch (EmptyIdException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testInvalidNodeType() throws InvalidPropertyException,
-            EmptyIdException {
+    public void testInvalidNodeType() {
         for (Map<String, String> properties : NODE1_PROPERTIES) {
             try {
                 tx.setProperties(NODE_ID, "UnkownNodeType", properties);
                 fail("Expected InvalidNodeTypeException.");
-            } catch (InvalidNodeTypeException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testEmptyProperty() throws InvalidNodeTypeException,
-            EmptyIdException {
+    public void testEmptyProperty() {
         try {
             tx.setProperties(NODE_ID, "Node1", new HashMap<String, String>());
             fail("Expected InvalidPropertyException.");
-        } catch (InvalidPropertyException e) {
+        } catch (IllegalArgumentException e) {
         }
     }
 
     @Test
-    public void testInvalidProperty() throws InvalidNodeTypeException,
-            EmptyIdException {
+    public void testInvalidProperty() {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("UnkownProperty", "foo");
         try {
             tx.setProperties(NODE_ID, "Node1", properties);
             fail("Expected InvalidPropertyException.");
-        } catch (InvalidPropertyException e) {
+        } catch (IllegalArgumentException e) {
         }
     }
 

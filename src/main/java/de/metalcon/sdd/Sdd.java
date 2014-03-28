@@ -24,14 +24,12 @@ import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 
+import de.metalcon.sdd.api.exception.InvalidNodeException;
+import de.metalcon.sdd.api.exception.OutputGenerationException;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.ConfigNodeOutput;
 import de.metalcon.sdd.config.RelationType;
-import de.metalcon.sdd.exception.InvalidDetailException;
-import de.metalcon.sdd.exception.InvalidNodeException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.OutputGenerationException;
 
 public class Sdd implements AutoCloseable {
 
@@ -169,7 +167,7 @@ public class Sdd implements AutoCloseable {
         }
 
         if (!config.isDetail(detail)) {
-            throw new InvalidDetailException();
+            throw ExceptionFactory.createInvalidDetailException();
         }
 
         String idDetail = buildIdDetail(nodeId, detail);
@@ -365,12 +363,7 @@ public class Sdd implements AutoCloseable {
     }
 
     private Vertex getNode(long nodeId) {
-        try {
-            return getNode(nodeId, null, false);
-        } catch (InvalidNodeTypeException e) {
-            // Shouldn't be able to occur
-            throw new IllegalStateException(e);
-        }
+        return getNode(nodeId, null, false);
     }
 
     private Vertex getNode(long nodeId, String nodeType, boolean create) {
@@ -388,7 +381,7 @@ public class Sdd implements AutoCloseable {
         }
 
         if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
+            throw ExceptionFactory.createInvalidNodeTypeException();
         }
 
         node = nodeDb.addVertex(null);

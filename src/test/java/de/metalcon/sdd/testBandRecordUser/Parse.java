@@ -12,13 +12,9 @@ import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.WriteTransaction;
+import de.metalcon.sdd.api.exception.InvalidConfigException;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidConfigException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class Parse {
 
@@ -48,9 +44,7 @@ public class Parse {
 
     @Test
     @Ignore
-    public void parse() throws InvalidNodeTypeException,
-            InvalidPropertyException, InvalidRelationException,
-            EmptyIdException {
+    public void parse() {
         parseBand();
         parseRecord();
         parseUser();
@@ -59,8 +53,7 @@ public class Parse {
         parseUserRecord();
     }
 
-    private void parseBand() throws InvalidNodeTypeException,
-            InvalidPropertyException, EmptyIdException {
+    private void parseBand() {
         System.out.println("Bands");
 
         Iterable<String[]> bands =
@@ -113,8 +106,7 @@ public class Parse {
         System.out.println();
     }
 
-    private void parseRecord() throws InvalidNodeTypeException,
-            InvalidPropertyException, EmptyIdException {
+    private void parseRecord() {
         System.out.println("Records");
         Iterable<String[]> records =
                 new CsvIteratable(
@@ -165,8 +157,7 @@ public class Parse {
         System.out.println();
     }
 
-    private void parseUser() throws InvalidNodeTypeException,
-            InvalidPropertyException, EmptyIdException {
+    private void parseUser() {
         System.out.println("Users");
         Iterable<String[]> users =
                 new CsvIteratable(
@@ -217,8 +208,7 @@ public class Parse {
         System.out.println();
     }
 
-    private void parseBandRecord() throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+    private void parseBandRecord() {
         System.out.println("BandRecord");
         Iterable<String[]> bandRecords =
                 new CsvIteratable(
@@ -271,8 +261,7 @@ public class Parse {
         System.out.println();
     }
 
-    private void parseUserBand() throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+    private void parseUserBand() {
         System.out.println("UserBand");
         Iterable<String[]> userBands =
                 new CsvIteratable(
@@ -325,8 +314,7 @@ public class Parse {
         System.out.println();
     }
 
-    private void parseUserRecord() throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+    private void parseUserRecord() {
         System.out.println("UserRecord");
         Iterable<String[]> userRecords =
                 new CsvIteratable(

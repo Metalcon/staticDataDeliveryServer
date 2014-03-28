@@ -4,9 +4,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
 
 public class SetPropertiesAction extends Action {
 
@@ -31,18 +28,20 @@ public class SetPropertiesAction extends Action {
         }
 
         if (nodeId == Sdd.EMPTY_ID) {
-            throw new EmptyIdException();
+            throw ExceptionFactory.createEmptyIdException();
         }
         if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
+            throw ExceptionFactory.createInvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
         if (properties.size() == 0) {
-            throw new InvalidPropertyException("properties was empty.");
+            throw ExceptionFactory
+                    .createInvalidPropertyException("Properties was empty.");
         }
         for (String property : properties.keySet()) {
             if (!configNode.isProperty(property)) {
-                throw new InvalidPropertyException();
+                throw ExceptionFactory
+                        .createInvalidPropertyException("Property not defined in Configuration.");
             }
         }
 

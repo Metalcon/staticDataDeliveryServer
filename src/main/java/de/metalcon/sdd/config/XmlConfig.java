@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import de.metalcon.sdd.exception.InvalidXmlConfigException;
+import de.metalcon.sdd.api.exception.InvalidXmlConfigException;
 
 public class XmlConfig extends Config {
 

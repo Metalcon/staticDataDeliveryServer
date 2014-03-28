@@ -3,11 +3,6 @@ package de.metalcon.sdd;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.InvalidRelationException;
-
 public class TestAction {
 
     public static final int NUM_VALID_ACTIONS = 4;
@@ -32,9 +27,7 @@ public class TestAction {
         2L, 3L
     };
 
-    public static void performValidAction(WriteTransaction tx, int action)
-            throws InvalidNodeTypeException, InvalidPropertyException,
-            InvalidRelationException, EmptyIdException {
+    public static void performValidAction(WriteTransaction tx, int action) {
         switch (action) {
             case 0:
                 tx.setProperties(NODE_ID, NODE_TYPE, PROPERTIES);

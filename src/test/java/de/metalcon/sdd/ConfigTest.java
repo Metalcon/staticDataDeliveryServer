@@ -6,30 +6,24 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
 import de.metalcon.sdd.config.TransactionMode;
 import de.metalcon.sdd.config.XmlConfig;
-import de.metalcon.sdd.exception.InvalidConfigException;
 
 public class ConfigTest {
 
     private Config config;
 
     @Before
-    public void setUp() throws InvalidConfigException, SAXException,
-            IOException, ParserConfigurationException {
+    public void setUp() {
         config = new XmlConfig("src/test/resources/testConfig.xml");
     }
 
@@ -181,7 +175,7 @@ public class ConfigTest {
     }
 
     @Test
-    public void testValidate() throws InvalidConfigException {
+    public void testValidate() {
         config.validate();
     }
 

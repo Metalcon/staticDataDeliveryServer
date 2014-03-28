@@ -9,10 +9,6 @@ import org.junit.Test;
 import de.metalcon.sdd.StaticSddTestBase;
 import de.metalcon.sdd.TestAction;
 import de.metalcon.sdd.WriteTransaction;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidPropertyException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class WriteTransactionTest extends StaticSddTestBase {
 
@@ -29,9 +25,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
     private WriteTransaction tx;
 
     @Test
-    public void testValidActions() throws InvalidNodeTypeException,
-            InvalidPropertyException, InvalidRelationException,
-            EmptyIdException {
+    public void testValidActions() {
         for (int i = 0; i != TEST_VALID_ACTIONS_NUM_ROUNDS; ++i) {
             tx = sdd.createWriteTransaction();
 
@@ -56,9 +50,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
     }
 
     @Test
-    public void testAlreadyCommited1() throws InvalidNodeTypeException,
-            InvalidPropertyException, InvalidRelationException,
-            EmptyIdException {
+    public void testAlreadyCommited1() {
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             tx = sdd.createWriteTransaction();
             TestAction.performValidAction(tx, i);
@@ -72,9 +64,7 @@ public class WriteTransactionTest extends StaticSddTestBase {
     }
 
     @Test
-    public void testAlreadyCommited2() throws InvalidNodeTypeException,
-            InvalidPropertyException, InvalidRelationException,
-            EmptyIdException {
+    public void testAlreadyCommited2() {
         for (int i = 0; i != TestAction.NUM_VALID_ACTIONS; ++i) {
             for (int j = 0; j != TestAction.NUM_VALID_ACTIONS; ++j) {
                 tx = sdd.createWriteTransaction();

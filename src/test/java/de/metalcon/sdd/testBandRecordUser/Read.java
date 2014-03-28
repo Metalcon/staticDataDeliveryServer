@@ -1,6 +1,5 @@
 package de.metalcon.sdd.testBandRecordUser;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.After;
@@ -11,15 +10,13 @@ import org.junit.Test;
 import de.metalcon.sdd.Sdd;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
-import de.metalcon.sdd.exception.InvalidConfigException;
-import de.metalcon.sdd.exception.InvalidDetailException;
 
 public class Read {
 
     private Sdd sdd;
 
     @Before
-    public void setUp() throws InvalidConfigException, IOException {
+    public void setUp() throws IOException {
         Config config =
                 new XmlConfig(
                         "src/test/resources/testBandRecordUser/config.xml");
@@ -34,7 +31,7 @@ public class Read {
 
     @Test
     @Ignore
-    public void read() throws InvalidDetailException, FileNotFoundException {
+    public void read() {
         long t1 = System.currentTimeMillis();
         System.out.println(sdd.read(Parse.BAND_ID_PREFIX + 1L, "nested"));
         long t2 = System.currentTimeMillis();

@@ -5,9 +5,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class SetRelationsTest extends ActionTestBase {
 
@@ -22,8 +19,7 @@ public class SetRelationsTest extends ActionTestBase {
     };
 
     @Test
-    public void testValidArguments() throws InvalidRelationException,
-            InvalidNodeTypeException, EmptyIdException {
+    public void testValidArguments() {
         for (long[] toIds : TO_IDS) {
             tx.setRelations(NODE_ID, "Node1", "relation1", toIds);
             tx.setRelations(NODE_ID, "Node2", "relation1", toIds);
@@ -31,20 +27,18 @@ public class SetRelationsTest extends ActionTestBase {
     }
 
     @Test
-    public void testEmptyId1() throws InvalidRelationException,
-            InvalidNodeTypeException {
+    public void testEmptyId1() {
         for (long[] toIds : TO_IDS) {
             try {
                 tx.setRelations(Sdd.EMPTY_ID, "Node1", "relation1", toIds);
                 fail("Expected EmptyIdException.");
-            } catch (EmptyIdException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testEmptyId2() throws InvalidRelationException,
-            InvalidNodeTypeException {
+    public void testEmptyId2() {
         for (long[] toIds : TO_IDS) {
             long[] toIdsWithEmpty = new long[toIds.length + 1];
             System.arraycopy(toIds, 0, toIdsWithEmpty, 0, toIds.length);
@@ -52,43 +46,40 @@ public class SetRelationsTest extends ActionTestBase {
             try {
                 tx.setRelations(NODE_ID, "Node1", "relation1", toIdsWithEmpty);
                 fail("Expected EmptyIdException.");
-            } catch (EmptyIdException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testInvalidNodeType() throws InvalidRelationException,
-            EmptyIdException {
+    public void testInvalidNodeType() {
         for (long[] toIds : TO_IDS) {
             try {
                 tx.setRelations(NODE_ID, "UnkownNodeType", "relation1", toIds);
                 fail("Expected InvalidNodeTypeException.");
-            } catch (InvalidNodeTypeException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testInvalidRelation1() throws InvalidNodeTypeException,
-            EmptyIdException {
+    public void testInvalidRelation1() {
         for (long[] toIds : TO_IDS) {
             try {
                 tx.setRelations(NODE_ID, "Node1", "UnkownRelation", toIds);
                 fail("Expected InvalidRelationException.");
-            } catch (InvalidRelationException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }
 
     @Test
-    public void testInvalidRelation2() throws InvalidNodeTypeException,
-            EmptyIdException {
+    public void testInvalidRelation2() {
         for (long[] toIds : TO_IDS) {
             try {
                 tx.setRelations(NODE_ID, "Node1", "relation2", toIds);
                 fail("Expected InvalidRelationException.");
-            } catch (InvalidRelationException e) {
+            } catch (IllegalArgumentException e) {
             }
         }
     }

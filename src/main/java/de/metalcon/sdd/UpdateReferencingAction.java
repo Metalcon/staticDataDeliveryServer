@@ -3,9 +3,6 @@ package de.metalcon.sdd;
 import java.util.Queue;
 import java.util.Set;
 
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidDetailException;
-
 public class UpdateReferencingAction extends Action {
 
     private long nodeId;
@@ -23,11 +20,11 @@ public class UpdateReferencingAction extends Action {
         }
 
         if (nodeId == Sdd.EMPTY_ID) {
-            throw new EmptyIdException();
+            throw ExceptionFactory.createEmptyIdException();
         }
         for (String detail : modifiedDetails) {
             if (!config.isDetail(detail)) {
-                throw new InvalidDetailException();
+                throw ExceptionFactory.createInvalidDetailException();
             }
         }
 

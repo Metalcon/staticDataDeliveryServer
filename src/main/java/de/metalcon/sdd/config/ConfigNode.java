@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.metalcon.sdd.Sdd;
-import de.metalcon.sdd.exception.InvalidConfigException;
+import de.metalcon.sdd.api.exception.InvalidConfigException;
 
 public class ConfigNode {
 

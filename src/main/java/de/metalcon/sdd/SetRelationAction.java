@@ -4,9 +4,6 @@ import java.util.Queue;
 
 import de.metalcon.sdd.config.ConfigNode;
 import de.metalcon.sdd.config.RelationType;
-import de.metalcon.sdd.exception.EmptyIdException;
-import de.metalcon.sdd.exception.InvalidNodeTypeException;
-import de.metalcon.sdd.exception.InvalidRelationException;
 
 public class SetRelationAction extends Action {
 
@@ -38,18 +35,18 @@ public class SetRelationAction extends Action {
         }
 
         if (nodeId == Sdd.EMPTY_ID) {
-            throw new EmptyIdException();
+            throw ExceptionFactory.createEmptyIdException();
         }
         if (!config.isNodeType(nodeType)) {
-            throw new InvalidNodeTypeException();
+            throw ExceptionFactory.createInvalidNodeTypeException();
         }
         ConfigNode configNode = config.getNode(nodeType);
         if (!configNode.isRelation(relation)) {
-            throw new InvalidRelationException();
+            throw ExceptionFactory.createInvalidRelationException();
         }
         RelationType relationType = configNode.getRelationType(relation);
         if (relationType.isArray()) {
-            throw new InvalidRelationException();
+            throw ExceptionFactory.createInvalidRelationException();
         }
 
         this.nodeId = nodeId;

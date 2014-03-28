@@ -7,14 +7,13 @@ import org.junit.BeforeClass;
 
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
-import de.metalcon.sdd.exception.InvalidConfigException;
 
 public abstract class StaticSddTestBase {
 
     protected static Sdd sdd;
 
     @BeforeClass
-    public static void setUpStatic() throws InvalidConfigException, IOException {
+    public static void setUpStatic() throws IOException {
         Config config = new XmlConfig("src/test/resources/testConfig.xml");
         config.makeTemporary();
         sdd = new Sdd(config);
