@@ -225,7 +225,7 @@ public class Sdd implements AutoCloseable {
             long nodeId,
             String nodeType,
             Map<String, String> properties) {
-        Vertex node = getNode(nodeId, nodeType, true);
+        Vertex node = getNode(actions, nodeId, nodeType, true);
 
         for (Map.Entry<String, String> property : properties.entrySet()) {
             // TODO: use removeProperty() if value is null?
@@ -248,7 +248,7 @@ public class Sdd implements AutoCloseable {
         // TODO: only remove edges that are not toId, and only create new edge
         // if needed
 
-        Vertex node = getNode(nodeId, nodeType, true);
+        Vertex node = getNode(actions, nodeId, nodeType, true);
         for (Edge edge : node.getEdges(Direction.OUT, relation)) {
             edge.remove();
         }
@@ -256,7 +256,7 @@ public class Sdd implements AutoCloseable {
         ConfigNode configNode = config.getNode(nodeType);
         RelationType relationType = configNode.getRelationType(relation);
 
-        Vertex relNode = getNode(toId, relationType.getType(), true);
+        Vertex relNode = getNode(actions, toId, relationType.getType(), true);
         nodeDb.addEdge(null, node, relNode, relation);
 
         actions.add(new UpdateOutputAction(this, nodeId));
@@ -271,7 +271,7 @@ public class Sdd implements AutoCloseable {
         // TODO: only remove edges that are not in toIds, and only create
         // remaining needed edges
 
-        Vertex node = getNode(nodeId, nodeType, true);
+        Vertex node = getNode(actions, nodeId, nodeType, true);
         for (Edge edge : node.getEdges(Direction.OUT, relation)) {
             edge.remove();
         }
@@ -285,13 +285,14 @@ public class Sdd implements AutoCloseable {
             String nodeType,
             String relation,
             long[] toIds) {
-        Vertex node = getNode(nodeId, nodeType, true);
+        Vertex node = getNode(actions, nodeId, nodeType, true);
 
         ConfigNode configNode = config.getNode(nodeType);
         RelationType relationType = configNode.getRelationType(relation);
 
         for (long toId : toIds) {
-            Vertex relNode = getNode(toId, relationType.getType(), true);
+            Vertex relNode =
+                    getNode(actions, toId, relationType.getType(), true);
             nodeDb.addEdge(null, node, relNode, relation);
         }
 
@@ -315,7 +316,7 @@ public class Sdd implements AutoCloseable {
 
     /* package */void actionUpdateOutput(Queue<Action> actions, long nodeId) {
         // TODO: move vertex into parameters to avoid lookup?
-        Vertex node = getNode(nodeId);
+        Vertex node = getNode(actions, nodeId);
         Set<String> modifiedDetails = new HashSet<String>();
 
         for (String detail : config.getDetails()) {
@@ -340,7 +341,7 @@ public class Sdd implements AutoCloseable {
             long nodeId,
             Set<String> modifiedDetails) {
         // TODO: move vertex into parameters to avoid lookup?
-        Vertex node = getNode(nodeId);
+        Vertex node = getNode(actions, nodeId);
         String nodeType = getNodeType(node);
 
         for (Vertex referencingNode : node.getVertices(Direction.IN)) {
@@ -362,11 +363,15 @@ public class Sdd implements AutoCloseable {
         return NODEDB_OUTPUT_PREFIX + detail;
     }
 
-    private Vertex getNode(long nodeId) {
-        return getNode(nodeId, null, false);
+    private Vertex getNode(Queue<Action> actions, long nodeId) {
+        return getNode(actions, nodeId, null, false);
     }
 
-    private Vertex getNode(long nodeId, String nodeType, boolean create) {
+    private Vertex getNode(
+            Queue<Action> actions,
+            long nodeId,
+            String nodeType,
+            boolean create) {
         Vertex node = nodeDbIndex.get(nodeId);
         if (node != null) {
             String type = getNodeType(node);
@@ -388,6 +393,9 @@ public class Sdd implements AutoCloseable {
         node.setProperty(NODEDB_ID, nodeId);
         node.setProperty(NODEDB_TYPE, nodeType);
         nodeDbIndex.put(nodeId, node);
+
+        actions.add(new UpdateOutputAction(this, nodeId));
+
         return node;
     }
 
