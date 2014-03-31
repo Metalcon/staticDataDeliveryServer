@@ -45,8 +45,8 @@
 
   <properties>
     <metalcon.api.version>0.1.0</metalcon.api.version>
-    <metalcon.static-data-delivery-server-api.version>0.0.2</metalcon.static-data-delivery-server-api.version>
-    <metalcon.zmq-worker.version>0.1.0</metalcon.zmq-worker.version>
+    <metalcon.static-data-delivery-server-api.version>0.0.6</metalcon.static-data-delivery-server-api.version>
+    <metalcon.zmq-worker.version>0.2.1</metalcon.zmq-worker.version>
 
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
