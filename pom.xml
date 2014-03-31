@@ -44,9 +44,9 @@
   </repositories>
 
   <properties>
-    <metalcon.api.version>0.1.0</metalcon.api.version>
-    <metalcon.static-data-delivery-server-api.version>0.0.6</metalcon.static-data-delivery-server-api.version>
-    <metalcon.zmq-worker.version>0.2.1</metalcon.zmq-worker.version>
+    <metalcon.api.version>0.1.1</metalcon.api.version>
+    <metalcon.static-data-delivery-server-api.version>0.0.7</metalcon.static-data-delivery-server-api.version>
+    <metalcon.request-dispatcher.version>1.1.0</metalcon.request-dispatcher.version>
 
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
@@ -72,9 +72,9 @@
       <version>${metalcon.static-data-delivery-server-api.version}</version>
     </dependency>
     <dependency>
-      <groupId>de.metalcon</groupId>
-      <artifactId>zmq-worker</artifactId>
-      <version>${metalcon.zmq-worker.version}</version>
+      <groupId>net.hh</groupId>
+      <artifactId>RequestDispatcher</artifactId>
+      <version>${metalcon.request-dispatcher.version}</version>
     </dependency>
 
     <dependency>

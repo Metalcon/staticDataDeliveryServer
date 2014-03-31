@@ -10,6 +10,7 @@ import de.metalcon.sdd.api.requests.DeleteAction;
 import de.metalcon.sdd.api.requests.DeleteRelationsAction;
 import de.metalcon.sdd.api.requests.ReadRequestAction;
 import de.metalcon.sdd.api.requests.SddReadRequest;
+import de.metalcon.sdd.api.requests.SddRequest;
 import de.metalcon.sdd.api.requests.SddWriteRequest;
 import de.metalcon.sdd.api.requests.SetPropertiesAction;
 import de.metalcon.sdd.api.requests.SetRelationAction;
@@ -18,9 +19,11 @@ import de.metalcon.sdd.api.requests.WriteRequestAction;
 import de.metalcon.sdd.api.responses.SddCouldNotQueueResponse;
 import de.metalcon.sdd.api.responses.SddSucessfulReadResponse;
 import de.metalcon.sdd.api.responses.SddSucessfullQueueResponse;
-import de.metalcon.zmqworker.ZMQRequestHandler;
 
-public class RequestHandler implements ZMQRequestHandler {
+public class RequestHandler implements
+        net.hh.request_dispatcher.server.RequestHandler<SddRequest, Response> {
+
+    private static final long serialVersionUID = 5403742746062109485L;
 
     private Sdd sdd;
 
@@ -30,13 +33,17 @@ public class RequestHandler implements ZMQRequestHandler {
     }
 
     @Override
-    public Response handleRequest(Object request) {
+    public Response handleRequest(SddRequest request) {
         try {
             if (request instanceof SddReadRequest) {
-                handleReadRequest((SddReadRequest) request);
+                return handleReadRequest((SddReadRequest) request);
             } else if (request instanceof SddWriteRequest) {
-                handleWriteRequest((SddWriteRequest) request);
+                return handleWriteRequest((SddWriteRequest) request);
             }
+
+            return new UsageErrorResponse("unknown request type: "
+                    + request.getClass(),
+                    "use requests defined in staticDataDeliveryApi");
         } catch (SddInternalServerException e) {
             return new InternalServerErrorResponse(e, null);
         } catch (SddUsageException e) {
@@ -44,9 +51,6 @@ public class RequestHandler implements ZMQRequestHandler {
         } catch (RuntimeException e) {
             return new UsageErrorResponse(e, null);
         }
-
-        return new UsageErrorResponse("unknown request type",
-                "use requests defined in staticDataDeliveryApi");
     }
 
     private Response handleReadRequest(SddReadRequest request) {
