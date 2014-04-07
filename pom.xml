@@ -12,7 +12,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>static-data-delivery-server</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <packaging>jar</packaging>
 
   <name>staticDataDelivery</name>
@@ -45,7 +45,7 @@
 
   <properties>
     <metalcon.api.version>0.1.1</metalcon.api.version>
-    <metalcon.static-data-delivery-server-api.version>0.1.0</metalcon.static-data-delivery-server-api.version>
+    <metalcon.static-data-delivery-server-api.version>0.1.1</metalcon.static-data-delivery-server-api.version>
     <metalcon.request-dispatcher.version>1.1.0</metalcon.request-dispatcher.version>
 
     <!-- LevelDB -->
