@@ -52,9 +52,9 @@ public class DispatcherTest {
     public void test() {
         long t1 = System.currentTimeMillis();
         SddReadRequest readRequest = new SddReadRequest();
-        readRequest.read(new Muid(7L), "nested");
-        readRequest.read(new Muid(7L), "properties");
-        readRequest.read(new Muid(8L), "nested");
+        readRequest.read(Muid.createFromID(7L), "nested");
+        readRequest.read(Muid.createFromID(7L), "properties");
+        readRequest.read(Muid.createFromID(8L), "nested");
         dispatcher.execute(readRequest, new Callback<Response>() {
 
             @Override
