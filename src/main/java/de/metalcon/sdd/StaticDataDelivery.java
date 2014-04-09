@@ -13,17 +13,21 @@ import de.metalcon.sdd.config.XmlConfig;
 
 public class StaticDataDelivery implements AutoCloseable {
 
+    public static final String DEFAULT_CONFIG_PATH =
+            "/usr/share/sdd/config.xml";
+
     private Sdd sdd;
 
     private ZMQ.Context context;
 
     private ZmqWorker<SddRequest, Response> worker;
 
-    public StaticDataDelivery() throws IOException {
+    public StaticDataDelivery(
+            String configPath) throws IOException {
         super();
 
         System.out.println("Loading config...");
-        Config config = new XmlConfig("/usr/share/sdd/config.xml");
+        Config config = new XmlConfig(configPath);
         System.out.println("Starting Sdd...");
         sdd = new Sdd(config);
 
@@ -44,6 +48,7 @@ public class StaticDataDelivery implements AutoCloseable {
                     // Ignore Exceptions we are shutting down
                 }
             }
+
         });
     }
 
@@ -75,8 +80,14 @@ public class StaticDataDelivery implements AutoCloseable {
     }
 
     public static void main(String[] args) throws IOException {
+        String configPath = DEFAULT_CONFIG_PATH;
+        if (args.length > 0) {
+            configPath = args[0];
+        }
+        System.out.println("Using configuration path: \"" + configPath + "\".");
+
         @SuppressWarnings("resource")
-        StaticDataDelivery main = new StaticDataDelivery();
+        StaticDataDelivery main = new StaticDataDelivery(configPath);
         main.run();
     }
 
