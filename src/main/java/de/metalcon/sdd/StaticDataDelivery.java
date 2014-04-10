@@ -6,8 +6,8 @@ import net.hh.request_dispatcher.server.ZmqWorker;
 
 import org.zeromq.ZMQ;
 
-import de.metalcon.api.responses.Response;
 import de.metalcon.sdd.api.requests.SddRequest;
+import de.metalcon.sdd.api.responses.SddResponse;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
 
@@ -20,7 +20,7 @@ public class StaticDataDelivery implements AutoCloseable {
 
     private ZMQ.Context context;
 
-    private ZmqWorker<SddRequest, Response> worker;
+    private ZmqWorker<SddRequest, SddResponse> worker;
 
     public StaticDataDelivery(
             String configPath) throws IOException {
@@ -35,7 +35,7 @@ public class StaticDataDelivery implements AutoCloseable {
         context = ZMQ.context(1);
         System.out.println("Creating Worker...");
         worker =
-                new ZmqWorker<SddRequest, Response>(context,
+                new ZmqWorker<SddRequest, SddResponse>(context,
                         "tcp://127.0.0.1:1337", new RequestHandler(sdd));
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

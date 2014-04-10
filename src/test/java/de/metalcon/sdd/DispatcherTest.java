@@ -1,9 +1,11 @@
 package de.metalcon.sdd;
 
+import java.io.IOException;
 import java.util.Map;
 
 import net.hh.request_dispatcher.Callback;
 import net.hh.request_dispatcher.Dispatcher;
+import net.hh.request_dispatcher.server.RequestException;
 import net.hh.request_dispatcher.service_adapter.ZmqAdapter;
 
 import org.junit.After;
@@ -17,7 +19,6 @@ import de.metalcon.api.responses.errors.InternalServerErrorResponse;
 import de.metalcon.api.responses.errors.UsageErrorResponse;
 import de.metalcon.domain.Muid;
 import de.metalcon.sdd.api.requests.SddReadRequest;
-import de.metalcon.sdd.api.requests.SddRequest;
 import de.metalcon.sdd.api.requests.SddWriteRequest;
 import de.metalcon.sdd.api.responses.SddSucessfulReadResponse;
 
@@ -33,8 +34,7 @@ public class DispatcherTest {
 
         dispatcher = new Dispatcher();
         dispatcher.registerServiceAdapter("staticDataDeliveryServer",
-                new ZmqAdapter<SddRequest, Response>(context,
-                        "tcp://127.0.0.1:1337"));
+                new ZmqAdapter(context, "tcp://127.0.0.1:1337"));
         dispatcher.setDefaultService(SddReadRequest.class,
                 "staticDataDeliveryServer");
         dispatcher.setDefaultService(SddWriteRequest.class,
@@ -42,7 +42,7 @@ public class DispatcherTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         dispatcher.close();
         context.term();
     }
@@ -58,7 +58,13 @@ public class DispatcherTest {
         dispatcher.execute(readRequest, new Callback<Response>() {
 
             @Override
+            public void onError(RequestException exception) {
+                exception.printStackTrace();
+            }
+
+            @Override
             public void onSuccess(Response response) {
+                System.out.println(response.getClass());
                 if (response instanceof UsageErrorResponse) {
                     System.out.println(((UsageErrorResponse) response)
                             .getErrorMessage());
@@ -75,6 +81,7 @@ public class DispatcherTest {
                     }
                 }
             }
+
         });
         dispatcher.gatherResults();
         long t2 = System.currentTimeMillis();

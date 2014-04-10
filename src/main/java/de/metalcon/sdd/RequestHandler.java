@@ -1,10 +1,5 @@
 package de.metalcon.sdd;
 
-import de.metalcon.api.responses.Response;
-import de.metalcon.api.responses.errors.InternalServerErrorResponse;
-import de.metalcon.api.responses.errors.UsageErrorResponse;
-import de.metalcon.sdd.api.exception.SddInternalServerException;
-import de.metalcon.sdd.api.exception.SddUsageException;
 import de.metalcon.sdd.api.requests.AddRelationsAction;
 import de.metalcon.sdd.api.requests.DeleteAction;
 import de.metalcon.sdd.api.requests.DeleteRelationsAction;
@@ -17,11 +12,13 @@ import de.metalcon.sdd.api.requests.SetRelationAction;
 import de.metalcon.sdd.api.requests.SetRelationsAction;
 import de.metalcon.sdd.api.requests.WriteRequestAction;
 import de.metalcon.sdd.api.responses.SddCouldNotQueueResponse;
+import de.metalcon.sdd.api.responses.SddResponse;
 import de.metalcon.sdd.api.responses.SddSucessfulReadResponse;
 import de.metalcon.sdd.api.responses.SddSucessfullQueueResponse;
 
-public class RequestHandler implements
-        net.hh.request_dispatcher.server.RequestHandler<SddRequest, Response> {
+public class RequestHandler
+        implements
+        net.hh.request_dispatcher.server.RequestHandler<SddRequest, SddResponse> {
 
     private static final long serialVersionUID = 5403742746062109485L;
 
@@ -33,27 +30,19 @@ public class RequestHandler implements
     }
 
     @Override
-    public Response handleRequest(SddRequest request) {
-        try {
-            if (request instanceof SddReadRequest) {
-                return handleReadRequest((SddReadRequest) request);
-            } else if (request instanceof SddWriteRequest) {
-                return handleWriteRequest((SddWriteRequest) request);
-            }
-
-            return new UsageErrorResponse("unknown request type: "
-                    + request.getClass(),
-                    "use requests defined in staticDataDeliveryApi");
-        } catch (SddInternalServerException e) {
-            return new InternalServerErrorResponse(e, null);
-        } catch (SddUsageException e) {
-            return new UsageErrorResponse(e, null);
-        } catch (RuntimeException e) {
-            return new UsageErrorResponse(e, null);
+    public SddResponse handleRequest(SddRequest request) {
+        if (request instanceof SddReadRequest) {
+            return handleReadRequest((SddReadRequest) request);
+        } else if (request instanceof SddWriteRequest) {
+            return handleWriteRequest((SddWriteRequest) request);
         }
+
+        throw new IllegalArgumentException("Unkown request type: \""
+                + request.getClass()
+                + "\". Use request types defined in staticDataDeliveryApi.");
     }
 
-    private Response handleReadRequest(SddReadRequest request) {
+    private SddResponse handleReadRequest(SddReadRequest request) {
         SddSucessfulReadResponse response = new SddSucessfulReadResponse();
         for (ReadRequestAction read : request.getActions()) {
             long nodeId = read.getNodeId();
@@ -64,7 +53,7 @@ public class RequestHandler implements
         return response;
     }
 
-    private Response handleWriteRequest(SddWriteRequest request) {
+    private SddResponse handleWriteRequest(SddWriteRequest request) {
         WriteTransaction tx = sdd.createWriteTransaction();
         for (WriteRequestAction write : request.getActions()) {
             if (write instanceof SetPropertiesAction) {
