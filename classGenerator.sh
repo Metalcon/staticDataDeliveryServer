@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.mainClass="de.metalcon.sdd.config.ClassGenerator" -Dexec.args="$1 $2 $3"
+mvn exec:java -Dexec.mainClass="de.metalcon.sdd.Main" -Dexec.args="classGenerator $@"

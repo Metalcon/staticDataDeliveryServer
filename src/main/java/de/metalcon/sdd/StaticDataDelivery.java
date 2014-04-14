@@ -2,12 +2,7 @@ package de.metalcon.sdd;
 
 import java.io.IOException;
 
-import net.hh.request_dispatcher.server.ZmqWorker;
-
-import org.zeromq.ZMQ;
-
-import de.metalcon.sdd.api.requests.SddRequest;
-import de.metalcon.sdd.api.responses.SddResponse;
+import net.hh.request_dispatcher.ZmqWorkerProxy;
 import de.metalcon.sdd.config.Config;
 import de.metalcon.sdd.config.XmlConfig;
 
@@ -18,9 +13,9 @@ public class StaticDataDelivery implements AutoCloseable {
 
     private Sdd sdd;
 
-    private ZMQ.Context context;
+    private ZmqWorkerProxy proxy;
 
-    private ZmqWorker<SddRequest, SddResponse> worker;
+    //private ZmqWorker<SddRequest, SddResponse> worker;
 
     public StaticDataDelivery(
             String configPath) throws IOException {
@@ -31,12 +26,9 @@ public class StaticDataDelivery implements AutoCloseable {
         System.out.println("Starting Sdd...");
         sdd = new Sdd(config);
 
-        System.out.println("Creating Context...");
-        context = ZMQ.context(1);
-        System.out.println("Creating Worker...");
-        worker =
-                new ZmqWorker<SddRequest, SddResponse>(context,
-                        "tcp://127.0.0.1:1337", new RequestHandler(sdd));
+        System.out.println("Creating Proxy...");
+        proxy = new ZmqWorkerProxy("tcp://127.0.0.1:1337");
+        proxy.add(1, new RequestHandler(sdd));
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -54,15 +46,10 @@ public class StaticDataDelivery implements AutoCloseable {
 
     @Override
     public void close() throws IOException {
-        System.out.println("Closing Worker...");
-        if (worker != null) {
-            worker.close();
-            worker = null;
-        }
-        System.out.println("Closing Context...");
-        if (context != null) {
-            context.close();
-            context = null;
+        System.out.println("Closing Proxy...");
+        if (proxy != null) {
+            proxy.shutdown();
+            proxy = null;
         }
 
         System.out.println("Closing Sdd...");
@@ -73,8 +60,8 @@ public class StaticDataDelivery implements AutoCloseable {
     }
 
     public void run() {
-        System.out.println("Starting worker...");
-        worker.start();
+        System.out.println("Starting Proxy...");
+        proxy.startWorkers();
 
         System.out.println("Ready!");
     }

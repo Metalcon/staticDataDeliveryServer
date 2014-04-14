@@ -16,9 +16,8 @@ import de.metalcon.sdd.api.responses.SddResponse;
 import de.metalcon.sdd.api.responses.SddSucessfulReadResponse;
 import de.metalcon.sdd.api.responses.SddSucessfullQueueResponse;
 
-public class RequestHandler
-        implements
-        net.hh.request_dispatcher.server.RequestHandler<SddRequest, SddResponse> {
+public class RequestHandler implements
+        net.hh.request_dispatcher.RequestHandler<SddRequest, SddResponse> {
 
     private static final long serialVersionUID = 5403742746062109485L;
 

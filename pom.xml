@@ -44,6 +44,8 @@
   </repositories>
 
   <properties>
+    <java.exec.launcherClass>de.metalcon.sdd.Main</java.exec.launcherClass>
+  
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
     <!-- Blueprints -->
