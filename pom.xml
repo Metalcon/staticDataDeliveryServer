@@ -6,13 +6,13 @@
   <parent>
     <groupId>de.metalcon</groupId>
     <artifactId>pom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.8</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>static-data-delivery-server</artifactId>
-  <version>0.4.1</version>
+  <version>0.5.0</version>
   <packaging>jar</packaging>
 
   <name>staticDataDelivery</name>
@@ -44,10 +44,6 @@
   </repositories>
 
   <properties>
-    <metalcon.api.version>0.1.1</metalcon.api.version>
-    <metalcon.static-data-delivery-server-api.version>0.1.3</metalcon.static-data-delivery-server-api.version>
-    <metalcon.request-dispatcher.version>1.3.0</metalcon.request-dispatcher.version>
-
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
     <!-- Blueprints -->
@@ -63,18 +59,18 @@
   <dependencies>
     <dependency>
       <groupId>de.metalcon</groupId>
-      <artifactId>api</artifactId>
-      <version>${metalcon.api.version}</version>
+      <artifactId>backend-api</artifactId>
+      <version>${metalcon.backendApi.version}</version>
     </dependency>
     <dependency>
       <groupId>de.metalcon</groupId>
       <artifactId>static-data-delivery-server-api</artifactId>
-      <version>${metalcon.static-data-delivery-server-api.version}</version>
+      <version>${metalcon.staticDataDeliveryServer.api.version}</version>
     </dependency>
     <dependency>
       <groupId>net.hh</groupId>
       <artifactId>RequestDispatcher</artifactId>
-      <version>${metalcon.request-dispatcher.version}</version>
+      <version>${metalcon.dispatcher.version}</version>
     </dependency>
 
     <dependency>

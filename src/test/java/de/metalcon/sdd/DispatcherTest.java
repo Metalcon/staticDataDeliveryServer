@@ -5,8 +5,7 @@ import java.util.Map;
 
 import net.hh.request_dispatcher.Callback;
 import net.hh.request_dispatcher.Dispatcher;
-import net.hh.request_dispatcher.server.RequestException;
-import net.hh.request_dispatcher.service_adapter.ZmqAdapter;
+import net.hh.request_dispatcher.RequestException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +18,7 @@ import de.metalcon.api.responses.errors.InternalServerErrorResponse;
 import de.metalcon.api.responses.errors.UsageErrorResponse;
 import de.metalcon.domain.Muid;
 import de.metalcon.sdd.api.requests.SddReadRequest;
-import de.metalcon.sdd.api.requests.SddWriteRequest;
+import de.metalcon.sdd.api.requests.SddRequest;
 import de.metalcon.sdd.api.responses.SddSucessfulReadResponse;
 
 public class DispatcherTest {
@@ -33,17 +32,12 @@ public class DispatcherTest {
         context = ZMQ.context(1);
 
         dispatcher = new Dispatcher();
-        dispatcher.registerServiceAdapter("staticDataDeliveryServer",
-                new ZmqAdapter(context, "tcp://127.0.0.1:1337"));
-        dispatcher.setDefaultService(SddReadRequest.class,
-                "staticDataDeliveryServer");
-        dispatcher.setDefaultService(SddWriteRequest.class,
-                "staticDataDeliveryServer");
+        dispatcher.registerService(SddRequest.class, "tcp://127.0.0.1:1337");
     }
 
     @After
     public void tearDown() throws IOException {
-        dispatcher.close();
+        dispatcher.shutdown();
         context.term();
     }
 
