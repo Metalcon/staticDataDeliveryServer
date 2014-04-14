@@ -9,3 +9,6 @@ in order to use the static data delivery component you have to create the folder
 
 find more (mostly outdated information) in our wiki at: https://github.com/renepickhardt/metalcon/wiki/componentStaticDataDelivery
 
+To generate java classes that can hold  sdd ouput do:
+
+    ./classGenerator.sh /usr/share/sdd/config.xml /home/lukas/metalcon/workspace/middleware/src/main/java/de/metalcon/middleware/sdd de.metalcon.middleware.sdd
