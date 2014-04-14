@@ -53,6 +53,8 @@ public class Sdd implements AutoCloseable {
 
     public static final String OUTPUT_TYPE = "type";
 
+    public static final String OUTPUT_DETAIL = "detail";
+
     public static final boolean OUTPUT_INDENT = true;
 
     public static final boolean OUTPUT_ORDER = true;
@@ -424,6 +426,7 @@ public class Sdd implements AutoCloseable {
             Map<String, Object> output = new HashMap<String, Object>();
             output.put(OUTPUT_ID, nodeId);
             output.put(OUTPUT_TYPE, nodeType);
+            output.put(OUTPUT_DETAIL, detail);
 
             if (configNodeOutput != null) {
                 for (String property : configNodeOutput.getOutProperties()) {
