@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.mainClass="de.metalcon.sdd.Main" -Dexec.args="sdd $@"
+mvn exec:java -Dexec.args="sdd $@"
