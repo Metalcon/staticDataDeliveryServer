@@ -5,44 +5,80 @@
   <transactions mode="single"/>
   
   <details>
-    <detail name="detail1"/>
-    <detail name="detail2"/>
+    <detail name="entry"/>
+    <detail name="page"/>
+    <detail name="tabBands"/>
+    <detail name="tabRecords"/>
+    <detail name="tabTracks"/>
   </details>
   
   <nodes>
-    <node type="Node1">
-      <property name="property1" type="String"/>
-      <property name="property2" type="String"/>
-      <relation name="relation1" type="Node2[]"/>
-      <relation name="relation2" type="Node3"/>
+    <node type="band">
+      <property name="name" type="String"/>
+      <property name="urlMySpace" type="String"/>
+      <relation name="records" type="record[]"/>
+      <relation name="tracks" type="track[]"/>
 
-      <output detail="detail1">
-        <out-property property="property1"/>
-        <out-property property="property2"/>
-        <out-relation relation="relation1" detail="detail2"/>
-        <out-relation relation="relation2" detail="detail2"/>
+      <output detail="entry">
+        <out-property property="name"/>
       </output>
 
-      <output detail="detail2">
-        <out-property property="property1"/>
-        <out-property property="property2"/>
+      <output detail="page">
+        <out-property property="name"/>
+        <out-relation relation="records" detail="entry"/>
+        <out-relation relation="tracks" detail="entry"/>
+      </output>
+      
+      <output detail="tabRecords">
+        <out-relation relation="records" detail="entry"/>
+      </output>
+      
+      <output detail="tabTracks">
+        <out-relation relation="tracks" detail="entry"/>
       </output>
     </node>
 
-    <node type="Node2">
-      <property name="property1" type="String"/>
-      <relation name="relation1" type="Node1[]"/>
+    <node type="record">
+      <property name="name" type="String"/>
+      <property name="releaseDate" type="String"/>
+      <relation name="band" type="band"/>
+      <relation name="tracks" type="track[]"/>
 
-      <output detail="detail1">
-        <out-property property="property1"/>
-        <out-relation relation="relation1" detail="detail2"/>
+      <output detail="entry">
+        <out-property property="name"/>
+        <out-property property="releaseYear"/>
       </output>
 
-      <output detail="detail2">
-        <out-property property="property1"/>
+      <output detail="page">
+        <out-property property="name"/>
+        <out-property property="releaseYear"/>
+        <out-relation relation="band" detail="entry"/>
+        <out-relation relation="tracks" detail="entry"/>
+      </output>
+      
+      <output detail="tabTracks">
+        <out-relation relation="tracks" detail="entry"/>
       </output>
     </node>
     
-    <node type="Node3"/>
+    <node type="track">
+      <property name="name" type="String"/>
+      <property name="trackNumber" type="String"/>
+      <property name="duration" type="String"/>
+      <relation name="band" type="band"/>
+      <relation name="record" type="record"/>
+
+      <output detail="entry">
+        <out-property property="name"/>
+        <out-property property="trackNumber"/>
+      </output>
+
+      <output detail="page">
+        <out-property property="name"/>
+        <out-property property="trackNumber"/>
+        <out-relation relation="band" detail="entry"/>
+        <out-relation relation="record" detail="entry"/>
+      </output>
+    </node>
   </nodes>
 </sdd-config>
