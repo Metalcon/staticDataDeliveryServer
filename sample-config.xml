@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<sdd-config>
+  <leveldb path="/usr/share/metalcon/staticDataDelivery/leveldb"/>
+  <neo4j path="/usr/share/metalcon/staticDataDelivery/neo4j"/>
+  <transactions mode="single"/>
+  
+  <details>
+    <detail name="detail1"/>
+    <detail name="detail2"/>
+  </details>
+  
+  <nodes>
+    <node type="Node1">
+      <property name="property1" type="String"/>
+      <property name="property2" type="String"/>
+      <relation name="relation1" type="Node2[]"/>
+      <relation name="relation2" type="Node3"/>
+
+      <output detail="detail1">
+        <out-property property="property1"/>
+        <out-property property="property2"/>
+        <out-relation relation="relation1" detail="detail2"/>
+        <out-relation relation="relation2" detail="detail2"/>
+      </output>
+
+      <output detail="detail2">
+        <out-property property="property1"/>
+        <out-property property="property2"/>
+      </output>
+    </node>
+
+    <node type="Node2">
+      <property name="property1" type="String"/>
+      <relation name="relation1" type="Node1[]"/>
+
+      <output detail="detail1">
+        <out-property property="property1"/>
+        <out-relation relation="relation1" detail="detail2"/>
+      </output>
+
+      <output detail="detail2">
+        <out-property property="property1"/>
+      </output>
+    </node>
+    
+    <node type="Node3"/>
+  </nodes>
+</sdd-config>
