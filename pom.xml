@@ -3,97 +3,113 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>de.metalcon</groupId>
+    <artifactId>pom</artifactId>
+    <version>0.0.19</version>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.metalcon</groupId>
-  <artifactId>staticDataDelivery</artifactId>
+  <artifactId>static-data-delivery-server</artifactId>
+  <version>0.6.0</version>
+  <packaging>jar</packaging>
+
   <name>staticDataDelivery</name>
-  <version>1.0.0-BUILD-SNAPSHOT</version>
-  
-  <packaging>war</packaging>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>lukasschmelzeisen</id>
+      <name>Lukas Schmelzeisen</name>
+      <email>l.schmelzeisen@gmx.de</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>metalcon-depend</id>
+      <url>http://develop.metalcon.de:8080/mvn/</url>
+    </repository>
+  </repositories>
 
   <properties>
-    <!-- Generic -->
-    <java.version>1.7</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.exec.launcherClass>de.metalcon.sdd.Main</java.exec.launcherClass>
+  
     <!-- LevelDB -->
     <leveldb.version>1.7</leveldb.version>
-    <!-- Neo4j -->
-    <neo4j.version>1.9.4</neo4j.version>
+    <!-- Blueprints -->
+    <blueprints.version>2.4.0</blueprints.version>
+
     <!-- JSON -->
-    <json-simple.version>1.1</json-simple.version>
-    
+    <jackson.version>2.3.2</jackson.version>
+
     <!-- Test -->
     <junit.version>4.11</junit.version>
-    
-    <!-- Tomcat -->
-    <tomcat.version>2.2</tomcat.version>
   </properties>
 
   <dependencies>
-    <!-- LevelDB -->
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>backend-api</artifactId>
+      <version>${metalcon.backendApi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>static-data-delivery-server-api</artifactId>
+      <version>${metalcon.staticDataDeliveryServer.api.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>de.metalcon</groupId>
+      <artifactId>db-helper</artifactId>
+      <version>${metalcon.dbHelper.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.hh</groupId>
+      <artifactId>RequestDispatcher</artifactId>
+      <version>${metalcon.dispatcher.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.fusesource.leveldbjni</groupId>
       <artifactId>leveldbjni-all</artifactId>
       <version>${leveldb.version}</version>
     </dependency>
-    
-    <!-- Neo4j -->
+
     <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>neo4j</artifactId>
-      <version>${neo4j.version}</version>
+      <groupId>com.tinkerpop.blueprints</groupId>
+      <artifactId>blueprints-core</artifactId>
+      <version>${blueprints.version}</version>
     </dependency>
-    
-    <!-- JSON -->
     <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-      <version>${json-simple.version}</version>
+      <groupId>com.tinkerpop.blueprints</groupId>
+      <artifactId>blueprints-neo4j-graph</artifactId>
+      <version>${blueprints.version}</version>
     </dependency>
-    
-    <!-- Tomcat -->
+
     <dependency>
-      <groupId>org.apache.tomcat.maven</groupId>
-      <artifactId>tomcat7-maven-plugin</artifactId>
-      <version>${tomcat.version}</version>
-      <scope>provided</scope>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
-    
-    <!-- Test -->
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- for data import -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.26</version>
-    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-      </plugin>
-    </plugins>
-  </build>
 </project>

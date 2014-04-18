@@ -1,5 +1,4 @@
-metalcon
-========
+Static Data Delivery
+====================
 
-find more in our wiki at: https://github.com/renepickhardt/metalcon/wiki
-
+See the [Wiki](https://github.com/Metalcon/staticDataDeliveryServer/wiki).

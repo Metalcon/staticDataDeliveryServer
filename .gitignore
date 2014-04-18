@@ -18,3 +18,7 @@ bin/
 
 # backup files
 *~
+
+# config file
+config.xml
+config.txt

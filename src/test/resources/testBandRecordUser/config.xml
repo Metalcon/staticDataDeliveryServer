@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<sdd-config>
+  <leveldb path="/usr/share/sdd/leveldb"/>
+  <neo4j path="/usr/share/sdd/neo4j"/>
+  <transactions mode="single"/>
+  
+  <details>
+    <detail name="nested"/>
+    <detail name="properties"/>
+  </details>
+  
+  <nodes>
+    <node type="Band">
+      <property name="name" type="String"/>
+      <property name="desc" type="String"/>
+      <property name="picid" type="String"/>
+      <relation name="records" type="Record[]"/>
+      <relation name="users" type="User[]"/>
+
+      <output detail="nested">
+        <out-property property="name"/>
+        <out-property property="desc"/>
+        <out-relation relation="records" detail="properties"/>
+        <out-relation relation="users" detail="properties"/>
+      </output>
+
+      <output detail="properties">
+        <out-property property="name"/>
+        <out-property property="desc"/>
+      </output>
+    </node>
+
+    <node type="Record">
+      <property name="name" type="String"/>
+      <property name="release" type="String"/>
+      <relation name="bands" type="Band[]"/>
+      <relation name="users" type="User[]"/>
+
+      <output detail="nested">
+        <out-property property="name"/>
+        <out-property property="release"/>
+        <out-relation relation="bands" detail="properties"/>
+        <out-relation relation="users" detail="properties"/>
+      </output>
+
+      <output detail="properties">
+        <out-property property="name"/>
+        <out-property property="release"/>
+      </output>
+    </node>
+
+    <node type="User">
+      <property name="name" type="String"/>
+      <property name="picid" type="String"/>
+      <relation name="bands" type="Band[]"/>
+      <relation name="records" type="Record[]"/>
+
+      <output detail="nested">
+        <out-property property="name"/>
+        <out-relation relation="bands" detail="properties"/>
+        <out-relation relation="records" detail="properties"/>
+      </output>
+
+      <output detail="properties">
+        <out-property property="name"/>
+      </output>
+    </node>
+  </nodes>
+</sdd-config>
