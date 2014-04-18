@@ -42,8 +42,11 @@ public class RequestHandler implements
     }
 
     private SddResponse handleReadRequest(SddReadRequest request) {
+        System.out.println("received read request: " + request.toString());
         SddSucessfulReadResponse response = new SddSucessfulReadResponse();
         for (ReadRequestAction read : request.getActions()) {
+            System.out.println("\t read actions: " + read.getNodeId() + " : "
+                    + read.getDetail());
             long nodeId = read.getNodeId();
             String detail = read.getDetail();
             String output = sdd.read(nodeId, detail);
@@ -54,6 +57,7 @@ public class RequestHandler implements
 
     private SddResponse handleWriteRequest(SddWriteRequest request) {
         WriteTransaction tx = sdd.createWriteTransaction();
+        System.out.println("received write request: " + request.toString());
         for (WriteRequestAction write : request.getActions()) {
             if (write instanceof SetPropertiesAction) {
                 SetPropertiesAction w = (SetPropertiesAction) write;

@@ -33,11 +33,17 @@ public class Worker implements Runnable {
                 try {
                     busy = false;
                     WriteTransaction transaction = transactions.take();
+                    System.out
+                            .println("\ttook transaction from queue: queuesize: "
+                                    + transactions.size());
                     busy = true;
 
                     Queue<Action> actions = transaction.getActions();
                     sdd.startTransaction();
                     while (!actions.isEmpty()) {
+                        System.out
+                                .println("\t\t working with actions. actions size: "
+                                        + actions.size());
                         Action action = actions.poll();
                         action.runAction(actions);
                     }
