@@ -9,7 +9,7 @@ import de.metalcon.sdd.config.XmlConfig;
 public class StaticDataDelivery implements AutoCloseable {
 
     public static final String DEFAULT_CONFIG_PATH =
-            "/usr/share/sdd/config.xml";
+            "/usr/share/metalcon/staticDataDelivery/config.xml";
 
     private Sdd sdd;
 
