@@ -27,7 +27,7 @@ public class StaticDataDelivery implements AutoCloseable {
         sdd = new Sdd(config);
 
         System.out.println("Creating Proxy...");
-        proxy = new ZmqWorkerProxy("tcp://141.26.71.69:1337");
+        proxy = new ZmqWorkerProxy("tcp://127.0.0.1:1337");
         proxy.add(1, new RequestHandler(sdd));
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
