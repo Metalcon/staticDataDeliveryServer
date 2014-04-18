@@ -13,16 +13,8 @@ import de.metalcon.sdd.api.exception.InvalidConfigException;
 
 public class Config {
 
-    public static final String LEVELDB_PATH_DEFAULT = "/usr/share/sdd/leveldb";
-
-    public static final String NEO4J_PATH_DEFAULT = "/usr/share/sdd/neo4j";
-
     public static final TransactionMode TRANSACTION_MODE_DEFAULT =
             TransactionMode.SINGLE;
-
-    private String leveldbPath = LEVELDB_PATH_DEFAULT;
-
-    private String neo4jPath = NEO4J_PATH_DEFAULT;
 
     private TransactionMode transactionMode = TRANSACTION_MODE_DEFAULT;
 
@@ -31,25 +23,25 @@ public class Config {
     private Map<String, ConfigNode> nodes = new HashMap<String, ConfigNode>();
 
     public String getLeveldbPath() {
-        return leveldbPath;
+        return Options.LEVELDB_PATH;
     }
 
     public void setLeveldbPath(String leveldbPath) {
         if (leveldbPath == null) {
             throw new IllegalArgumentException("leveldbPath was null.");
         }
-        this.leveldbPath = leveldbPath;
+        Options.LEVELDB_PATH = leveldbPath;
     }
 
     public String getNeo4jPath() {
-        return neo4jPath;
+        return Options.NEO4J_PATH;
     }
 
     public void setNeo4jPath(String neo4jPath) {
         if (neo4jPath == null) {
             throw new IllegalArgumentException("neo4jPath was null.");
         }
-        this.neo4jPath = neo4jPath;
+        Options.NEO4J_PATH = neo4jPath;
     }
 
     public TransactionMode getTransactionMode() {

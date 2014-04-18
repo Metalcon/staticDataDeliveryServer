@@ -9,14 +9,23 @@ fi
 
 source $configFile
 
-CONFIG_NAME="config.xml"
+XML_CONFIG_NAME="config.xml"
+CONFIG_NAME="config.txt"
 
 # check for server config
+if [ ! -e "$XML_CONFIG_NAME" ]
+then
+    echo "static data delivery server config not found: \"$XML_CONFIG_NAME\""
+    echo "edit \"sample-config.xml\" to match your needs and do"
+    echo "cp sample-config.xml $XML_CONFIG_NAME"
+    exit 1
+fi
+
 if [ ! -e "$CONFIG_NAME" ]
 then
 	echo "static data delivery server config not found: \"$CONFIG_NAME\""
-	echo "edit \"sample-config.xml\" to match your needs and do"
-	echo "cp sample-config.xml $CONFIG_NAME"
+	echo "edit \"sample-config.txt\" to match your needs and do"
+	echo "cp sample-config.txt $CONFIG_NAME"
 	exit 1
 fi
 
@@ -37,5 +46,7 @@ rm -rf $SERVER_DIR/*
 echo "server directory cleaned"
 
 cp $CONFIG_NAME $CONFIG_PATH
-echo "server config is \"$CONFIG_PATH\""
+echo "server config is \"$CONFIG_PATH$CONFIG_NAME\""
 
+cp $XML_CONFIG_NAME $CONFIG_PATH
+echo "server xml config is \"$CONFIG_PATH$XML_CONFIG_NAME\""

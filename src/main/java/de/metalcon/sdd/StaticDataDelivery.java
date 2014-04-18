@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.hh.request_dispatcher.ZmqWorkerProxy;
 import de.metalcon.sdd.config.Config;
+import de.metalcon.sdd.config.Options;
 import de.metalcon.sdd.config.XmlConfig;
 
 public class StaticDataDelivery implements AutoCloseable {
@@ -27,7 +28,7 @@ public class StaticDataDelivery implements AutoCloseable {
         sdd = new Sdd(config);
 
         System.out.println("Creating Proxy...");
-        proxy = new ZmqWorkerProxy("tcp://127.0.0.1:1337");
+        proxy = new ZmqWorkerProxy(Options.LISTEN_URI);
         proxy.add(1, new RequestHandler(sdd));
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

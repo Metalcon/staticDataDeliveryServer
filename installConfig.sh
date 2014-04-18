@@ -1,5 +1,5 @@
 # path to server config
-CONFIG_PATH="/usr/share/metalcon/staticDataDelivery/config.xml"
+CONFIG_PATH="/usr/share/metalcon/staticDataDelivery/"
 # directory for server files
 SERVER_DIR="/usr/share/metalcon/staticDataDelivery"
 
