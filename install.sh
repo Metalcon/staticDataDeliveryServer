@@ -17,7 +17,7 @@ then
 	echo "static data delivery server config not found: \"$CONFIG_NAME\""
 	echo "edit \"sample-config.xml\" to match your needs and do"
 	echo "cp sample-config.xml $CONFIG_NAME"
-	exit
+	exit 1
 fi
 
 echo "server directory is \"$SERVER_DIR\""
