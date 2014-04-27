@@ -47,18 +47,12 @@ public class XmlConfig extends Config {
                 ++i;
                 switch (i) {
                     case 1:
-                        xmlLoadLeveldb(domElement);
-                        break;
-                    case 2:
-                        xmlLoadNeo4j(domElement);
-                        break;
-                    case 3:
                         xmlLoadTransactions(domElement);
                         break;
-                    case 4:
+                    case 2:
                         xmlLoadDetails(domElement);
                         break;
-                    case 5:
+                    case 3:
                         xmlLoadNodes(domElement);
                         break;
 
@@ -68,18 +62,6 @@ public class XmlConfig extends Config {
                 }
             }
         }
-    }
-
-    private void xmlLoadLeveldb(Element domLeveldb) {
-        xmlAssertNodeName(domLeveldb, "leveldb");
-        xmlAssertHasAttribute(domLeveldb, "path");
-        setLeveldbPath(domLeveldb.getAttribute("path"));
-    }
-
-    private void xmlLoadNeo4j(Element domNeo4j) {
-        xmlAssertNodeName(domNeo4j, "neo4j");
-        xmlAssertHasAttribute(domNeo4j, "path");
-        setNeo4jPath(domNeo4j.getAttribute("path"));
     }
 
     private void xmlLoadTransactions(Element domTransactionMode) {

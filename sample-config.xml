@@ -13,7 +13,10 @@
   <nodes>
     <node type="band">
       <property name="name" type="String"/>
+      <property name="urlLogo" type="String"/>
+      <property name="urlWebsite" type="String"/>
       <property name="urlMySpace" type="String"/>
+      <property name="description" type="String"/>
       <relation name="records" type="record[]"/>
       <relation name="tracks" type="track[]"/>
 

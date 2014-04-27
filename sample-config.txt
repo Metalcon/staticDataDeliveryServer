@@ -1,3 +1,3 @@
-LEVELDB_PATH = /usr/share/sdd/leveldb
-NEO4J_PATH = /usr/share/sdd/neo4j
+LEVELDB_PATH = /usr/share/metalcon/staticDataDelivery/leveldb
+NEO4J_PATH = /usr/share/metalcon/staticDataDelivery/neo4j
 LISTEN_URI = tcp://127.0.0.1:1337
