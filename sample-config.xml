@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <sdd-config>
-  <leveldb path="/usr/share/metalcon/staticDataDelivery/leveldb"/>
-  <neo4j path="/usr/share/metalcon/staticDataDelivery/neo4j"/>
   <transactions mode="single"/>
   
   <details>
@@ -41,7 +39,7 @@
     <node type="record">
       <property name="name" type="String"/>
       <property name="releaseDate" type="String"/>
-      <relation name="band" type="band"/>
+      <relation name="bands" type="band[]"/>
       <relation name="tracks" type="track[]"/>
 
       <output detail="entry">
@@ -52,7 +50,7 @@
       <output detail="page">
         <out-property property="name"/>
         <out-property property="releaseYear"/>
-        <out-relation relation="band" detail="entry"/>
+        <out-relation relation="bands" detail="entry"/>
         <out-relation relation="tracks" detail="entry"/>
       </output>
       
@@ -65,7 +63,7 @@
       <property name="name" type="String"/>
       <property name="trackNumber" type="String"/>
       <property name="duration" type="String"/>
-      <relation name="band" type="band"/>
+      <relation name="bands" type="band[]"/>
       <relation name="record" type="record"/>
 
       <output detail="entry">
@@ -76,7 +74,7 @@
       <output detail="page">
         <out-property property="name"/>
         <out-property property="trackNumber"/>
-        <out-relation relation="band" detail="entry"/>
+        <out-relation relation="bands" detail="entry"/>
         <out-relation relation="record" detail="entry"/>
       </output>
     </node>
