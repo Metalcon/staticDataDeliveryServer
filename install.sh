@@ -42,11 +42,16 @@ sudo chown -R $SERVER_DIR_RIGHTS $SERVER_DIR
 echo "set directory rights to \"$SERVER_DIR_RIGHTS\""
 
 # reset server files
-rm -rf $SERVER_DIR/*
-echo "server directory cleaned"
+echo "server directory is \"$SERVER_DIR\""
 
-cp $CONFIG_NAME $CONFIG_PATH
+if [ "$SERVER_DIR" ]
+then
+	rm -rf /$SERVER_DIR/*
+	echo "server directory cleaned"
+fi
+
+sudo cp $CONFIG_NAME $CONFIG_PATH
 echo "server config is \"$CONFIG_PATH$CONFIG_NAME\""
 
-cp $XML_CONFIG_NAME $CONFIG_PATH
+sudo cp $XML_CONFIG_NAME $CONFIG_PATH
 echo "server xml config is \"$CONFIG_PATH$XML_CONFIG_NAME\""
